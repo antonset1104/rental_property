@@ -1,8 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_coretax_efaktur"
-              name="CORETAX e-Faktur"
+    <menuitem id="menu_coretax_root"
+              name="CORETAX"
               parent="rental_management.main_menu_rental_management"
-              action="action_coretax_efaktur_wizard"
               sequence="92"/>
+
+    <menuitem id="menu_coretax_efaktur"
+              name="e-Faktur / SPT Export"
+              parent="menu_coretax_root"
+              action="action_coretax_efaktur_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_coretax_spt_registers"
+              name="SPT Registers"
+              parent="menu_coretax_root"
+              sequence="20"/>
+
+    <menuitem id="menu_coretax_depreciation"
+              name="L9 Depreciation/Amortization"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_depreciation"
+              sequence="10"/>
+    <menuitem id="menu_coretax_withholding_other"
+              name="L3B Withheld by Others"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_withholding_other"
+              sequence="20"/>
+    <menuitem id="menu_coretax_uncollectible"
+              name="L11A Uncollectible Debt"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_uncollectible"
+              sequence="30"/>
+    <menuitem id="menu_coretax_nonperforming"
+              name="L11A Non-Performing Credit"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_nonperforming"
+              sequence="40"/>
 </odoo>

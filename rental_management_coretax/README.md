@@ -51,9 +51,27 @@ OtherTaxBase, VATRate, VAT, STLGRate, STLG`.
   period (month/year of *From* date), with per-row seller/buyer TIN+name, billing
   document, selling price, VAT and grand totals.
 
+## SPT / bookkeeping exports (same wizard)
+
+- **Pencatatan** (`SimpleBookKeepingBulk`) — from customer invoices: transaction
+  number/date, customer, per-item details (good/service, price/unit, qty), discount.
+- **L9 Depreciation / Amortization** (`DepreciationAmortization`) — from the
+  *L9 Depreciation/Amortization* register (Properties → CORETAX → SPT Registers),
+  split into `ListOfDepreciation` / `ListOfAmortization` by kind. Amounts keep decimals.
+- **L3B Withheld by Other Parties** (`OtherParties`) — from the L3B register, for the
+  selected Tax Year.
+- **L11A Uncollectible Debt** (`UncollectibleDebtBulk`) and **L11A Non-Performing
+  Credit** (`NonPerforming`) — from their registers, for the selected Tax Year.
+
+Register-based exports use the **Tax Year** field; document-based exports (PK / PM /
+Lampiran C / Pencatatan) use the **From / To** period.
+
 ## Scope / notes
 
-- Covers Faktur Keluaran (PK), Retur Faktur Masukan (PM) and Lampiran C.
+- Covers Faktur Keluaran (PK), Retur Faktur Masukan (PM), Lampiran C, Pencatatan,
+  and SPT attachments L9, L3B, L11A (uncollectible & non-performing).
+- L9/L3B/L11A have no natural Odoo source, so they are captured in dedicated
+  data-entry registers and exported from there.
 - Building depreciation tables (Tabel A/B Kelompok I & II) concern fixed-asset
   depreciation and are out of scope for the faktur export.
 - Validate the generated XML against the official CORETAX XSD and the current DJP

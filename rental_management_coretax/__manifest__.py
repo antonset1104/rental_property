@@ -31,6 +31,7 @@ Lampiran C exports can be added on the same pattern if required.
         'views/res_partner_views.xml',
         'views/account_move_views.xml',
         'views/product_views.xml',
+        'views/tax_registers_views.xml',
         'views/menus.xml',
     ],
     'license': 'LGPL-3',

@@ -7,12 +7,17 @@
             <form string="CORETAX e-Faktur Export">
                 <group invisible="state != 'choose'">
                     <field name="export_type"/>
+                    <field name="is_register" invisible="1"/>
                     <group>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="date_from"/>
-                        <field name="date_to"/>
+                        <field name="date_from" invisible="is_register"
+                               required="not is_register"/>
+                        <field name="date_to" invisible="is_register"
+                               required="not is_register"/>
+                        <field name="tax_year" invisible="not is_register"
+                               required="is_register"/>
                     </group>
-                    <group>
+                    <group invisible="is_register">
                         <field name="only_unexported"/>
                         <field name="only_property"/>
                     </group>
