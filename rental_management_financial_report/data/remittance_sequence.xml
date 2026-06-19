@@ -8,5 +8,12 @@
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
+        <record id="seq_property_security_deposit" model="ir.sequence">
+            <field name="name">Security Deposit</field>
+            <field name="code">property.security.deposit</field>
+            <field name="prefix">SD</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
 </odoo>

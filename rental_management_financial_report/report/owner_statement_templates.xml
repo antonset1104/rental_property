@@ -190,6 +190,7 @@
                                     <th class="lbl">Tenant</th><th>Beginning</th>
                                     <th>Recurring Charges</th><th>Other Charges</th>
                                     <th>Cash Receipts</th><th>End Balance</th>
+                                    <th>Sec Dep Bal</th>
                                 </tr>
                                 <tr t-foreach="d['tenants']['rows']" t-as="r">
                                     <td class="lbl" t-out="r['name']"/>
@@ -198,6 +199,7 @@
                                     <td class="num" t-out="r['other']"/>
                                     <td class="num" t-out="r['receipts']"/>
                                     <td class="num" t-out="r['ending']"/>
+                                    <td class="num" t-out="r['secdep']"/>
                                 </tr>
                                 <tr class="tot">
                                     <td class="lbl">TOTAL</td>
@@ -206,6 +208,7 @@
                                     <td class="num" t-out="d['tenants']['totals']['other']"/>
                                     <td class="num" t-out="d['tenants']['totals']['receipts']"/>
                                     <td class="num" t-out="d['tenants']['totals']['ending']"/>
+                                    <td class="num" t-out="d['tenants']['totals']['secdep']"/>
                                 </tr>
                             </table>
 

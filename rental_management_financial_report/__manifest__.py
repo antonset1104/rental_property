@@ -41,6 +41,7 @@ Adds:
         'views/financial_category_views.xml',
         'views/property_budget_views.xml',
         'views/property_owner_remittance_views.xml',
+        'views/property_security_deposit_views.xml',
         'views/property_details_views.xml',
         'views/account_views.xml',
         'wizard/owner_statement_wizard_views.xml',

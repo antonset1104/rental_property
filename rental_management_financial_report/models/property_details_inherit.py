@@ -37,6 +37,19 @@ class PropertyDetails(models.Model):
     remittance_ids = fields.One2many('property.owner.remittance', 'property_id',
                                      string='Owner Remittances')
 
+    # Security deposit configuration (held as a liability, not income)
+    deposit_liability_account_id = fields.Many2one(
+        'account.account', string='Deposit Liability Account',
+        help="Liability account where tenant security deposits are held.")
+    deposit_income_account_id = fields.Many2one(
+        'account.account', string='Deposit Forfeiture Income Account',
+        help="Income account credited when part of a deposit is deducted/forfeited.")
+    deposit_journal_id = fields.Many2one(
+        'account.journal', string='Deposit Journal',
+        domain="[('type', 'in', ('bank', 'cash', 'general'))]")
+    deposit_ids = fields.One2many('property.security.deposit', 'property_id',
+                                  string='Security Deposits')
+
     def trust_balance(self, upto_date, strict_before=False):
         """Return the GL balance of the trust account for this property
         up to (or strictly before) ``upto_date``."""

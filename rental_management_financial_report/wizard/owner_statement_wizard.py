@@ -174,7 +174,7 @@ class OwnerStatementWizard(models.TransientModel):
 
         income_exp = self._build_ie(pl_rows)
         perf = self._build_performance(pl_rows, d_from, d_to, fy)
-        tenants = self._tenant_balances(lines, d_from, d_to)
+        tenants = self._tenant_balances(prop, lines, d_from, d_to)
         arrears = self._aged_arrears(lines, d_to)
         payments = self._payment_details(lines, d_from, d_to)
         balance = self._balance_sheet(bs)
@@ -345,36 +345,57 @@ class OwnerStatementWizard(models.TransientModel):
         return {'accrual_rows': accrual_rows, 'net_return': net_return}
 
     # ----- Tenant Balances ------------------------------------------------
-    def _tenant_balances(self, lines, d_from, d_to):
+    def _tenant_balances(self, prop, lines, d_from, d_to):
         rec_lines = lines.filtered(lambda l: l.account_id.account_type == RECEIVABLE)
         partners = {}
         for l in rec_lines:
             partners.setdefault(l.partner_id, self.env['account.move.line'])
             partners[l.partner_id] |= l
+        # Security deposit balances held per tenant (Sec Dep Bal column)
+        secdep = {}
+        deposits = self.env['property.security.deposit'].search([
+            ('property_id', '=', prop.id), ('state', '=', 'held')])
+        for dep in deposits:
+            secdep[dep.tenant_id.id] = secdep.get(dep.tenant_id.id, 0.0) + dep.balance
         result = []
-        tot = {'beg': 0, 'rec': 0, 'oth': 0, 'cash': 0, 'end': 0}
+        tot = {'beg': 0, 'rec': 0, 'oth': 0, 'cash': 0, 'end': 0, 'sd': 0}
         for partner, plines in partners.items():
             beginning = sum(x.balance for x in plines if x.date < d_from)
             charges = sum(x.debit for x in plines if d_from <= x.date <= d_to)
             receipts = sum(x.credit for x in plines if d_from <= x.date <= d_to)
             ending = sum(x.balance for x in plines)
+            sd = secdep.pop(partner.id, 0.0) if partner else 0.0
             if (abs(beginning) < 0.005 and abs(charges) < 0.005
-                    and abs(receipts) < 0.005 and abs(ending) < 0.005):
+                    and abs(receipts) < 0.005 and abs(ending) < 0.005
+                    and abs(sd) < 0.005):
                 continue
             tot['beg'] += beginning
             tot['rec'] += charges
             tot['cash'] += receipts
             tot['end'] += ending
+            tot['sd'] += sd
             result.append({
                 'name': partner.display_name if partner else 'Unallocated',
                 'beginning': self._fmt(beginning), 'recurring': self._fmt(charges),
                 'other': self._fmt(0.0), 'receipts': self._fmt(receipts),
-                'ending': self._fmt(ending),
+                'ending': self._fmt(ending), 'secdep': self._fmt(sd),
+            })
+        # Tenants with a deposit balance but no receivable activity in the period
+        for partner_id, sd in secdep.items():
+            if abs(sd) < 0.005:
+                continue
+            partner = self.env['res.partner'].browse(partner_id)
+            tot['sd'] += sd
+            result.append({
+                'name': partner.display_name, 'beginning': self._fmt(0.0),
+                'recurring': self._fmt(0.0), 'other': self._fmt(0.0),
+                'receipts': self._fmt(0.0), 'ending': self._fmt(0.0),
+                'secdep': self._fmt(sd),
             })
         result.sort(key=lambda r: r['name'])
         totals = {'beginning': self._fmt(tot['beg']), 'recurring': self._fmt(tot['rec']),
                   'other': self._fmt(tot['oth']), 'receipts': self._fmt(tot['cash']),
-                  'ending': self._fmt(tot['end'])}
+                  'ending': self._fmt(tot['end']), 'secdep': self._fmt(tot['sd'])}
         return {'rows': result, 'totals': totals}
 
     # ----- Aged Arrears ---------------------------------------------------

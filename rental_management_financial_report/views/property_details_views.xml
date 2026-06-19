@@ -24,6 +24,11 @@
                             <field name="remittance_account_id"/>
                             <field name="remittance_journal_id"/>
                         </group>
+                        <group string="Security Deposit" colspan="2">
+                            <field name="deposit_liability_account_id"/>
+                            <field name="deposit_income_account_id"/>
+                            <field name="deposit_journal_id"/>
+                        </group>
                     </group>
                     <separator string="Owners"/>
                     <field name="owner_line_ids">
