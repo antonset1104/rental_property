@@ -14,6 +14,7 @@ Statement** report suite styled after CBRE / MRI MRI_AUNZ output.
 | Multi-owner | `property.ownership.line` on `property.details` | Several owners per property with ownership %, plus Property Manager / phone / fax for the statement header. |
 | Account classification | `property.financial.category` + `account.account.property_fin_category_id` | Maps GL accounts to Owners-Statement sections/sub-groups (the MRxxxx structure). |
 | Budgeting | `property.budget` / `property.budget.line` | Per-property, per-account, per-month budget for Actual vs Budget vs Variance. |
+| Trust accounting | `property.details.trust_account_id` / `remittance_account_id` / `remittance_journal_id` + `property.owner.remittance(.line)` | Opening/Closing Trust Balance, Available for Remittance, Less Remittances; posts Dr Owners Remittance / Cr Trust Bank per owner. |
 | Analytic | `property.details.analytic_account_id` | Optional per-property analytic account for future cost allocation. |
 | Linkage | `account.move.property_financial_id` (stored, computed) | Resolves the property from `tenancy_id` / `sold_id` / `maintenance_request_id` so every journal entry can be attributed to a property. |
 | Report | `property.owner.statement.wizard` + QWeb PDF | One sectioned PDF with all nine reports. |
@@ -22,7 +23,9 @@ Statement** report suite styled after CBRE / MRI MRI_AUNZ output.
 
 1. **Performance Summary** – Accrual (Income / Statutory / Variable / Direct Recharge /
    Owners Expenses / Net Return) with Actual vs Budget vs Variance vs %Var for the
-   period and year-to-date, plus a Cash summary (Receipts / Payments / GST / Net Cash).
+   period and year-to-date, plus a **Cash Summary & Trust Reconciliation**
+   (Receipts, GST, expense groups, Net Cash Before Capital, Capital, Net Cash,
+   Opening Trust Balance, Available for Remittance, Less Remittances, Closing Trust Balance).
 2. **Income & Expenditure Report (Accrual)** – per account, grouped by section &
    sub-group, with Annual Budget.
 3. **Receipts & Payments Report (Cash)** – per category, Net Cash.
@@ -57,9 +60,12 @@ Statement** report suite styled after CBRE / MRI MRI_AUNZ output.
 - Reports only show numbers for moves attributable to the property via
   `tenancy_id` / `sold_id` / `maintenance_request_id`. For purely manual journal entries,
   set those links (or extend `_compute_property_financial`) / use the analytic account.
-- Trust-account balances (Opening/Closing Trust, Available for Remittance) and Owner
-  Remittance are **not yet modelled**; the Cash summary shows Net Cash instead. These are
-  the recommended next milestone (see the project mapping document in `/docs`).
+- **Trust accounting is modelled.** Set the Trust Bank Account, Owners Remittance Account
+  and Remittance Journal on the property; record remittances under *Financial Reports →
+  Owner Remittances* (use *Compute from Owners* to split by ownership %, then *Post*).
+  Opening Trust Balance comes from the trust account's GL balance; Less Remittances from
+  posted remittances in the period; Closing Trust Balance is derived
+  (Opening + Net Cash − Remittances), mirroring the CBRE statement arithmetic.
 - Tenant Balances reports all period charges under "Recurring Charges"; the
   recurring-vs-other split is not yet distinguished.
 

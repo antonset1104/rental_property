@@ -34,11 +34,13 @@ Adds:
     'data': [
         'security/ir.model.access.csv',
         'data/financial_category_data.xml',
+        'data/remittance_sequence.xml',
         'report/report_paperformat.xml',
         'report/owner_statement_templates.xml',
         'report/report_actions.xml',
         'views/financial_category_views.xml',
         'views/property_budget_views.xml',
+        'views/property_owner_remittance_views.xml',
         'views/property_details_views.xml',
         'views/account_views.xml',
         'wizard/owner_statement_wizard_views.xml',

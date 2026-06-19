@@ -22,6 +22,37 @@ class PropertyDetails(models.Model):
 
     budget_ids = fields.One2many('property.budget', 'property_id', string='Budgets')
 
+    # Trust accounting configuration (Owners Statement cash / remittance)
+    trust_account_id = fields.Many2one(
+        'account.account', string='Trust Bank Account',
+        help="Bank/cash account that holds tenant funds on behalf of the owners. "
+             "Its balance is reported as the Opening/Closing Trust Balance.")
+    remittance_account_id = fields.Many2one(
+        'account.account', string='Owners Remittance Account',
+        help="Clearing account debited when funds are remitted to owners "
+             "(equivalent to account '98400 Owners Remittance').")
+    remittance_journal_id = fields.Many2one(
+        'account.journal', string='Remittance Journal',
+        domain="[('type', 'in', ('bank', 'cash', 'general'))]")
+    remittance_ids = fields.One2many('property.owner.remittance', 'property_id',
+                                     string='Owner Remittances')
+
+    def trust_balance(self, upto_date, strict_before=False):
+        """Return the GL balance of the trust account for this property
+        up to (or strictly before) ``upto_date``."""
+        self.ensure_one()
+        if not self.trust_account_id:
+            return 0.0
+        company = self.company_id or self.env.company
+        op = '<' if strict_before else '<='
+        lines = self.env['account.move.line'].search([
+            ('parent_state', '=', 'posted'),
+            ('company_id', '=', company.id),
+            ('move_id.property_financial_id', '=', self.id),
+            ('account_id', '=', self.trust_account_id.id),
+            ('date', op, upto_date)])
+        return sum(lines.mapped('balance'))
+
     @api.depends('owner_line_ids')
     def _compute_owner_count(self):
         for rec in self:

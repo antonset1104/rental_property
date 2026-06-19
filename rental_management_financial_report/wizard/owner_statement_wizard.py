@@ -179,7 +179,18 @@ class OwnerStatementWizard(models.TransientModel):
         payments = self._payment_details(lines, d_from, d_to)
         balance = self._balance_sheet(bs)
         gst = self._gst(lines, d_from, d_to)
-        cash = self._cash_data(prop, company, d_from, d_to)
+        cash_raw = self._cash_data(prop, company, d_from, d_to)
+        cash_summary = self._build_cash_summary(prop, cash_raw, d_from)
+        remittances = self._remittance_details(prop, d_from)
+        cash = {
+            'receipts': cash_raw['receipts_rows'],
+            'payments': cash_raw['payments_rows'],
+            'r_total': self._fmt(cash_raw['r_total']),
+            'p_total': self._fmt(cash_raw['p_total']),
+            'gst_r': self._fmt(cash_raw['gst_r']),
+            'gst_p': self._fmt(cash_raw['gst_p']),
+            'net_cash': self._fmt(cash_raw['net_cash_v']),
+        }
 
         owners = [{
             'name': o.owner_id.display_name,
@@ -206,6 +217,8 @@ class OwnerStatementWizard(models.TransientModel):
             'balance': balance,
             'gst': gst,
             'cash': cash,
+            'cash_summary': cash_summary,
+            'remittances': remittances,
         }
 
     # ----- Income & Expenditure (accrual) ---------------------------------
@@ -479,8 +492,12 @@ class OwnerStatementWizard(models.TransientModel):
 
     # ----- Receipts & Payments (cash basis, payment-allocation based) -----
     def _cash_data(self, prop, company, d_from, d_to):
+        """Cash figures from payment allocations within the period.
+        Receipt/payment amounts are NET of tax; GST is tracked separately
+        (matching the CBRE 'GST on Receipts / GST on Expenses' rows)."""
         res = {'receipts': {}, 'payments': {}, 'r_total': 0.0, 'p_total': 0.0,
-               'gst_r': 0.0, 'gst_p': 0.0}
+               'gst_r': 0.0, 'gst_p': 0.0, 'capital': 0.0,
+               'by_section': dict.fromkeys(SECTION_ORDER, 0.0)}
         moves = self.env['account.move'].search([
             ('state', '=', 'posted'),
             ('company_id', '=', company.id),
@@ -505,7 +522,6 @@ class OwnerStatementWizard(models.TransientModel):
                     continue
                 ratio = paid / total
                 is_sale = mv.move_type in ('out_invoice', 'out_refund')
-                bucket = res['receipts'] if is_sale else res['payments']
                 for l in mv.line_ids:
                     if l.tax_line_id:
                         g = abs(l.balance) * ratio
@@ -516,29 +532,95 @@ class OwnerStatementWizard(models.TransientModel):
                         continue
                     if l.account_id.account_type in (RECEIVABLE, PAYABLE):
                         continue
-                    if l.account_id.account_type not in (INCOME_TYPES + EXPENSE_TYPES):
-                        continue
                     cat = l.account_id.property_fin_category_id
+                    section = cat.section if cat else self._auto_section(l.account_id)
+                    amt = abs(l.balance) * ratio
                     key = (cat.code or l.account_id.code or '',
                            cat.name if cat else (l.account_id.name or ''))
-                    bucket[key] = bucket.get(key, 0.0) + abs(l.balance) * ratio
-                if is_sale:
-                    res['r_total'] += paid
-                else:
-                    res['p_total'] += paid
+                    is_income = (section == 'income') or \
+                        (not cat and l.account_id.account_type in INCOME_TYPES)
+                    if is_income:
+                        res['receipts'][key] = res['receipts'].get(key, 0.0) + amt
+                        res['r_total'] += amt
+                    elif (l.account_id.account_type in EXPENSE_TYPES
+                          or section in EXPENSE_SECTIONS or section == 'capital'):
+                        res['payments'][key] = res['payments'].get(key, 0.0) + amt
+                        res['p_total'] += amt
+                        res['by_section'][section] = \
+                            res['by_section'].get(section, 0.0) + amt
+                        if section == 'capital':
+                            res['capital'] += amt
             except Exception:
                 continue
         receipts = [{'code': k[0], 'name': k[1], 'amount': self._fmt(v)}
                     for k, v in sorted(res['receipts'].items())]
         payments = [{'code': k[0], 'name': k[1], 'amount': self._fmt(v)}
                     for k, v in sorted(res['payments'].items())]
-        net = res['r_total'] - res['p_total']
-        return {
-            'receipts': receipts, 'payments': payments,
-            'r_total': self._fmt(res['r_total']), 'p_total': self._fmt(res['p_total']),
-            'gst_r': self._fmt(res['gst_r']), 'gst_p': self._fmt(res['gst_p']),
-            'net_cash': self._fmt(net),
-        }
+        net_cash = (res['r_total'] - res['p_total']) + (res['gst_r'] - res['gst_p'])
+        res.update({
+            'receipts_rows': receipts, 'payments_rows': payments,
+            'net_cash_v': net_cash,
+        })
+        return res
+
+    # ----- Performance Summary: Cash + Trust roll-forward -----------------
+    def _build_cash_summary(self, prop, cash, d_from):
+        bysec = cash['by_section']
+        statutory = bysec.get('statutory', 0.0)
+        variable = bysec.get('variable', 0.0)
+        direct = bysec.get('direct_recharge', 0.0) + bysec.get('tenant_recharge', 0.0)
+        non_recov = (bysec.get('non_recoverable', 0.0) + bysec.get('expense', 0.0)
+                     + bysec.get('other', 0.0))
+        capital = cash['capital']
+        ncbc = cash['net_cash_v'] + capital  # net cash before capital
+        net_cash = cash['net_cash_v']
+
+        # Trust roll-forward
+        opening_trust = prop.trust_balance(d_from, strict_before=True)
+        remittances = self._period_remittances(prop, d_from)
+        available = net_cash + opening_trust
+        closing_trust = available - remittances
+
+        rows = [
+            {'label': 'Receipts', 'v': self._fmt(cash['r_total'])},
+            {'label': 'GST on Receipts', 'v': self._fmt(cash['gst_r'])},
+            {'label': 'Statutory Outgoings Expense', 'v': self._fmt(statutory)},
+            {'label': 'Variable Outgoings Expense', 'v': self._fmt(variable)},
+            {'label': 'Direct Recharge Expense', 'v': self._fmt(direct)},
+            {'label': 'Non-Recoverable Expenses', 'v': self._fmt(non_recov)},
+            {'label': 'GST on Expenses', 'v': self._fmt(cash['gst_p'])},
+            {'label': 'NET CASH BEFORE CAPITAL', 'v': self._fmt(ncbc), 'bold': True},
+            {'label': 'Capital', 'v': self._fmt(capital)},
+            {'label': 'NET CASH', 'v': self._fmt(net_cash), 'bold': True},
+            {'label': 'Opening Trust Balance', 'v': self._fmt(opening_trust)},
+            {'label': 'AVAILABLE FOR REMITTANCE', 'v': self._fmt(available), 'bold': True},
+            {'label': 'Less Remittances', 'v': self._fmt(remittances)},
+            {'label': 'CLOSING TRUST BALANCE', 'v': self._fmt(closing_trust), 'bold': True},
+        ]
+        return rows
+
+    def _period_remittances(self, prop, d_from):
+        rems = self.env['property.owner.remittance'].search([
+            ('property_id', '=', prop.id), ('state', '=', 'posted'),
+            ('date', '>=', d_from), ('date', '<=', self.date_to)])
+        return sum(rems.mapped('total_amount'))
+
+    def _remittance_details(self, prop, d_from):
+        rems = self.env['property.owner.remittance'].search([
+            ('property_id', '=', prop.id), ('state', '=', 'posted'),
+            ('date', '>=', d_from), ('date', '<=', self.date_to)])
+        rows = []
+        total = 0.0
+        for rem in rems:
+            for line in rem.line_ids:
+                total += line.amount
+                rows.append({
+                    'supplier': line.owner_id.display_name,
+                    'ref': rem.name,
+                    'date': fields.Date.to_string(rem.date),
+                    'amount': self._fmt(line.amount),
+                })
+        return {'rows': rows, 'total': self._fmt(total)}
 
     # ----- actions --------------------------------------------------------
     def action_print(self):

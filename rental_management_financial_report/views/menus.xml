@@ -11,6 +11,12 @@
               action="action_owner_statement_wizard"
               sequence="10"/>
 
+    <menuitem id="menu_property_owner_remittance"
+              name="Owner Remittances"
+              parent="menu_financial_reports_root"
+              action="action_property_owner_remittance"
+              sequence="15"/>
+
     <menuitem id="menu_property_budget"
               name="Property Budgets"
               parent="menu_financial_reports_root"

@@ -85,18 +85,16 @@
                                     <td class="num" t-out="d['perf']['net_return']['y_pct']"/>
                                 </tr>
                             </table>
-                            <table style="margin-top:4px;">
+                            <table style="margin-top:4px; width:55%;">
                                 <tr class="hdr">
-                                    <th class="lbl">Cash Summary</th><th>Period</th><th>GST</th>
+                                    <th class="lbl">Cash Summary &amp; Trust Reconciliation</th>
+                                    <th>Amount (Period)</th>
                                 </tr>
-                                <tr><td class="lbl">Receipts</td>
-                                    <td class="num" t-out="d['cash']['r_total']"/>
-                                    <td class="num" t-out="d['cash']['gst_r']"/></tr>
-                                <tr><td class="lbl">Payments</td>
-                                    <td class="num" t-out="d['cash']['p_total']"/>
-                                    <td class="num" t-out="d['cash']['gst_p']"/></tr>
-                                <tr class="tot"><td class="lbl">NET CASH</td>
-                                    <td class="num" t-out="d['cash']['net_cash']"/><td/></tr>
+                                <tr t-foreach="d['cash_summary']" t-as="cr"
+                                    t-att-class="'tot' if cr.get('bold') else ''">
+                                    <td class="lbl" t-out="cr['label']"/>
+                                    <td class="num" t-out="cr['v']"/>
+                                </tr>
                             </table>
 
                             <!-- ===== 2. INCOME &amp; EXPENDITURE (ACCRUAL) ===== -->
@@ -257,7 +255,16 @@
                                     <tr class="tot"><td class="lbl" colspan="3" t-out="'Account Total'"/>
                                         <td class="num" t-out="g['sum']"/></tr>
                                 </t>
-                                <tr class="tot"><td class="lbl" colspan="3">GRAND TOTAL</td>
+                                <tr class="grp"><td class="lbl" colspan="4">Owners Remittance</td></tr>
+                                <tr t-foreach="d['remittances']['rows']" t-as="r">
+                                    <td class="lbl" t-out="r['supplier']"/>
+                                    <td class="lbl" t-out="r['ref']"/>
+                                    <td class="lbl" t-out="r['date']"/>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl" colspan="3">Total Remittances</td>
+                                    <td class="num" t-out="d['remittances']['total']"/></tr>
+                                <tr class="tot"><td class="lbl" colspan="3">GRAND TOTAL (Bills)</td>
                                     <td class="num" t-out="d['payments']['total']"/></tr>
                             </table>
 

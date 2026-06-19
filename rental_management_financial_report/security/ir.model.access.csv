@@ -5,3 +5,5 @@ access_property_ownership_line_user,property.ownership.line user,model_property_
 access_property_budget_user,property.budget user,model_property_budget,base.group_user,1,1,1,1
 access_property_budget_line_user,property.budget.line user,model_property_budget_line,base.group_user,1,1,1,1
 access_owner_statement_wizard_user,property.owner.statement.wizard user,model_property_owner_statement_wizard,base.group_user,1,1,1,1
+access_property_owner_remittance_user,property.owner.remittance user,model_property_owner_remittance,base.group_user,1,1,1,1
+access_property_owner_remittance_line_user,property.owner.remittance.line user,model_property_owner_remittance_line,base.group_user,1,1,1,1

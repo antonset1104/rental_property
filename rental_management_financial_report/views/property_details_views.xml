@@ -19,6 +19,11 @@
                                     string="Create Analytic Account" class="btn-link"
                                     invisible="analytic_account_id"/>
                         </group>
+                        <group string="Trust Accounting" colspan="2">
+                            <field name="trust_account_id"/>
+                            <field name="remittance_account_id"/>
+                            <field name="remittance_journal_id"/>
+                        </group>
                     </group>
                     <separator string="Owners"/>
                     <field name="owner_line_ids">
