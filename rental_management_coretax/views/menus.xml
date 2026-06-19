@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_coretax_efaktur"
+              name="CORETAX e-Faktur"
+              parent="rental_management.main_menu_rental_management"
+              action="action_coretax_efaktur_wizard"
+              sequence="92"/>
+</odoo>
