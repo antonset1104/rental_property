@@ -16,6 +16,14 @@ All custom modules are companions to the third-party **`rental_management`**
 | **rental_management_crm** | **`crm`** | Leasing pipeline: leasing fields on the lead (expected move-in/rent/months), *Create Lease Contract* (opens a tenancy pre-filled from the lead), Lease Contracts smart button, "Property Leasing" team + "Leasing" tag. |
 | **rental_management_project** | **`project`** (+ handover) | Turn a Fit-out handover into a `project.project` with one `project.task` per checklist item; tasks smart button. |
 | **rental_management_documents** | **`documents`** (Enterprise) | One `documents.document` folder per property; push the property's `ir.attachment`s into Documents and open the folder. |
+| **rental_management_asset** | `account` (+ optional coretax) | Fixed-asset register with depreciation board → posts journal entries (tagged to property → Owners Statement + analytic); revaluation against a reserve account with prospective board recompute; one-click sync to the CORETAX L9 register. |
+
+## Maintenance
+
+Maintenance is **already** covered by the base `rental_management` addon (depends on
+Odoo **`maintenance`**; extends `maintenance.request` with property/contract links,
+tenant invoice / vendor bill, recharge and product lines). `rental_management_purchase`
+adds *Create Purchase Order* from a maintenance request.
 
 ## Cross-cutting integration: Analytic Accounting
 
