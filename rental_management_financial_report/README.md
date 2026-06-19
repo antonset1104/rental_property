@@ -16,7 +16,7 @@ Statement** report suite styled after CBRE / MRI MRI_AUNZ output.
 | Budgeting | `property.budget` / `property.budget.line` | Per-property, per-account, per-month budget for Actual vs Budget vs Variance. |
 | Trust accounting | `property.details.trust_account_id` / `remittance_account_id` / `remittance_journal_id` + `property.owner.remittance(.line)` | Opening/Closing Trust Balance, Available for Remittance, Less Remittances; posts Dr Owners Remittance / Cr Trust Bank per owner. |
 | Security deposits | `property.security.deposit(.line)` + `deposit_liability_account_id` / `deposit_income_account_id` / `deposit_journal_id` | Tenant deposits tracked as a HELD LIABILITY (not income), with deductions/refunds; running balance feeds the **Sec Dep Bal** column of Tenant Balances. Optional GL posting (Dr Trust / Cr Deposit Liability on receipt). |
-| Analytic | `property.details.analytic_account_id` | Optional per-property analytic account for future cost allocation. |
+| Analytic | `property.details.analytic_account_id` + `account.move._post` auto-stamp | Per-property analytic account; on posting, income/expense journal items of property-linked moves are tagged with the property analytic (no distribution overwritten), so spend/income flow into Odoo's native **Analytic Accounting** (analytic items, plans, budgets, P&L by analytic). "Analytic Items" button on the property opens the standard report. |
 | Linkage | `account.move.property_financial_id` (stored, computed) | Resolves the property from `tenancy_id` / `sold_id` / `maintenance_request_id` so every journal entry can be attributed to a property. |
 | Report | `property.owner.statement.wizard` + QWeb PDF | One sectioned PDF with all nine reports. |
 

@@ -18,6 +18,9 @@
                             <button name="action_create_analytic_account" type="object"
                                     string="Create Analytic Account" class="btn-link"
                                     invisible="analytic_account_id"/>
+                            <button name="action_view_analytic_items" type="object"
+                                    string="Analytic Items" class="btn-link"
+                                    invisible="not analytic_account_id"/>
                         </group>
                         <group string="Trust Accounting" colspan="2">
                             <field name="trust_account_id"/>

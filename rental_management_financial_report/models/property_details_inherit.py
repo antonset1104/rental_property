@@ -71,6 +71,20 @@ class PropertyDetails(models.Model):
         for rec in self:
             rec.owner_count = len(rec.owner_line_ids)
 
+    def action_view_analytic_items(self):
+        """Open the standard Analytic Items for this property's analytic account."""
+        self.ensure_one()
+        if not self.analytic_account_id:
+            return self.action_create_analytic_account()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Analytic Items'),
+            'res_model': 'account.analytic.line',
+            'view_mode': 'list,form',
+            'domain': [('account_id', '=', self.analytic_account_id.id)],
+            'context': {'default_account_id': self.analytic_account_id.id},
+        }
+
     def action_create_analytic_account(self):
         """Create (once) a dedicated analytic account for the property."""
         Analytic = self.env['account.analytic.account']

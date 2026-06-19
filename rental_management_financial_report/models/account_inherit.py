@@ -38,3 +38,33 @@ class AccountMove(models.Model):
             elif move.maintenance_request_id and move.maintenance_request_id.property_id:
                 prop = move.maintenance_request_id.property_id
             move.property_financial_id = prop and prop.id or False
+
+    # ---- Integration with standard Odoo Analytic Accounting --------------
+    _PL_TYPES = ('income', 'income_other', 'expense',
+                 'expense_depreciation', 'expense_direct_cost')
+
+    def _apply_property_analytic(self):
+        """Tag the property's analytic account on income/expense journal items
+        that have no analytic distribution yet, so property spend & income flow
+        into Odoo's native Analytic Accounting (analytic items, plans, budgets,
+        P&L by analytic)."""
+        for move in self:
+            prop = move.property_financial_id
+            analytic = prop.analytic_account_id if prop else False
+            if not analytic:
+                continue
+            for line in move.line_ids:
+                if line.display_type:
+                    continue
+                if line.account_id.account_type not in self._PL_TYPES:
+                    continue
+                if line.analytic_distribution:
+                    continue
+                try:
+                    line.analytic_distribution = {str(analytic.id): 100.0}
+                except Exception:
+                    continue
+
+    def _post(self, soft=True):
+        self._apply_property_analytic()
+        return super()._post(soft=soft)
