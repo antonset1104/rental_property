@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tenancy_details_form_view_handover" model="ir.ui.view">
+        <field name="name">tenancy.details.form.handover</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Handovers" name="handovers">
+                    <field name="handover_ids" context="{'default_tenancy_id': id}">
+                        <list decoration-success="state == 'done'"
+                              decoration-muted="state == 'cancel'">
+                            <field name="name"/>
+                            <field name="handover_type"/>
+                            <field name="scheduled_date"/>
+                            <field name="actual_date"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
