@@ -96,4 +96,80 @@
         <field name="res_model">coretax.nonperforming.credit</field>
         <field name="view_mode">list,form</field>
     </record>
+
+    <!-- L11A Promotion Expense -->
+    <record id="view_coretax_promotion_list" model="ir.ui.view">
+        <field name="name">coretax.promotion.expense.list</field>
+        <field name="model">coretax.promotion.expense</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="identity_number"/>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="date_of_promotion"/>
+                <field name="form_and_type"/>
+                <field name="amount_of_promotion"/>
+                <field name="amount_of_witholding"/>
+                <field name="witholding_slip_number"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_promotion" model="ir.actions.act_window">
+        <field name="name">L11A Promotion Expense</field>
+        <field name="res_model">coretax.promotion.expense</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L11A Entertainment Expense -->
+    <record id="view_coretax_entertainment_list" model="ir.ui.view">
+        <field name="name">coretax.entertainment.expense.list</field>
+        <field name="model">coretax.entertainment.expense</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="date_of_entertainment"/>
+                <field name="place"/>
+                <field name="address"/>
+                <field name="type_of_entertainment"/>
+                <field name="amount_of_entertainment"/>
+                <field name="name_of_business_partner"/>
+                <field name="position"/>
+                <field name="company_name"/>
+                <field name="business_type"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_entertainment" model="ir.actions.act_window">
+        <field name="name">L11A Entertainment Expense</field>
+        <field name="res_model">coretax.entertainment.expense</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L10A Related-Party Transactions -->
+    <record id="view_coretax_related_party_list" model="ir.ui.view">
+        <field name="name">coretax.related.party.list</field>
+        <field name="model">coretax.related.party</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="name"/>
+                <field name="partner_tin"/>
+                <field name="country_code"/>
+                <field name="type_of_relation_code"/>
+                <field name="business_activity"/>
+                <field name="type_of_transaction_code"/>
+                <field name="transaction_value"/>
+                <field name="pricing_method_code"/>
+                <field name="reason_pricing"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_related_party" model="ir.actions.act_window">
+        <field name="name">L10A Related-Party Transactions</field>
+        <field name="res_model">coretax.related.party</field>
+        <field name="view_mode">list,form</field>
+    </record>
 </odoo>

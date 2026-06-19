@@ -36,4 +36,19 @@
               parent="menu_coretax_spt_registers"
               action="action_coretax_nonperforming"
               sequence="40"/>
+    <menuitem id="menu_coretax_promotion"
+              name="L11A Promotion Expense"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_promotion"
+              sequence="50"/>
+    <menuitem id="menu_coretax_entertainment"
+              name="L11A Entertainment Expense"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_entertainment"
+              sequence="60"/>
+    <menuitem id="menu_coretax_related_party"
+              name="L10A Related-Party Transactions"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_related_party"
+              sequence="70"/>
 </odoo>

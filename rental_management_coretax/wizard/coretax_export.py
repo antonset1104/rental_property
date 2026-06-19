@@ -41,6 +41,9 @@ class CoretaxEfakturWizard(models.TransientModel):
         ('l3b_otherparties', 'L3B - PPh Withheld by Other Parties'),
         ('l11a_uncollectible', 'L11A - Uncollectible Debt'),
         ('l11a_nonperforming', 'L11A - Non-Performing Credit'),
+        ('l11a_promotion', 'L11A - Promotion Expense'),
+        ('l11a_entertainment', 'L11A - Entertainment Expense'),
+        ('l10a_related', 'L10A - Related-Party Transactions'),
     ], string='Export Type', default='pk', required=True)
     company_id = fields.Many2one('res.company', default=lambda s: s.env.company,
                                  required=True)
@@ -63,7 +66,8 @@ class CoretaxEfakturWizard(models.TransientModel):
 
     # ----- selection ------------------------------------------------------
     REGISTER_TYPES = ('l9_depreciation', 'l3b_otherparties',
-                      'l11a_uncollectible', 'l11a_nonperforming')
+                      'l11a_uncollectible', 'l11a_nonperforming',
+                      'l11a_promotion', 'l11a_entertainment', 'l10a_related')
 
     @api.depends('export_type')
     def _compute_is_register(self):
@@ -383,12 +387,80 @@ class CoretaxEfakturWizard(models.TransientModel):
         return b'<?xml version="1.0" encoding="UTF-8"?>\n' + \
             tostring(root, encoding='utf-8')
 
+    def _build_promotion(self, records):
+        company_partner = self.company_id.partner_id
+        root = Element('PromotionExpense')
+        _se(root, 'TIN', company_partner.coretax_tin or company_partner.vat or '')
+        _se(root, 'TaxYear', str(self.tax_year))
+        lst = SubElement(root, 'PromotionExpenseList')
+        for rec in records:
+            el = SubElement(lst, 'List')
+            _se(el, 'IdentityNumber', rec.identity_number or '')
+            _se(el, 'Name', rec.name or '')
+            _se(el, 'Address', rec.address or '')
+            _se(el, 'DateOfPromotion',
+                rec.date_of_promotion.strftime('%d-%m-%Y')
+                if rec.date_of_promotion else '')
+            _se(el, 'FormAndType', rec.form_and_type or '')
+            _se(el, 'AmountOfPromotion', _num(rec.amount_of_promotion))
+            _se(el, 'AmountOfWitholding', _num(rec.amount_of_witholding))
+            _se(el, 'WitholdingSlipNumber', rec.witholding_slip_number or '')
+            _se(el, 'Description', rec.description or '')
+        return b'<?xml version="1.0" encoding="UTF-8"?>\n' + \
+            tostring(root, encoding='utf-8')
+
+    def _build_entertainment(self, records):
+        company_partner = self.company_id.partner_id
+        root = Element('EntertainmentExpense')
+        _se(root, 'TIN', company_partner.coretax_tin or company_partner.vat or '')
+        _se(root, 'TaxYear', str(self.tax_year))
+        lst = SubElement(root, 'EntertainmentExpenseList')
+        for rec in records:
+            el = SubElement(lst, 'List')
+            _se(el, 'DateOfEntertainment',
+                rec.date_of_entertainment.strftime('%d-%m-%Y')
+                if rec.date_of_entertainment else '')
+            _se(el, 'Place', rec.place or '')
+            _se(el, 'Address', rec.address or '')
+            _se(el, 'TypeOfEntertainment', rec.type_of_entertainment or '')
+            _se(el, 'AmountOfEntertainment', _num(rec.amount_of_entertainment))
+            _se(el, 'NameOfBusinessPartner', rec.name_of_business_partner or '')
+            _se(el, 'Position', rec.position or '')
+            _se(el, 'CompanyName', rec.company_name or '')
+            _se(el, 'BusinessType', rec.business_type or '')
+            _se(el, 'Notes', rec.notes or '')
+        return b'<?xml version="1.0" encoding="UTF-8"?>\n' + \
+            tostring(root, encoding='utf-8')
+
+    def _build_related_party(self, records):
+        company_partner = self.company_id.partner_id
+        root = Element('DeclarationOfTransactionRelatedPartiesBulk')
+        _se(root, 'TIN', company_partner.coretax_tin or company_partner.vat or '')
+        _se(root, 'TaxYear', str(self.tax_year))
+        lst = SubElement(root, 'DeclarationOfTransactionRelatedPartiesList')
+        for rec in records:
+            el = SubElement(lst, 'List')
+            _se(el, 'Name', rec.name or '')
+            _se(el, 'TIN', rec.partner_tin or '')
+            _se(el, 'CountryCode', rec.country_code or '')
+            _se(el, 'TypeOfRelationCode', rec.type_of_relation_code or '')
+            _se(el, 'BusinessActivity', rec.business_activity or '')
+            _se(el, 'TypeOfTransactionCode', rec.type_of_transaction_code or '')
+            _se(el, 'TransactionValue', _num(rec.transaction_value))
+            _se(el, 'PricingMethodAppliedCode', rec.pricing_method_code or '')
+            _se(el, 'ReasonOfPricingMethodApplication', rec.reason_pricing or '')
+        return b'<?xml version="1.0" encoding="UTF-8"?>\n' + \
+            tostring(root, encoding='utf-8')
+
     def _get_register_records(self):
         model_map = {
             'l9_depreciation': 'coretax.asset.depreciation',
             'l3b_otherparties': 'coretax.withholding.other',
             'l11a_uncollectible': 'coretax.uncollectible.debt',
             'l11a_nonperforming': 'coretax.nonperforming.credit',
+            'l11a_promotion': 'coretax.promotion.expense',
+            'l11a_entertainment': 'coretax.entertainment.expense',
+            'l10a_related': 'coretax.related.party',
         }
         model = model_map[self.export_type]
         return self.env[model].search([
@@ -410,6 +482,9 @@ class CoretaxEfakturWizard(models.TransientModel):
                 'l3b_otherparties': (self._build_otherparties, 'L3B_OtherParties'),
                 'l11a_uncollectible': (self._build_uncollectible, 'L11A_Uncollectible'),
                 'l11a_nonperforming': (self._build_nonperforming, 'L11A_NonPerforming'),
+                'l11a_promotion': (self._build_promotion, 'L11A_Promosi'),
+                'l11a_entertainment': (self._build_entertainment, 'L11A_Entertainment'),
+                'l10a_related': (self._build_related_party, 'L10A_RelatedParties'),
             }
             builder, prefix = builders[self.export_type]
             if self.export_type != 'l9_depreciation' and not (

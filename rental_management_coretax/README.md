@@ -62,6 +62,10 @@ OtherTaxBase, VATRate, VAT, STLGRate, STLG`.
   selected Tax Year.
 - **L11A Uncollectible Debt** (`UncollectibleDebtBulk`) and **L11A Non-Performing
   Credit** (`NonPerforming`) — from their registers, for the selected Tax Year.
+- **L11A Promotion Expense** (`PromotionExpense`) and **L11A Entertainment Expense**
+  (`EntertainmentExpense`) — from their registers, for the selected Tax Year.
+- **L10A Related-Party Transactions** (`DeclarationOfTransactionRelatedPartiesBulk`)
+  — from the related-party register, for the selected Tax Year.
 
 Register-based exports use the **Tax Year** field; document-based exports (PK / PM /
 Lampiran C / Pencatatan) use the **From / To** period.

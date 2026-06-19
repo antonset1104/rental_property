@@ -91,3 +91,64 @@ class CoretaxNonPerforming(models.Model):
     category = fields.Selection([('01', '01'), ('02', '02'), ('03', '03')],
                                 string='Category', default='01')
     company_id = fields.Many2one('res.company', default=lambda s: s.env.company)
+
+
+class CoretaxPromotionExpense(models.Model):
+    """L11A - Promotion expense list."""
+    _name = 'coretax.promotion.expense'
+    _description = 'CORETAX Promotion Expense'
+    _order = 'tax_year desc, id'
+
+    tax_year = fields.Integer(string='Tax Year', required=True,
+                              default=lambda s: fields.Date.today().year)
+    identity_number = fields.Char(string='Identity Number')
+    name = fields.Char(string='Name')
+    address = fields.Char(string='Address')
+    date_of_promotion = fields.Date(string='Date of Promotion')
+    form_and_type = fields.Char(string='Form and Type')
+    amount_of_promotion = fields.Float(string='Amount of Promotion', digits=(16, 2))
+    amount_of_witholding = fields.Float(string='Amount of Withholding', digits=(16, 2))
+    witholding_slip_number = fields.Char(string='Withholding Slip Number')
+    description = fields.Char(string='Description')
+    company_id = fields.Many2one('res.company', default=lambda s: s.env.company)
+
+
+class CoretaxEntertainmentExpense(models.Model):
+    """L11A - Entertainment expense list."""
+    _name = 'coretax.entertainment.expense'
+    _description = 'CORETAX Entertainment Expense'
+    _order = 'tax_year desc, id'
+
+    tax_year = fields.Integer(string='Tax Year', required=True,
+                              default=lambda s: fields.Date.today().year)
+    date_of_entertainment = fields.Date(string='Date of Entertainment')
+    place = fields.Char(string='Place')
+    address = fields.Char(string='Address')
+    type_of_entertainment = fields.Char(string='Type of Entertainment')
+    amount_of_entertainment = fields.Float(string='Amount', digits=(16, 2))
+    name_of_business_partner = fields.Char(string='Business Partner Name')
+    position = fields.Char(string='Position')
+    company_name = fields.Char(string='Company Name')
+    business_type = fields.Char(string='Business Type')
+    notes = fields.Char(string='Notes')
+    company_id = fields.Many2one('res.company', default=lambda s: s.env.company)
+
+
+class CoretaxRelatedParty(models.Model):
+    """L10A - Related-party transactions declaration."""
+    _name = 'coretax.related.party'
+    _description = 'CORETAX Related Party Transaction'
+    _order = 'tax_year desc, id'
+
+    tax_year = fields.Integer(string='Tax Year', required=True,
+                              default=lambda s: fields.Date.today().year)
+    name = fields.Char(string='Name')
+    partner_tin = fields.Char(string='TIN')
+    country_code = fields.Char(string='Country Code (ISO3)')
+    type_of_relation_code = fields.Char(string='Type of Relation Code')
+    business_activity = fields.Char(string='Business Activity')
+    type_of_transaction_code = fields.Char(string='Type of Transaction Code')
+    transaction_value = fields.Float(string='Transaction Value', digits=(16, 2))
+    pricing_method_code = fields.Char(string='Pricing Method Applied Code')
+    reason_pricing = fields.Char(string='Reason of Pricing Method')
+    company_id = fields.Many2one('res.company', default=lambda s: s.env.company)

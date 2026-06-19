@@ -5,3 +5,6 @@ access_coretax_asset_depreciation,coretax.asset.depreciation,model_coretax_asset
 access_coretax_withholding_other,coretax.withholding.other,model_coretax_withholding_other,account.group_account_user,1,1,1,1
 access_coretax_uncollectible_debt,coretax.uncollectible.debt,model_coretax_uncollectible_debt,account.group_account_user,1,1,1,1
 access_coretax_nonperforming_credit,coretax.nonperforming.credit,model_coretax_nonperforming_credit,account.group_account_user,1,1,1,1
+access_coretax_promotion_expense,coretax.promotion.expense,model_coretax_promotion_expense,account.group_account_user,1,1,1,1
+access_coretax_entertainment_expense,coretax.entertainment.expense,model_coretax_entertainment_expense,account.group_account_user,1,1,1,1
+access_coretax_related_party,coretax.related.party,model_coretax_related_party,account.group_account_user,1,1,1,1
