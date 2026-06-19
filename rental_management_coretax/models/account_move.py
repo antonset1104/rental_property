@@ -32,3 +32,21 @@ class AccountMove(models.Model):
     coretax_buyer_idtku = fields.Char(string='Buyer ID TKU')
     coretax_exported = fields.Boolean(string='e-Faktur Exported', copy=False)
     coretax_export_date = fields.Datetime(string='Exported On', copy=False)
+
+    # --- Retur Faktur PM (input tax invoice return / vendor credit note) ---
+    coretax_origin_invoice_number = fields.Char(
+        string='Original Faktur No.',
+        help="Seller's original tax-invoice number being returned (Retur PM).")
+    coretax_seller_tin = fields.Char(
+        string="Seller TIN (Return)",
+        help="Supplier TIN for the returned input invoice; defaults to the "
+             "vendor's CORETAX TIN when empty.")
+
+    # --- Lampiran C (VAT/STLG collected by other collector) ---
+    coretax_collector_type = fields.Selection([
+        ('001', '001'), ('002', '002'), ('003', '003'), ('100', '100'),
+    ], string='Type of VAT Collected')
+    coretax_billing_number = fields.Char(string='Billing Document No.')
+    coretax_billing_date = fields.Date(string='Billing Document Date')
+    coretax_invoice_replaced = fields.Char(string='Invoice Number Replaced')
+    coretax_lampc_info = fields.Char(string='Lampiran C Information', default='Ok')

@@ -39,10 +39,21 @@ OtherTaxBase, VATRate, VAT, STLGRate, STLG`.
    defaults to `04 – Other Tax Base`).
 4. Run **CORETAX e-Faktur Export**, download the XML and upload it to CORETAX.
 
+## Export types (single wizard, `Export Type` selector)
+
+- **Faktur Keluaran (PK)** — posted customer invoices/refunds → `TaxInvoiceBulk` (v1.4).
+- **Retur Faktur Masukan (PM)** — posted **vendor credit notes** (`in_refund`) →
+  `InputTaxInvoiceReturn` (v1.1). Per document: original faktur no. (set on the credit
+  note), seller TIN, return date (DD-MM-YYYY), and a `Rows` line per item with
+  `ReturnQuantity/ReturnTaxBase/ReturnVAT` plus a `FooterRow` total.
+- **Lampiran C** — posted customer invoices that carry a *Type of VAT Collected*
+  (001/002/003/100) → `VATandSTLGCollectedByOtherCollector` (v1.1) for the
+  period (month/year of *From* date), with per-row seller/buyer TIN+name, billing
+  document, selling price, VAT and grand totals.
+
 ## Scope / notes
 
-- Output tax invoices (Faktur Keluaran) only. Retur Faktur PM (input return) and
-  Lampiran C exports can be added on the same pattern if needed.
+- Covers Faktur Keluaran (PK), Retur Faktur Masukan (PM) and Lampiran C.
 - Building depreciation tables (Tabel A/B Kelompok I & II) concern fixed-asset
   depreciation and are out of scope for the faktur export.
 - Validate the generated XML against the official CORETAX XSD and the current DJP

@@ -7,23 +7,42 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page string="CORETAX e-Faktur" name="coretax_efaktur"
-                      invisible="move_type not in ('out_invoice', 'out_refund')">
-                    <group>
-                        <group>
+                      invisible="move_type not in ('out_invoice', 'out_refund', 'in_refund')">
+                    <group invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <group string="Output Faktur (PK)">
                             <field name="coretax_trx_code"/>
                             <field name="coretax_invoice_opt"/>
                             <field name="coretax_add_info"/>
                             <field name="coretax_facility_stamp"/>
                             <field name="coretax_ref_desc"/>
                         </group>
-                        <group>
+                        <group string="ID TKU / Customs">
                             <field name="coretax_seller_idtku"/>
                             <field name="coretax_buyer_idtku"/>
                             <field name="coretax_custom_doc"/>
                             <field name="coretax_custom_doc_my"/>
-                            <field name="coretax_exported" readonly="1"/>
-                            <field name="coretax_export_date" readonly="1"/>
                         </group>
+                    </group>
+                    <group string="Lampiran C (VAT collected by other collector)"
+                           invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <group>
+                            <field name="coretax_collector_type"/>
+                            <field name="coretax_billing_number"/>
+                            <field name="coretax_billing_date"/>
+                        </group>
+                        <group>
+                            <field name="coretax_invoice_replaced"/>
+                            <field name="coretax_lampc_info"/>
+                        </group>
+                    </group>
+                    <group string="Retur Faktur Masukan (Input Return)"
+                           invisible="move_type != 'in_refund'">
+                        <field name="coretax_origin_invoice_number"/>
+                        <field name="coretax_seller_tin"/>
+                    </group>
+                    <group string="Status">
+                        <field name="coretax_exported" readonly="1"/>
+                        <field name="coretax_export_date" readonly="1"/>
                     </group>
                 </page>
             </xpath>

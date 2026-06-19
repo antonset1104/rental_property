@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form string="CORETAX e-Faktur Export">
                 <group invisible="state != 'choose'">
+                    <field name="export_type"/>
                     <group>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="date_from"/>
