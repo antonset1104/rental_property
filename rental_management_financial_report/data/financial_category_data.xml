@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Income -->
+        <record id="cat_rental_income" model="property.financial.category">
+            <field name="name">Rental Income</field>
+            <field name="section">income</field>
+            <field name="group_name">Rental Income</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="cat_tenant_recharge_income" model="property.financial.category">
+            <field name="name">Tenant Recharge Income</field>
+            <field name="section">income</field>
+            <field name="group_name">Tenant Recharge Income</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="cat_other_income" model="property.financial.category">
+            <field name="name">Other Income</field>
+            <field name="section">income</field>
+            <field name="group_name">Other Income</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Statutory Outgoings -->
+        <record id="cat_statutory" model="property.financial.category">
+            <field name="name">Statutory Expenses</field>
+            <field name="section">statutory</field>
+            <field name="group_name">Statutory Expenses</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- Variable Outgoings -->
+        <record id="cat_insurance" model="property.financial.category">
+            <field name="name">Insurance Expenses</field>
+            <field name="section">variable</field>
+            <field name="group_name">Insurance Expenses</field>
+            <field name="sequence">200</field>
+        </record>
+        <record id="cat_aircon" model="property.financial.category">
+            <field name="name">Airconditioning/Ventilation</field>
+            <field name="section">variable</field>
+            <field name="group_name">Airconditioning/Ventilation</field>
+            <field name="sequence">210</field>
+        </record>
+        <record id="cat_cleaning" model="property.financial.category">
+            <field name="name">Common Area Cleaning</field>
+            <field name="section">variable</field>
+            <field name="group_name">Common Area Cleaning</field>
+            <field name="sequence">220</field>
+        </record>
+        <record id="cat_electricity" model="property.financial.category">
+            <field name="name">Electricity</field>
+            <field name="section">variable</field>
+            <field name="group_name">Electricity</field>
+            <field name="sequence">230</field>
+        </record>
+        <record id="cat_fire" model="property.financial.category">
+            <field name="name">Fire Protection</field>
+            <field name="section">variable</field>
+            <field name="group_name">Fire Protection</field>
+            <field name="sequence">240</field>
+        </record>
+        <record id="cat_lifts" model="property.financial.category">
+            <field name="name">Lifts and Escalators</field>
+            <field name="section">variable</field>
+            <field name="group_name">Lifts and Escalators</field>
+            <field name="sequence">250</field>
+        </record>
+        <record id="cat_rm" model="property.financial.category">
+            <field name="name">Repairs &amp; Maintenance</field>
+            <field name="section">variable</field>
+            <field name="group_name">Repairs &amp; Maintenance</field>
+            <field name="sequence">260</field>
+        </record>
+        <record id="cat_security" model="property.financial.category">
+            <field name="name">Security/Access Control</field>
+            <field name="section">variable</field>
+            <field name="group_name">Security/Access Control</field>
+            <field name="sequence">270</field>
+        </record>
+        <record id="cat_management_fee" model="property.financial.category">
+            <field name="name">Building Management / Admin Fees</field>
+            <field name="section">variable</field>
+            <field name="group_name">Building Management</field>
+            <field name="sequence">280</field>
+        </record>
+
+        <!-- Direct Recharge -->
+        <record id="cat_direct_recharge" model="property.financial.category">
+            <field name="name">Direct Recharge</field>
+            <field name="section">direct_recharge</field>
+            <field name="group_name">Direct Recharge</field>
+            <field name="sequence">300</field>
+        </record>
+
+        <!-- Tenant Recharge Expenditure -->
+        <record id="cat_tenant_recharge_exp" model="property.financial.category">
+            <field name="name">Tenant Recharge Expenditure</field>
+            <field name="section">tenant_recharge</field>
+            <field name="group_name">Tenant Recharge Expenditure</field>
+            <field name="sequence">320</field>
+        </record>
+
+        <!-- Non-Recoverable -->
+        <record id="cat_non_recoverable" model="property.financial.category">
+            <field name="name">Non-Recoverable Expenditure</field>
+            <field name="section">non_recoverable</field>
+            <field name="group_name">Non-Recoverable Expenditure</field>
+            <field name="sequence">400</field>
+        </record>
+
+        <!-- Capital -->
+        <record id="cat_capital" model="property.financial.category">
+            <field name="name">Capital Expenditure</field>
+            <field name="section">capital</field>
+            <field name="group_name">Capital Expenditure</field>
+            <field name="sequence">500</field>
+        </record>
+
+        <!-- GST -->
+        <record id="cat_gst" model="property.financial.category">
+            <field name="name">GST</field>
+            <field name="section">gst</field>
+            <field name="group_name">GST</field>
+            <field name="sequence">600</field>
+        </record>
+    </data>
+</odoo>
