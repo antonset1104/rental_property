@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="crm_team_leasing" model="crm.team">
+            <field name="name">Property Leasing</field>
+        </record>
+        <record id="crm_tag_leasing" model="crm.tag">
+            <field name="name">Leasing</field>
+        </record>
+    </data>
+</odoo>

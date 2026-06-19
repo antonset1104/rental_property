@@ -13,6 +13,9 @@ All custom modules are companions to the third-party **`rental_management`**
 | **rental_management_portal** | **`portal`** | `/my/contracts` controllers, `portal.mixin` on `tenancy.details`, record rules; links to native `/my/invoices` (Accounting portal). |
 | **rental_management_coretax** | `account` | Exports posted customer invoices / vendor credit notes to CORETAX/DJP XML; taxpayer data on `res.partner`/company; e-Faktur fields on `account.move`; CORETAX codes on `product.template`. |
 | **rental_management_purchase** | **`purchase`**, `account` | PO ↔ property/contract/maintenance links; `_prepare_invoice` propagates links to the vendor bill → property attribution + analytic + Payment Details. *Create PO* from a maintenance request. |
+| **rental_management_crm** | **`crm`** | Leasing pipeline: leasing fields on the lead (expected move-in/rent/months), *Create Lease Contract* (opens a tenancy pre-filled from the lead), Lease Contracts smart button, "Property Leasing" team + "Leasing" tag. |
+| **rental_management_project** | **`project`** (+ handover) | Turn a Fit-out handover into a `project.project` with one `project.task` per checklist item; tasks smart button. |
+| **rental_management_documents** | **`documents`** (Enterprise) | One `documents.document` folder per property; push the property's `ir.attachment`s into Documents and open the folder. |
 
 ## Cross-cutting integration: Analytic Accounting
 
