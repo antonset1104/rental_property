@@ -257,3 +257,30 @@ graph TD
 - Semua diagram bersifat **logis/fungsional**; nama field & hook mengikuti kode pada branch `claude/gallant-curie-dpaatp`.
 - Integrasi bersifat **decoupled** — modul memeriksa keberadaan field (mis. `property_manual_id`) sebelum memakainya, sehingga tiap modul dapat diinstal independen.
 - Validasi: sintaks Python/XML/CSV ✅; **smoke test pada Odoo 19 staging tetap wajib** sebelum produksi.
+
+---
+
+## Versi Gambar (PNG)
+
+Versi PNG resolusi tinggi (scale 2×) tersedia di `docs/diagrams/` untuk dipakai
+pada slide presentasi / dokumen cetak:
+
+| # | Diagram | File |
+|---|---------|------|
+| 1 | Arsitektur Sistem (Layered) | `diagrams/01-arsitektur-sistem.png` |
+| 2 | Arsitektur Data — Atribusi Properti | `diagrams/02-arsitektur-data.png` |
+| 3 | Siklus Hidup Tenant (E2E) | `diagrams/03-siklus-hidup-tenant.png` |
+| 4 | Billing Bulanan & Penagihan | `diagrams/04-billing-penagihan.png` |
+| 5 | Pengeluaran (Procurement & Maintenance) | `diagrams/05-pengeluaran.png` |
+| 6 | Tutup Periode (Owners Statement, Trust, Remittance) | `diagrams/06-tutup-periode.png` |
+| 7 | Fixed Asset — Depresiasi & Revaluation | `diagrams/07-fixed-asset.png` |
+| 8 | Integrasi Cross-Cutting Analytic | `diagrams/08-analytic-crosscutting.png` |
+
+![Arsitektur Sistem](diagrams/01-arsitektur-sistem.png)
+![Arsitektur Data](diagrams/02-arsitektur-data.png)
+![Siklus Hidup Tenant](diagrams/03-siklus-hidup-tenant.png)
+![Billing & Penagihan](diagrams/04-billing-penagihan.png)
+![Pengeluaran](diagrams/05-pengeluaran.png)
+![Tutup Periode](diagrams/06-tutup-periode.png)
+![Fixed Asset](diagrams/07-fixed-asset.png)
+![Analytic Cross-Cutting](diagrams/08-analytic-crosscutting.png)
