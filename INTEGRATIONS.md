@@ -23,6 +23,11 @@ All custom modules are companions to the third-party **`rental_management`**
 | **rental_management_rent_escalation** | `rental_management` (+cron) | Scheduled periodic rent increases (fixed % or amount) on contracts with an escalation log. |
 | **rental_management_dashboard** | `account` | Management KPIs: properties, active contracts, NOI, arrears, collection rate, leases expiring in 12m (per property/period). |
 | **rental_management_dunning** | `account`, `mail` (+cron) | Automated dunning ladder for overdue invoices: reminder emails (template) + optional late fees; per-move dunning level tracking. |
+| **rental_management_insurance** | `mail` (+cron) | Property/building insurance policy register with expiry reminder activities. |
+| **rental_management_lease_expiry** | `rental_management`, `mail` (+cron) | Lease-expiry list/filters (30/90 days) and automated renewal-reminder activities. |
+| **rental_management_vacancy** | `rental_management` | Vacancy/availability board: properties grouped by status (available/on-rent/booked) with filters. |
+| **rental_management_ppm** | `rental_management` (maintenance) | Preventive-maintenance plans that auto-generate `maintenance.request` on schedule, with SLA. |
+| **rental_management_parking** | `account` | Car-park bay register, allocation to tenants and parking rental invoicing (tagged to property). |
 
 ## Maintenance
 
