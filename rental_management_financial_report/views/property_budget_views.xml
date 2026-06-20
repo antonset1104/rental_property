@@ -20,8 +20,11 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm" type="object" string="Confirm"
+                    <button name="action_submit" type="object" string="Submit for Approval"
                             class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-primary" invisible="state != 'to_approve'"
+                            groups="account.group_account_manager"/>
                     <button name="action_generate_monthly_lines" type="object"
                             string="Generate Monthly Lines"/>
                     <button name="action_draft" type="object" string="Set to Draft"
@@ -40,6 +43,8 @@
                             <field name="date_from"/>
                             <field name="date_to"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="date_approved" readonly="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>

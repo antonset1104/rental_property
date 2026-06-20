@@ -28,6 +28,15 @@ All custom modules are companions to the third-party **`rental_management`**
 | **rental_management_vacancy** | `rental_management` | Vacancy/availability board: properties grouped by status (available/on-rent/booked) with filters. |
 | **rental_management_ppm** | `rental_management` (maintenance) | Preventive-maintenance plans that auto-generate `maintenance.request` on schedule, with SLA. |
 | **rental_management_parking** | `account` | Car-park bay register, allocation to tenants and parking rental invoicing (tagged to property). |
+| **rental_management_valuation** | `rental_management` | Periodic market valuation register per property + latest value on the property. |
+| **rental_management_access** | `rental_management` | Access/parking card register and visitor check-in log. |
+| **rental_management_esign** | `rental_management`, `mail` | Lightweight contract signature-request tracking (no Enterprise Sign app). |
+
+### Enhancements to `rental_management_financial_report`
+- **Budget approval workflow**: `property.budget` states Draft → To Approve → Approved
+  (approver + date), Approve restricted to `account.group_account_manager`.
+- **Multi-currency owner remittance**: `property.owner.remittance.currency_id` selectable;
+  posting converts to company currency at the remittance-date rate (`amount_currency`).
 
 ## Maintenance
 

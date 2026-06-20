@@ -20,7 +20,11 @@ class PropertyOwnerRemittance(models.Model):
                        default=fields.Date.today, tracking=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda s: s.env.company)
-    currency_id = fields.Many2one(related='company_id.currency_id')
+    currency_id = fields.Many2one(
+        'res.currency', string='Remittance Currency',
+        default=lambda s: s.env.company.currency_id,
+        help="Currency the owners are remitted in. If different from the company "
+             "currency, journal entries are converted at the remittance date rate.")
     state = fields.Selection([('draft', 'Draft'),
                               ('posted', 'Posted'),
                               ('cancel', 'Cancelled')],
@@ -83,25 +87,37 @@ class PropertyOwnerRemittance(models.Model):
                     "Remittance Journal on the property '%s' first.") % prop.name)
             if not rec.line_ids:
                 raise UserError(self.env._("Add at least one owner allocation."))
+            company = rec.company_id or self.env.company
+            comp_cur = company.currency_id
+            cur = rec.currency_id or comp_cur
+            rdate = rec.date or fields.Date.today()
+            foreign = cur != comp_cur
             move_lines = []
+            total_comp = 0.0
             for line in rec.line_ids:
                 if not line.amount:
                     continue
-                # Dr Owners Remittance (per owner)
-                move_lines.append((0, 0, {
+                comp_amt = cur._convert(line.amount, comp_cur, company, rdate) \
+                    if foreign else line.amount
+                total_comp += comp_amt
+                vals = {
                     'account_id': prop.remittance_account_id.id,
                     'partner_id': line.owner_id.id,
                     'name': self.env._('Remittance to %s') % line.owner_id.display_name,
-                    'debit': line.amount,
-                    'credit': 0.0,
-                }))
-            # Cr Trust Bank (total)
-            move_lines.append((0, 0, {
+                    'debit': comp_amt, 'credit': 0.0,
+                }
+                if foreign:
+                    vals.update(currency_id=cur.id, amount_currency=line.amount)
+                move_lines.append((0, 0, vals))
+            # Cr Trust Bank (total, company currency)
+            trust_vals = {
                 'account_id': prop.trust_account_id.id,
                 'name': self.env._('Owner remittance %s') % rec.name,
-                'debit': 0.0,
-                'credit': rec.total_amount,
-            }))
+                'debit': 0.0, 'credit': total_comp,
+            }
+            if foreign:
+                trust_vals.update(currency_id=cur.id, amount_currency=-rec.total_amount)
+            move_lines.append((0, 0, trust_vals))
             move = self.env['account.move'].create({
                 'move_type': 'entry',
                 'journal_id': prop.remittance_journal_id.id,

@@ -48,7 +48,7 @@
                             <field name="total_amount"/>
                             <field name="move_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" readonly="state != &quot;draft&quot;"/>
                         </group>
                     </group>
                     <field name="line_ids" readonly="state != 'draft'">

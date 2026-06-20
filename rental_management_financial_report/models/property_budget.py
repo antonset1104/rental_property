@@ -14,19 +14,28 @@ class PropertyBudget(models.Model):
     date_from = fields.Date(string='From', required=True)
     date_to = fields.Date(string='To', required=True)
     state = fields.Selection([('draft', 'Draft'),
-                              ('confirm', 'Confirmed'),
+                              ('to_approve', 'To Approve'),
+                              ('approved', 'Approved'),
                               ('cancel', 'Cancelled')],
                              default='draft', string='Status')
+    approver_id = fields.Many2one('res.users', string='Approved By', readonly=True,
+                                  copy=False)
+    date_approved = fields.Date(string='Approved On', readonly=True, copy=False)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
     currency_id = fields.Many2one(related='company_id.currency_id')
     line_ids = fields.One2many('property.budget.line', 'budget_id', string='Lines')
 
-    def action_confirm(self):
-        self.write({'state': 'confirm'})
+    def action_submit(self):
+        self.write({'state': 'to_approve'})
+
+    def action_approve(self):
+        self.write({'state': 'approved',
+                    'approver_id': self.env.user.id,
+                    'date_approved': fields.Date.today()})
 
     def action_draft(self):
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'approver_id': False, 'date_approved': False})
 
     def action_cancel(self):
         self.write({'state': 'cancel'})
