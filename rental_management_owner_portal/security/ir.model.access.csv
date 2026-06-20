@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_details_owner_portal,property.details owner portal,rental_management.model_property_details,base.group_portal,1,0,0,0
+access_ownership_line_owner_portal,property.ownership.line owner portal,rental_management_financial_report.model_property_ownership_line,base.group_portal,1,0,0,0
+access_owner_remittance_portal,property.owner.remittance owner portal,rental_management_financial_report.model_property_owner_remittance,base.group_portal,1,0,0,0
+access_owner_remittance_line_portal,property.owner.remittance.line owner portal,rental_management_financial_report.model_property_owner_remittance_line,base.group_portal,1,0,0,0

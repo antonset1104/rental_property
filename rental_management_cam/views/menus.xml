@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cam_period" name="CAM / Service Charge"
+              parent="rental_management.main_menu_rental_management"
+              action="action_cam_period" sequence="81"/>
+</odoo>

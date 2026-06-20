@@ -17,6 +17,12 @@ All custom modules are companions to the third-party **`rental_management`**
 | **rental_management_project** | **`project`** (+ handover) | Turn a Fit-out handover into a `project.project` with one `project.task` per checklist item; tasks smart button. |
 | **rental_management_documents** | **`documents`** (Enterprise) | One `documents.document` folder per property; push the property's `ir.attachment`s into Documents and open the folder. |
 | **rental_management_asset** | `account` (+ optional coretax) | Fixed-asset register with depreciation board → posts journal entries (tagged to property → Owners Statement + analytic); revaluation against a reserve account with prospective board recompute; one-click sync to the CORETAX L9 register. |
+| **rental_management_document_ce** | `rental_management` (Community) | Attachments register per property via `ir.attachment` (Community fallback for the Enterprise Documents integration). |
+| **rental_management_owner_portal** | **`portal`** (+financial_report) | Owner self-service `/my/properties` with their properties and owner remittances; record rules limit to owned properties. |
+| **rental_management_cam** | `account` | CAM / Service Charge: pool expenses (budget vs actual), apportion to tenants by area share, invoice the service charge (tagged to property). |
+| **rental_management_rent_escalation** | `rental_management` (+cron) | Scheduled periodic rent increases (fixed % or amount) on contracts with an escalation log. |
+| **rental_management_dashboard** | `account` | Management KPIs: properties, active contracts, NOI, arrears, collection rate, leases expiring in 12m (per property/period). |
+| **rental_management_dunning** | `account`, `mail` (+cron) | Automated dunning ladder for overdue invoices: reminder emails (template) + optional late fees; per-move dunning level tracking. |
 
 ## Maintenance
 
