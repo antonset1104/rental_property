@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_financial_reports_root"
+              name="Financial Reports"
+              parent="rental_management.main_menu_rental_management"
+              sequence="90"/>
+
+    <menuitem id="menu_owner_statement_wizard"
+              name="Owners Statement"
+              parent="menu_financial_reports_root"
+              action="action_owner_statement_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_property_owner_remittance"
+              name="Owner Remittances"
+              parent="menu_financial_reports_root"
+              action="action_property_owner_remittance"
+              sequence="15"/>
+
+    <menuitem id="menu_property_security_deposit"
+              name="Security Deposits"
+              parent="menu_financial_reports_root"
+              action="action_property_security_deposit"
+              sequence="18"/>
+
+    <menuitem id="menu_property_budget"
+              name="Property Budgets"
+              parent="menu_financial_reports_root"
+              action="action_property_budget"
+              sequence="20"/>
+
+    <menuitem id="menu_property_financial_category"
+              name="Report Categories"
+              parent="menu_financial_reports_root"
+              action="action_property_financial_category"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_kpi_dashboard_form" model="ir.ui.view">
+        <field name="name">property.kpi.dashboard.form</field>
+        <field name="model">property.kpi.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="KPI Dashboard">
+                <group>
+                    <group>
+                        <field name="property_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <group string="Portfolio">
+                    <group>
+                        <field name="total_properties"/>
+                        <field name="active_contracts"/>
+                        <field name="lease_expiring_12m"/>
+                    </group>
+                    <group>
+                        <field name="collection_rate"/>
+                        <field name="arrears_total"/>
+                    </group>
+                </group>
+                <group string="Financial Performance (Period)">
+                    <group>
+                        <field name="total_income"/>
+                        <field name="total_expense"/>
+                    </group>
+                    <group>
+                        <field name="noi"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_property_kpi_dashboard" model="ir.actions.act_window">
+        <field name="name">KPI Dashboard</field>
+        <field name="res_model">property.kpi.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_property_kpi_dashboard" name="KPI Dashboard"
+              parent="rental_management.main_menu_rental_management"
+              action="action_property_kpi_dashboard" sequence="2"/>
+</odoo>

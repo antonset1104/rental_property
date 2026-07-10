@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Home: add a "Contracts" card with live count -->
+    <template id="portal_my_home_contract" inherit_id="portal.portal_my_home"
+              name="Portal My Home: Contracts">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Contracts</t>
+                <t t-set="url" t-value="'/my/contracts'"/>
+                <t t-set="text">Your lease contracts</t>
+                <t t-set="placeholder_count" t-value="'contract_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Contracts list -->
+    <template id="portal_my_contracts" name="My Contracts">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Contracts</t>
+            </t>
+            <t t-if="not contracts">
+                <div class="alert alert-info" role="alert">
+                    There are currently no contracts for your account.
+                </div>
+            </t>
+            <t t-if="contracts" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Reference</th>
+                        <th>Property</th>
+                        <th>Start Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Rent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="contracts" t-as="contract">
+                        <td>
+                            <a t-attf-href="/my/contracts/#{contract.id}">
+                                <t t-out="contract.tenancy_seq"/>
+                            </a>
+                        </td>
+                        <td t-out="contract.portal_property_name"/>
+                        <td><span t-field="contract.start_date"/></td>
+                        <td><span t-field="contract.contract_type"/></td>
+                        <td class="text-end"><span t-field="contract.total_rent"/></td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <!-- Contract detail -->
+    <template id="portal_contract_page" name="Contract">
+        <t t-call="portal.portal_layout">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="mb-3">
+                        Contract <span t-out="contract.tenancy_seq"/>
+                    </h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <strong>Property:</strong>
+                                    <span t-out="contract.portal_property_name"/>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Tenant:</strong>
+                                    <span t-field="contract.tenancy_id"/>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Status:</strong>
+                                    <span t-field="contract.contract_type"/>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Payment Term:</strong>
+                                    <span t-field="contract.payment_term"/>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Start Date:</strong>
+                                    <span t-field="contract.start_date"/>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>End Date:</strong>
+                                    <span t-field="contract.end_date"/>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Rent:</strong>
+                                    <span t-field="contract.total_rent"/>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="/my/invoices" class="btn btn-primary">
+                                    <i class="fa fa-file-text-o"/> View My Invoices
+                                </a>
+                                <a href="/my/contracts" class="btn btn-link">
+                                    Back to Contracts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- L9 Depreciation / Amortization -->
+    <record id="view_coretax_depreciation_list" model="ir.ui.view">
+        <field name="name">coretax.asset.depreciation.list</field>
+        <field name="model">coretax.asset.depreciation</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="kind"/>
+                <field name="code_of_asset"/>
+                <field name="group_of_asset"/>
+                <field name="month_of_acquisition"/>
+                <field name="year_of_acquisition"/>
+                <field name="acquisition_price"/>
+                <field name="remaining_value"/>
+                <field name="commercial_method"/>
+                <field name="fiscal_method"/>
+                <field name="fiscal_depreciation_this_year"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_depreciation" model="ir.actions.act_window">
+        <field name="name">L9 Depreciation / Amortization</field>
+        <field name="res_model">coretax.asset.depreciation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L3B Withholding by Other Parties -->
+    <record id="view_coretax_withholding_other_list" model="ir.ui.view">
+        <field name="name">coretax.withholding.other.list</field>
+        <field name="model">coretax.withholding.other</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="partner_tin"/>
+                <field name="tax_type"/>
+                <field name="tax_base"/>
+                <field name="income_tax"/>
+                <field name="income_tax_usd"/>
+                <field name="slip_number"/>
+                <field name="slip_date"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_withholding_other" model="ir.actions.act_window">
+        <field name="name">L3B PPh Withheld by Other Parties</field>
+        <field name="res_model">coretax.withholding.other</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L11A Uncollectible Debt -->
+    <record id="view_coretax_uncollectible_list" model="ir.ui.view">
+        <field name="name">coretax.uncollectible.debt.list</field>
+        <field name="model">coretax.uncollectible.debt</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="identity_number"/>
+                <field name="name_of_recipient"/>
+                <field name="address"/>
+                <field name="debt_ceiling"/>
+                <field name="uncollectible_amount"/>
+                <field name="deduction_method"/>
+                <field name="proving_document_type"/>
+                <field name="remarks"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_uncollectible" model="ir.actions.act_window">
+        <field name="name">L11A Uncollectible Debt</field>
+        <field name="res_model">coretax.uncollectible.debt</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L11A Non-Performing Credit -->
+    <record id="view_coretax_nonperforming_list" model="ir.ui.view">
+        <field name="name">coretax.nonperforming.credit.list</field>
+        <field name="model">coretax.nonperforming.credit</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="identity_number"/>
+                <field name="debtor_name"/>
+                <field name="address"/>
+                <field name="amount_beginning"/>
+                <field name="amount_end_of_year"/>
+                <field name="amount_of_interest"/>
+                <field name="category"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_nonperforming" model="ir.actions.act_window">
+        <field name="name">L11A Non-Performing Credit</field>
+        <field name="res_model">coretax.nonperforming.credit</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L11A Promotion Expense -->
+    <record id="view_coretax_promotion_list" model="ir.ui.view">
+        <field name="name">coretax.promotion.expense.list</field>
+        <field name="model">coretax.promotion.expense</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="identity_number"/>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="date_of_promotion"/>
+                <field name="form_and_type"/>
+                <field name="amount_of_promotion"/>
+                <field name="amount_of_witholding"/>
+                <field name="witholding_slip_number"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_promotion" model="ir.actions.act_window">
+        <field name="name">L11A Promotion Expense</field>
+        <field name="res_model">coretax.promotion.expense</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L11A Entertainment Expense -->
+    <record id="view_coretax_entertainment_list" model="ir.ui.view">
+        <field name="name">coretax.entertainment.expense.list</field>
+        <field name="model">coretax.entertainment.expense</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="date_of_entertainment"/>
+                <field name="place"/>
+                <field name="address"/>
+                <field name="type_of_entertainment"/>
+                <field name="amount_of_entertainment"/>
+                <field name="name_of_business_partner"/>
+                <field name="position"/>
+                <field name="company_name"/>
+                <field name="business_type"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_entertainment" model="ir.actions.act_window">
+        <field name="name">L11A Entertainment Expense</field>
+        <field name="res_model">coretax.entertainment.expense</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- L10A Related-Party Transactions -->
+    <record id="view_coretax_related_party_list" model="ir.ui.view">
+        <field name="name">coretax.related.party.list</field>
+        <field name="model">coretax.related.party</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="tax_year"/>
+                <field name="name"/>
+                <field name="partner_tin"/>
+                <field name="country_code"/>
+                <field name="type_of_relation_code"/>
+                <field name="business_activity"/>
+                <field name="type_of_transaction_code"/>
+                <field name="transaction_value"/>
+                <field name="pricing_method_code"/>
+                <field name="reason_pricing"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_coretax_related_party" model="ir.actions.act_window">
+        <field name="name">L10A Related-Party Transactions</field>
+        <field name="res_model">coretax.related.party</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

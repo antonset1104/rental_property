@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_coretax_efaktur_wizard_user,coretax.efaktur.wizard user,model_coretax_efaktur_wizard,account.group_account_user,1,1,1,1
+access_coretax_efaktur_wizard_manager,coretax.efaktur.wizard manager,model_coretax_efaktur_wizard,account.group_account_manager,1,1,1,1
+access_coretax_asset_depreciation,coretax.asset.depreciation,model_coretax_asset_depreciation,account.group_account_user,1,1,1,1
+access_coretax_withholding_other,coretax.withholding.other,model_coretax_withholding_other,account.group_account_user,1,1,1,1
+access_coretax_uncollectible_debt,coretax.uncollectible.debt,model_coretax_uncollectible_debt,account.group_account_user,1,1,1,1
+access_coretax_nonperforming_credit,coretax.nonperforming.credit,model_coretax_nonperforming_credit,account.group_account_user,1,1,1,1
+access_coretax_promotion_expense,coretax.promotion.expense,model_coretax_promotion_expense,account.group_account_user,1,1,1,1
+access_coretax_entertainment_expense,coretax.entertainment.expense,model_coretax_entertainment_expense,account.group_account_user,1,1,1,1
+access_coretax_related_party,coretax.related.party,model_coretax_related_party,account.group_account_user,1,1,1,1

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="owner_statement_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="d" t-value="statements[o.id]"/>
+                    <div class="page">
+                        <style>
+                            .os table { width:100%; border-collapse:collapse; font-size:8px; }
+                            .os td, .os th { padding:1px 3px; }
+                            .os .num { text-align:right; white-space:nowrap; }
+                            .os .grp { font-weight:bold; background:#f0f0f0; }
+                            .os .sec { font-weight:bold; border-top:1px solid #000;
+                                       border-bottom:1px solid #000; background:#e2e8f0; }
+                            .os .tot { font-weight:bold; border-top:1px solid #000; }
+                            .os h2 { font-size:13px; margin:6px 0 2px; color:#1F3964; }
+                            .os h3 { font-size:11px; margin:10px 0 2px; color:#006A4E;
+                                     border-bottom:2px solid #006A4E; padding-bottom:1px; }
+                            .os .hdr th { border-bottom:1px solid #999; font-weight:bold;
+                                          text-align:right; }
+                            .os .lbl { text-align:left; }
+                            .os .meta td { font-size:9px; padding:1px 6px; }
+                        </style>
+                        <div class="os">
+                            <!-- ===== HEADER ===== -->
+                            <h2>OWNERS STATEMENT</h2>
+                            <table class="meta">
+                                <tr>
+                                    <td style="width:12%"><b>Property</b></td>
+                                    <td style="width:55%" t-out="d['property'].name"/>
+                                    <td style="width:13%"><b>Period</b></td>
+                                    <td t-out="d['period_label']"/>
+                                </tr>
+                                <tr>
+                                    <td><b>Owner(s)</b></td>
+                                    <td>
+                                        <t t-if="d['owners']">
+                                            <span t-foreach="d['owners']" t-as="ow">
+                                                <span t-out="ow['name']"/> (<span t-out="ow['pct']"/>)<br/>
+                                            </span>
+                                        </t>
+                                        <t t-else=""><span t-out="d['property'].landlord_id.name or ''"/></t>
+                                    </td>
+                                    <td><b>Property Manager</b></td>
+                                    <td t-out="d['manager']"/>
+                                </tr>
+                                <tr>
+                                    <td><b>Company</b></td>
+                                    <td t-out="d['company'].name"/>
+                                    <td><b>Telephone</b></td>
+                                    <td t-out="d['phone']"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== 1. PERFORMANCE SUMMARY ===== -->
+                            <h3>1. PERFORMANCE SUMMARY (Accrual)</h3>
+                            <table>
+                                <tr class="hdr">
+                                    <th class="lbl">Description</th>
+                                    <th>Actual (Period)</th><th>Budget (Period)</th>
+                                    <th>Variance</th><th>% Var</th>
+                                    <th>Actual (YTD)</th><th>Budget (YTD)</th>
+                                    <th>Variance</th><th>% Var</th>
+                                </tr>
+                                <tr t-foreach="d['perf']['accrual_rows']" t-as="r">
+                                    <td class="lbl" t-out="r['label']"/>
+                                    <td class="num" t-out="r['c_act']"/>
+                                    <td class="num" t-out="r['c_bud']"/>
+                                    <td class="num" t-out="r['c_var']"/>
+                                    <td class="num" t-out="r['c_pct']"/>
+                                    <td class="num" t-out="r['y_act']"/>
+                                    <td class="num" t-out="r['y_bud']"/>
+                                    <td class="num" t-out="r['y_var']"/>
+                                    <td class="num" t-out="r['y_pct']"/>
+                                </tr>
+                                <tr class="tot">
+                                    <td class="lbl" t-out="d['perf']['net_return']['label']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['c_act']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['c_bud']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['c_var']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['c_pct']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['y_act']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['y_bud']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['y_var']"/>
+                                    <td class="num" t-out="d['perf']['net_return']['y_pct']"/>
+                                </tr>
+                            </table>
+                            <table style="margin-top:4px; width:55%;">
+                                <tr class="hdr">
+                                    <th class="lbl">Cash Summary &amp; Trust Reconciliation</th>
+                                    <th>Amount (Period)</th>
+                                </tr>
+                                <tr t-foreach="d['cash_summary']" t-as="cr"
+                                    t-att-class="'tot' if cr.get('bold') else ''">
+                                    <td class="lbl" t-out="cr['label']"/>
+                                    <td class="num" t-out="cr['v']"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== 2. INCOME &amp; EXPENDITURE (ACCRUAL) ===== -->
+                            <h3>2. INCOME &amp; EXPENDITURE REPORT (Accrual)</h3>
+                            <table>
+                                <tr class="hdr">
+                                    <th class="lbl">Account</th>
+                                    <th>Actual (P)</th><th>Budget (P)</th><th>Var</th><th>%</th>
+                                    <th>Actual (YTD)</th><th>Budget (YTD)</th><th>Var</th><th>%</th>
+                                    <th>Annual Budget</th>
+                                </tr>
+                                <t t-foreach="d['income_exp']['sections']" t-as="sec">
+                                    <tr class="sec"><td class="lbl" colspan="10" t-out="sec['label']"/></tr>
+                                    <t t-foreach="sec['groups']" t-as="g">
+                                        <tr class="grp"><td class="lbl" colspan="10" t-out="g['label']"/></tr>
+                                        <tr t-foreach="g['rows']" t-as="r">
+                                            <td class="lbl">
+                                                <span t-out="r['code']"/> <span t-out="r['name']"/>
+                                            </td>
+                                            <td class="num" t-out="r['c_act']"/>
+                                            <td class="num" t-out="r['c_bud']"/>
+                                            <td class="num" t-out="r['c_var']"/>
+                                            <td class="num" t-out="r['c_pct']"/>
+                                            <td class="num" t-out="r['y_act']"/>
+                                            <td class="num" t-out="r['y_bud']"/>
+                                            <td class="num" t-out="r['y_var']"/>
+                                            <td class="num" t-out="r['y_pct']"/>
+                                            <td class="num" t-out="r['a_bud']"/>
+                                        </tr>
+                                        <tr class="tot">
+                                            <td class="lbl" t-out="g['label'] + ' Total'"/>
+                                            <td class="num" t-out="g['sub']['c_act']"/>
+                                            <td class="num" t-out="g['sub']['c_bud']"/>
+                                            <td/><td/>
+                                            <td class="num" t-out="g['sub']['y_act']"/>
+                                            <td class="num" t-out="g['sub']['y_bud']"/>
+                                            <td/><td/>
+                                            <td class="num" t-out="g['sub']['a_bud']"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr class="tot">
+                                    <td class="lbl">TOTAL INCOME</td>
+                                    <td class="num" t-out="d['income_exp']['total_income']['c']"/>
+                                    <td/><td/><td/>
+                                    <td class="num" t-out="d['income_exp']['total_income']['y']"/>
+                                    <td/><td/><td/>
+                                    <td class="num" t-out="d['income_exp']['total_income']['a']"/>
+                                </tr>
+                                <tr class="tot">
+                                    <td class="lbl">TOTAL EXPENSE</td>
+                                    <td class="num" t-out="d['income_exp']['total_expense']['c']"/>
+                                    <td/><td/><td/>
+                                    <td class="num" t-out="d['income_exp']['total_expense']['y']"/>
+                                    <td/><td/><td/>
+                                    <td class="num" t-out="d['income_exp']['total_expense']['a']"/>
+                                </tr>
+                                <tr class="tot">
+                                    <td class="lbl">NET RETURN</td>
+                                    <td class="num" t-out="d['income_exp']['net_return']['c']"/>
+                                    <td/><td/><td/>
+                                    <td class="num" t-out="d['income_exp']['net_return']['y']"/>
+                                    <td/><td/><td/>
+                                    <td class="num" t-out="d['income_exp']['net_return']['a']"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== 3. RECEIPTS &amp; PAYMENTS (CASH) ===== -->
+                            <h3>3. RECEIPTS &amp; PAYMENTS REPORT (Cash)</h3>
+                            <table>
+                                <tr class="hdr"><th class="lbl">Receipts</th><th>Amount</th></tr>
+                                <tr t-foreach="d['cash']['receipts']" t-as="r">
+                                    <td class="lbl"><span t-out="r['code']"/> <span t-out="r['name']"/></td>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">TOTAL RECEIPTS</td>
+                                    <td class="num" t-out="d['cash']['r_total']"/></tr>
+                                <tr class="hdr"><th class="lbl">Payments</th><th>Amount</th></tr>
+                                <tr t-foreach="d['cash']['payments']" t-as="r">
+                                    <td class="lbl"><span t-out="r['code']"/> <span t-out="r['name']"/></td>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">TOTAL PAYMENTS</td>
+                                    <td class="num" t-out="d['cash']['p_total']"/></tr>
+                                <tr class="tot"><td class="lbl">NET CASH</td>
+                                    <td class="num" t-out="d['cash']['net_cash']"/></tr>
+                            </table>
+
+                            <!-- ===== 4. TENANT BALANCES ===== -->
+                            <h3>4. TENANT BALANCES</h3>
+                            <table>
+                                <tr class="hdr">
+                                    <th class="lbl">Tenant</th><th>Beginning</th>
+                                    <th>Recurring Charges</th><th>Other Charges</th>
+                                    <th>Cash Receipts</th><th>End Balance</th>
+                                    <th>Sec Dep Bal</th>
+                                </tr>
+                                <tr t-foreach="d['tenants']['rows']" t-as="r">
+                                    <td class="lbl" t-out="r['name']"/>
+                                    <td class="num" t-out="r['beginning']"/>
+                                    <td class="num" t-out="r['recurring']"/>
+                                    <td class="num" t-out="r['other']"/>
+                                    <td class="num" t-out="r['receipts']"/>
+                                    <td class="num" t-out="r['ending']"/>
+                                    <td class="num" t-out="r['secdep']"/>
+                                </tr>
+                                <tr class="tot">
+                                    <td class="lbl">TOTAL</td>
+                                    <td class="num" t-out="d['tenants']['totals']['beginning']"/>
+                                    <td class="num" t-out="d['tenants']['totals']['recurring']"/>
+                                    <td class="num" t-out="d['tenants']['totals']['other']"/>
+                                    <td class="num" t-out="d['tenants']['totals']['receipts']"/>
+                                    <td class="num" t-out="d['tenants']['totals']['ending']"/>
+                                    <td class="num" t-out="d['tenants']['totals']['secdep']"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== 5. AGED ARREARS ===== -->
+                            <h3>5. AGED ARREARS REPORT</h3>
+                            <table>
+                                <tr class="hdr">
+                                    <th class="lbl">Tenant</th><th>Current</th><th>1 Month</th>
+                                    <th>2 Months</th><th>3 Months</th><th>4+ Months</th><th>Total</th>
+                                </tr>
+                                <tr t-foreach="d['arrears']['rows']" t-as="r">
+                                    <td class="lbl" t-out="r['name']"/>
+                                    <td class="num" t-out="r['current']"/>
+                                    <td class="num" t-out="r['m1']"/>
+                                    <td class="num" t-out="r['m2']"/>
+                                    <td class="num" t-out="r['m3']"/>
+                                    <td class="num" t-out="r['m4']"/>
+                                    <td class="num" t-out="r['total']"/>
+                                </tr>
+                                <tr class="tot">
+                                    <td class="lbl">GRAND TOTAL</td>
+                                    <td class="num" t-out="d['arrears']['totals']['current']"/>
+                                    <td class="num" t-out="d['arrears']['totals']['m1']"/>
+                                    <td class="num" t-out="d['arrears']['totals']['m2']"/>
+                                    <td class="num" t-out="d['arrears']['totals']['m3']"/>
+                                    <td class="num" t-out="d['arrears']['totals']['m4']"/>
+                                    <td class="num" t-out="d['arrears']['totals']['total']"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== 6. PAYMENT DETAILS ===== -->
+                            <h3>6. PAYMENT DETAILS REPORT</h3>
+                            <table>
+                                <tr class="hdr">
+                                    <th class="lbl">Account / Supplier</th><th class="lbl">Reference</th>
+                                    <th class="lbl">Date</th><th>Amount</th>
+                                </tr>
+                                <t t-foreach="d['payments']['groups']" t-as="g">
+                                    <tr class="grp"><td class="lbl" colspan="4">
+                                        <span t-out="g['code']"/> <span t-out="g['name']"/></td></tr>
+                                    <tr t-foreach="g['rows']" t-as="r">
+                                        <td class="lbl" t-out="r['supplier']"/>
+                                        <td class="lbl" t-out="r['ref']"/>
+                                        <td class="lbl" t-out="r['date']"/>
+                                        <td class="num" t-out="r['amount']"/>
+                                    </tr>
+                                    <tr class="tot"><td class="lbl" colspan="3" t-out="'Account Total'"/>
+                                        <td class="num" t-out="g['sum']"/></tr>
+                                </t>
+                                <tr class="grp"><td class="lbl" colspan="4">Owners Remittance</td></tr>
+                                <tr t-foreach="d['remittances']['rows']" t-as="r">
+                                    <td class="lbl" t-out="r['supplier']"/>
+                                    <td class="lbl" t-out="r['ref']"/>
+                                    <td class="lbl" t-out="r['date']"/>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl" colspan="3">Total Remittances</td>
+                                    <td class="num" t-out="d['remittances']['total']"/></tr>
+                                <tr class="tot"><td class="lbl" colspan="3">GRAND TOTAL (Bills)</td>
+                                    <td class="num" t-out="d['payments']['total']"/></tr>
+                            </table>
+
+                            <!-- ===== 7. TRIAL BALANCE ===== -->
+                            <h3>7. TRIAL BALANCE</h3>
+                            <table>
+                                <tr class="hdr">
+                                    <th class="lbl">Account</th><th>Opening</th>
+                                    <th>Debit</th><th>Credit</th><th>Closing</th>
+                                </tr>
+                                <tr t-foreach="d['trial']" t-as="r">
+                                    <td class="lbl"><span t-out="r['code']"/> <span t-out="r['name']"/></td>
+                                    <td class="num" t-out="r['opening']"/>
+                                    <td class="num" t-out="r['debit']"/>
+                                    <td class="num" t-out="r['credit']"/>
+                                    <td class="num" t-out="r['closing']"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== 8. BALANCE SHEET ===== -->
+                            <h3>8. BALANCE SHEET</h3>
+                            <table>
+                                <tr class="sec"><td class="lbl" colspan="2">ASSETS</td></tr>
+                                <tr t-foreach="d['balance']['assets']" t-as="r">
+                                    <td class="lbl"><span t-out="r['code']"/> <span t-out="r['name']"/></td>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">TOTAL ASSETS</td>
+                                    <td class="num" t-out="d['balance']['assets_total']"/></tr>
+                                <tr class="sec"><td class="lbl" colspan="2">LIABILITIES</td></tr>
+                                <tr t-foreach="d['balance']['liabilities']" t-as="r">
+                                    <td class="lbl"><span t-out="r['code']"/> <span t-out="r['name']"/></td>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">TOTAL LIABILITIES</td>
+                                    <td class="num" t-out="d['balance']['liabilities_total']"/></tr>
+                                <tr class="tot"><td class="lbl">NET ASSETS</td>
+                                    <td class="num" t-out="d['balance']['net_assets']"/></tr>
+                                <tr class="sec"><td class="lbl" colspan="2">EQUITY</td></tr>
+                                <tr t-foreach="d['balance']['equity']" t-as="r">
+                                    <td class="lbl"><span t-out="r['code']"/> <span t-out="r['name']"/></td>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">TOTAL EQUITY</td>
+                                    <td class="num" t-out="d['balance']['equity_total']"/></tr>
+                            </table>
+
+                            <!-- ===== 9. GST RECONCILIATION ===== -->
+                            <h3>9. GST RECONCILIATION</h3>
+                            <table>
+                                <tr class="hdr"><th class="lbl">GST Output (on Sales)</th><th>Amount</th></tr>
+                                <tr t-foreach="d['gst']['output']" t-as="r">
+                                    <td class="lbl" t-out="r['name']"/>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">Total GST Output (Payable)</td>
+                                    <td class="num" t-out="d['gst']['output_total']"/></tr>
+                                <tr class="hdr"><th class="lbl">GST Input (on Purchases)</th><th>Amount</th></tr>
+                                <tr t-foreach="d['gst']['input']" t-as="r">
+                                    <td class="lbl" t-out="r['name']"/>
+                                    <td class="num" t-out="r['amount']"/>
+                                </tr>
+                                <tr class="tot"><td class="lbl">Total GST Input (Claimable)</td>
+                                    <td class="num" t-out="d['gst']['input_total']"/></tr>
+                                <tr class="tot"><td class="lbl">NET GST PAYABLE</td>
+                                    <td class="num" t-out="d['gst']['net']"/></tr>
+                            </table>
+
+                            <p style="font-size:7px; margin-top:8px; color:#777;">
+                                Generated from posted journal entries linked to this property.
+                                Cash-basis figures (Receipts &amp; Payments) are derived from
+                                payment allocations within the period. Configure account →
+                                Property Report Category mapping and property budgets for full
+                                classification and variance analysis.
+                            </p>
+                        </div>
+                    </div>
+            </t>
+        </t>
+    </template>
+</odoo>

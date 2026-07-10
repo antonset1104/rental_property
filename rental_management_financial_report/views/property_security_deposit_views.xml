@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_security_deposit_list" model="ir.ui.view">
+        <field name="name">property.security.deposit.list</field>
+        <field name="model">property.security.deposit</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="tenancy_id"/>
+                <field name="tenant_id"/>
+                <field name="date"/>
+                <field name="amount"/>
+                <field name="balance"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'held'"
+                       decoration-muted="state == 'closed'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_property_security_deposit_form" model="ir.ui.view">
+        <field name="name">property.security.deposit.form</field>
+        <field name="model">property.security.deposit</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_hold" type="object" string="Mark as Held"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_post_lines" type="object"
+                            string="Post Deductions/Refunds" invisible="state != 'held'"/>
+                    <button name="action_close" type="object" string="Close"
+                            invisible="state != 'held'"/>
+                    <button name="action_draft" type="object" string="Set to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tenancy_id" readonly="state != 'draft'"/>
+                            <field name="tenant_id"/>
+                            <field name="property_id"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="amount" readonly="state != 'draft'"/>
+                            <field name="deducted_amount"/>
+                            <field name="refunded_amount"/>
+                            <field name="balance"/>
+                            <field name="receipt_move_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="line_type"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                            <field name="reason"/>
+                            <field name="move_id" readonly="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_security_deposit" model="ir.actions.act_window">
+        <field name="name">Security Deposits</field>
+        <field name="res_model">property.security.deposit</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="product_parking" model="product.product">
+        <field name="name">Parking Rental</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="True"/><field name="purchase_ok" eval="False"/>
+    </record>
+</data></odoo>

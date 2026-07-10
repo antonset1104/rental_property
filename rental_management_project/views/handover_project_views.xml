@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_handover_form_project" model="ir.ui.view">
+        <field name="name">property.handover.form.project</field>
+        <field name="model">property.handover</field>
+        <field name="inherit_id"
+               ref="rental_management_handover.view_property_handover_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_fitout_project" type="object"
+                        string="Create Fit-out Project"
+                        invisible="handover_type != 'fit_out' or project_id"/>
+                <button name="action_view_tasks" type="object"
+                        string="Fit-out Tasks"
+                        invisible="not project_id"/>
+            </xpath>
+            <xpath expr="//field[@name='responsible_id']" position="after">
+                <field name="project_id" invisible="handover_type != 'fit_out'"/>
+                <field name="task_count" invisible="not project_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_property_purchase_order"
+              name="Property Purchase Orders"
+              parent="rental_management.main_menu_rental_management"
+              action="action_property_purchase_order"
+              sequence="82"/>
+</odoo>

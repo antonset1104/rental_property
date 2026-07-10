@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ppm_plan_list" model="ir.ui.view">
+        <field name="name">property.ppm.plan.list</field>
+        <field name="model">property.ppm.plan</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/><field name="property_id"/><field name="category_id"/>
+                <field name="frequency_months"/><field name="next_date"/>
+                <field name="sla_days"/><field name="request_count"/><field name="user_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ppm_plan_form" model="ir.ui.view">
+        <field name="name">property.ppm.plan.form</field>
+        <field name="model">property.ppm.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate_now" type="object" string="Generate Request Now" class="btn-primary"/>
+                    <button name="action_view_requests" type="object" string="Requests"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/><field name="property_id"/><field name="category_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="frequency_months"/><field name="next_date"/>
+                            <field name="sla_days"/><field name="request_count"/><field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_ppm_plan" model="ir.actions.act_window">
+        <field name="name">Preventive Maintenance</field>
+        <field name="res_model">property.ppm.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_ppm_plan" name="Preventive Maintenance"
+              parent="rental_management.main_menu_rental_management"
+              action="action_ppm_plan" sequence="78"/>
+</odoo>

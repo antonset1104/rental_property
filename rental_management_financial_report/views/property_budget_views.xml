@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_budget_list" model="ir.ui.view">
+        <field name="name">property.budget.list</field>
+        <field name="model">property.budget</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_property_budget_form" model="ir.ui.view">
+        <field name="name">property.budget.form</field>
+        <field name="model">property.budget</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit for Approval"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-primary" invisible="state != 'to_approve'"
+                            groups="account.group_account_manager"/>
+                    <button name="action_generate_monthly_lines" type="object"
+                            string="Generate Monthly Lines"/>
+                    <button name="action_draft" type="object" string="Set to Draft"
+                            invisible="state == 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state == 'cancel'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="property_id"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="date_approved" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="account_id"/>
+                            <field name="category_id"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_budget" model="ir.actions.act_window">
+        <field name="name">Property Budgets</field>
+        <field name="res_model">property.budget</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

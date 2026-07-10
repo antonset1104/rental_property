@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_coretax_root"
+              name="CORETAX"
+              parent="rental_management.main_menu_rental_management"
+              sequence="92"/>
+
+    <menuitem id="menu_coretax_efaktur"
+              name="e-Faktur / SPT Export"
+              parent="menu_coretax_root"
+              action="action_coretax_efaktur_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_coretax_spt_registers"
+              name="SPT Registers"
+              parent="menu_coretax_root"
+              sequence="20"/>
+
+    <menuitem id="menu_coretax_depreciation"
+              name="L9 Depreciation/Amortization"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_depreciation"
+              sequence="10"/>
+    <menuitem id="menu_coretax_withholding_other"
+              name="L3B Withheld by Others"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_withholding_other"
+              sequence="20"/>
+    <menuitem id="menu_coretax_uncollectible"
+              name="L11A Uncollectible Debt"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_uncollectible"
+              sequence="30"/>
+    <menuitem id="menu_coretax_nonperforming"
+              name="L11A Non-Performing Credit"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_nonperforming"
+              sequence="40"/>
+    <menuitem id="menu_coretax_promotion"
+              name="L11A Promotion Expense"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_promotion"
+              sequence="50"/>
+    <menuitem id="menu_coretax_entertainment"
+              name="L11A Entertainment Expense"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_entertainment"
+              sequence="60"/>
+    <menuitem id="menu_coretax_related_party"
+              name="L10A Related-Party Transactions"
+              parent="menu_coretax_spt_registers"
+              action="action_coretax_related_party"
+              sequence="70"/>
+</odoo>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_handover_list" model="ir.ui.view">
+        <field name="name">property.handover.list</field>
+        <field name="model">property.handover</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancel'"
+                  decoration-success="state == 'done'">
+                <field name="name"/>
+                <field name="handover_type"/>
+                <field name="tenancy_id"/>
+                <field name="tenant_id"/>
+                <field name="property_id"/>
+                <field name="scheduled_date"/>
+                <field name="actual_date"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'progress'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_property_handover_form" model="ir.ui.view">
+        <field name="name">property.handover.form</field>
+        <field name="model">property.handover</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate_checklist" type="object"
+                            string="Load Default Checklist"
+                            invisible="state == 'done'"/>
+                    <button name="action_start" type="object" string="Start"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_complete" type="object" string="Complete"
+                            class="btn-primary" invisible="state != 'progress'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('done', 'cancel')"/>
+                    <button name="action_draft" type="object" string="Set to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="handover_type"/>
+                            <field name="tenancy_id"/>
+                            <field name="tenant_id"/>
+                            <field name="property_id"/>
+                        </group>
+                        <group>
+                            <field name="scheduled_date"/>
+                            <field name="actual_date"/>
+                            <field name="responsible_id"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Fit-out" invisible="handover_type != 'fit_out'">
+                        <group>
+                            <field name="contractor_id"/>
+                            <field name="bond_amount"/>
+                        </group>
+                        <group>
+                            <field name="fitout_start"/>
+                            <field name="fitout_end"/>
+                        </group>
+                    </group>
+                    <group string="Condition &amp; Keys">
+                        <group>
+                            <field name="keys_issued"
+                                   invisible="handover_type == 'move_out'"/>
+                            <field name="keys_returned"
+                                   invisible="handover_type != 'move_out'"/>
+                            <field name="make_good_required"
+                                   invisible="handover_type != 'move_out'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Checklist" name="checklist">
+                            <field name="checklist_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="is_done" widget="boolean_toggle"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Condition Report" name="condition">
+                            <field name="condition_notes"
+                                   placeholder="Describe the condition of the space..."/>
+                        </page>
+                        <page string="Make-good" name="make_good"
+                              invisible="handover_type != 'move_out'">
+                            <field name="make_good_notes"
+                                   placeholder="Reinstatement / make-good requirements..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_property_handover_search" model="ir.ui.view">
+        <field name="name">property.handover.search</field>
+        <field name="model">property.handover</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="tenancy_id"/>
+                <field name="tenant_id"/>
+                <field name="property_id"/>
+                <filter name="move_in" string="Move-in"
+                        domain="[('handover_type', '=', 'move_in')]"/>
+                <filter name="fit_out" string="Fit-out"
+                        domain="[('handover_type', '=', 'fit_out')]"/>
+                <filter name="move_out" string="Move-out"
+                        domain="[('handover_type', '=', 'move_out')]"/>
+                <separator/>
+                <filter name="open" string="Open"
+                        domain="[('state', 'in', ('draft', 'progress'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'handover_type'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_property" string="Property"
+                            context="{'group_by': 'property_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_property_handover" model="ir.actions.act_window">
+        <field name="name">Handovers</field>
+        <field name="res_model">property.handover</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_property_handover_search"/>
+    </record>
+</odoo>

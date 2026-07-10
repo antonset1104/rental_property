@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_coretax" model="ir.ui.view">
+        <field name="name">res.partner.form.coretax</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="CORETAX" name="coretax">
+                    <group>
+                        <group string="Taxpayer Identification">
+                            <field name="coretax_tin"/>
+                            <field name="coretax_idtku"/>
+                        </group>
+                        <group string="Buyer Document">
+                            <field name="coretax_doc_type"/>
+                            <field name="coretax_doc_number"/>
+                            <field name="coretax_country"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

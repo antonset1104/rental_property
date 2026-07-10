@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_coretax_efaktur_wizard_form" model="ir.ui.view">
+        <field name="name">coretax.efaktur.wizard.form</field>
+        <field name="model">coretax.efaktur.wizard</field>
+        <field name="arch" type="xml">
+            <form string="CORETAX e-Faktur Export">
+                <group invisible="state != 'choose'">
+                    <field name="export_type"/>
+                    <field name="is_register" invisible="1"/>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="date_from" invisible="is_register"
+                               required="not is_register"/>
+                        <field name="date_to" invisible="is_register"
+                               required="not is_register"/>
+                        <field name="tax_year" invisible="not is_register"
+                               required="is_register"/>
+                    </group>
+                    <group invisible="is_register">
+                        <field name="only_unexported"/>
+                        <field name="only_property"/>
+                    </group>
+                </group>
+                <div invisible="state != 'done'">
+                    <div class="alert alert-success" role="alert">
+                        Exported <field name="invoice_count" class="oe_inline"/> invoice(s).
+                        Download the file below and upload it to CORETAX.
+                    </div>
+                    <field name="file_name" invisible="1"/>
+                    <field name="file_data" filename="file_name" readonly="1"/>
+                </div>
+                <footer>
+                    <button name="action_export" type="object" string="Export XML"
+                            class="btn-primary" invisible="state != 'choose'"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_coretax_efaktur_wizard" model="ir.actions.act_window">
+        <field name="name">CORETAX e-Faktur Export</field>
+        <field name="res_model">coretax.efaktur.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_coretax_efaktur_from_moves" model="ir.actions.act_window">
+        <field name="name">Export e-Faktur (CORETAX)</field>
+        <field name="res_model">coretax.efaktur.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,form</field>
+    </record>
+</odoo>

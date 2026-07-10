@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cam_period_list" model="ir.ui.view">
+        <field name="name">property.cam.period.list</field>
+        <field name="model">property.cam.period</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="charge_basis"/>
+                <field name="total_charge"/>
+                <field name="state" widget="badge" decoration-success="state == 'invoiced'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_cam_period_form" model="ir.ui.view">
+        <field name="name">property.cam.period.form</field>
+        <field name="model">property.cam.period</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_create_invoices" type="object"
+                            string="Create Invoices" class="btn-primary"
+                            invisible="state == 'invoiced'"/>
+                    <button name="action_draft" type="object" string="Set to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="property_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="total_area"/>
+                            <field name="charge_basis"/>
+                            <field name="product_id"/>
+                            <field name="total_budget"/>
+                            <field name="total_actual"/>
+                            <field name="total_charge"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Expenses (Budget vs Actual)">
+                            <field name="expense_line_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="budget_amount"/>
+                                    <field name="actual_amount"/>
+                                    <field name="variance"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tenant Apportionment">
+                            <field name="tenant_line_ids">
+                                <list editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="tenancy_id"/>
+                                    <field name="area"/>
+                                    <field name="share"/>
+                                    <field name="amount"/>
+                                    <field name="invoice_id" readonly="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_cam_period" model="ir.actions.act_window">
+        <field name="name">CAM / Service Charge</field>
+        <field name="res_model">property.cam.period</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

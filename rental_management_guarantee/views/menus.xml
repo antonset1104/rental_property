@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Reuse the Leasing Operations menu if the GTO/Meter module created it,
+         otherwise fall back to the main rental menu. -->
+    <menuitem id="menu_tenant_guarantee"
+              name="Tenant Guarantees"
+              parent="rental_management.main_menu_rental_management"
+              action="action_property_tenant_guarantee"
+              sequence="86"/>
+</odoo>

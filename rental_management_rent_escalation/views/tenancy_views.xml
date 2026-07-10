@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tenancy_form_escalation" model="ir.ui.view">
+        <field name="name">tenancy.details.form.escalation</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Rent Escalation" name="rent_escalation">
+                    <group>
+                        <group>
+                            <field name="is_escalation"/>
+                            <field name="escalation_type" invisible="not is_escalation"/>
+                            <field name="escalation_value" invisible="not is_escalation"/>
+                        </group>
+                        <group>
+                            <field name="escalation_frequency_months" invisible="not is_escalation"/>
+                            <field name="escalation_next_date" invisible="not is_escalation"/>
+                            <button name="action_apply_escalation_now" type="object"
+                                    string="Apply Escalation Now" class="btn-link"
+                                    invisible="not is_escalation"/>
+                        </group>
+                    </group>
+                    <field name="escalation_log_ids" invisible="not is_escalation">
+                        <list>
+                            <field name="date"/>
+                            <field name="old_rent"/>
+                            <field name="new_rent"/>
+                            <field name="note"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
