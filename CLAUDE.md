@@ -144,6 +144,7 @@ Saat modul/fitur berubah, perbarui yang tersentuh dari daftar ini:
 | `docs/Panduan_Pengguna_Fitur_Sesuai_Alur_Bisnis.docx` | panduan non-teknis 13 BAB urut alur bisnis |
 | `docs/UAT_Tracker_Custom_Modules.xlsx` | kasus UAT (79+) dengan dropdown Status, COUNTIF Summary, sheet Sign-off |
 | `docs/Daftar_Pertanyaan_SME_Komprehensif_Semua_Modul.docx` | kuesioner SME (117 pertanyaan, area A–AF, kolom jawaban) |
+| `docs/Project_Plan_Timeline_Implementasi.docx` | project plan 6 fase (1 Jul 2026 – go-live 1 Jan 2027), Gantt, migrasi/cut-over, risiko, kriteria go/no-go |
 
 **Berkas .docx/.xlsx adalah hasil generate, jangan pernah diedit langsung.**
 Generatornya ada di **`tools/docgen/`** (python-docx/openpyxl) — ubah
