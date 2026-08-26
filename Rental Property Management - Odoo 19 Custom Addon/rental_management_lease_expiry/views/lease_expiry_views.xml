@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lease_expiry_search" model="ir.ui.view">
+        <field name="name">tenancy.details.search.expiry</field>
+        <field name="model">tenancy.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="property_id"/>
+                <filter name="exp_30" string="Expiring 30 days"
+                        domain="[('duration_end_date','&gt;=',context_today().strftime('%Y-%m-%d')),('duration_end_date','&lt;=',(context_today()+relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="exp_90" string="Expiring 90 days"
+                        domain="[('duration_end_date','&gt;=',context_today().strftime('%Y-%m-%d')),('duration_end_date','&lt;=',(context_today()+relativedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+                <separator string="Group By"/>
+                <filter name="g_property" string="Property" context="{'group_by':'property_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_lease_expiry" model="ir.actions.act_window">
+        <field name="name">Lease Expiry</field>
+        <field name="res_model">tenancy.details</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_lease_expiry_search"/>
+        <field name="context">{'search_default_exp_90': 1, 'search_default_g_property': 1}</field>
+    </record>
+    <menuitem id="menu_lease_expiry" name="Lease Expiry"
+              parent="rental_management.main_menu_rental_management"
+              action="action_lease_expiry" sequence="79"/>
+</odoo>

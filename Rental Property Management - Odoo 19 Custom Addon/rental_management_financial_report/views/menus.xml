@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_financial_reports_root"
+              name="Financial Reports"
+              parent="rental_management.main_menu_rental_management"
+              sequence="90"/>
+
+    <menuitem id="menu_owner_statement_wizard"
+              name="Owners Statement"
+              parent="menu_financial_reports_root"
+              action="action_owner_statement_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_property_owner_remittance"
+              name="Owner Remittances"
+              parent="menu_financial_reports_root"
+              action="action_property_owner_remittance"
+              sequence="15"/>
+
+    <menuitem id="menu_property_security_deposit"
+              name="Security Deposits"
+              parent="menu_financial_reports_root"
+              action="action_property_security_deposit"
+              sequence="18"/>
+
+    <menuitem id="menu_property_budget"
+              name="Property Budgets"
+              parent="menu_financial_reports_root"
+              action="action_property_budget"
+              sequence="20"/>
+
+    <menuitem id="menu_property_financial_category"
+              name="Report Categories"
+              parent="menu_financial_reports_root"
+              action="action_property_financial_category"
+              sequence="30"/>
+
+    <menuitem id="menu_accrual_template"
+              name="Accrual Templates"
+              parent="menu_financial_reports_root"
+              action="action_accrual_template"
+              sequence="35"/>
+
+    <menuitem id="menu_management_fee"
+              name="Management Fees"
+              parent="menu_financial_reports_root"
+              action="action_management_fee"
+              sequence="40"/>
+
+    <menuitem id="menu_tenant_recharge"
+              name="Tenant Recharges"
+              parent="menu_financial_reports_root"
+              action="action_tenant_recharge"
+              sequence="45"/>
+
+    <menuitem id="menu_period_lock"
+              name="Period Locks"
+              parent="menu_financial_reports_root"
+              action="action_period_lock"
+              sequence="50"/>
+
+    <menuitem id="menu_report_snapshot"
+              name="Report Snapshots"
+              parent="menu_financial_reports_root"
+              action="action_report_snapshot"
+              sequence="55"/>
+</odoo>

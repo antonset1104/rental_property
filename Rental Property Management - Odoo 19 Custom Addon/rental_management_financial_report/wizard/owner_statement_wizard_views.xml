@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_owner_statement_wizard_form" model="ir.ui.view">
+        <field name="name">property.owner.statement.wizard.form</field>
+        <field name="model">property.owner.statement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Laporan Pemilik">
+                <group>
+                    <group string="Mode Laporan">
+                        <field name="report_mode" widget="radio"/>
+                        <field name="property_id"
+                               invisible="report_mode != 'single'"
+                               required="report_mode == 'single'"/>
+                        <field name="owner_id"
+                               invisible="report_mode != 'entity'"/>
+                        <field name="property_ids" widget="many2many_tags"
+                               invisible="report_mode != 'entity'"
+                               string="Properti (kosong = semua milik pemilik)"/>
+                        <field name="company_ids" widget="many2many_tags"
+                               invisible="report_mode != 'consolidated'"
+                               string="Pilih Entitas (16 PT)"/>
+                    </group>
+                    <group string="Periode">
+                        <field name="period_type"/>
+                        <field name="fy_start_month"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+                <group string="Catatan Manajemen / Ringkasan Eksekutif (Opsional)">
+                    <field name="management_notes" nolabel="1" placeholder="Tuliskan catatan penjelasan, analisis kinerja, atau pesan dari Manajer Properti untuk dicantumkan pada laporan..."/>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Cetak Laporan Pemilik (PDF)"
+                            class="btn-primary"/>
+                    <button name="action_send_email_to_owners" type="object" string="📧 Kirim Email ke Pemilik"
+                            class="btn-success"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_owner_statement_wizard" model="ir.actions.act_window">
+        <field name="name">Laporan Pemilik</field>
+        <field name="res_model">property.owner.statement.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

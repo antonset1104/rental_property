@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_form_property_category" model="ir.ui.view">
+        <field name="name">account.account.form.property.category</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="account_type" position="after">
+                <field name="property_fin_category_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_form_property_manual" model="ir.ui.view">
+        <field name="name">account.move.form.property.manual</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+                <field name="property_manual_id"
+                       invisible="tenancy_id or sold_id or maintenance_request_id"
+                       string="Properti"/>
+                <field name="property_financial_id" readonly="1"
+                       invisible="not property_financial_id"
+                       string="Properti (Terhubung)"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- D3: expose property income/expense account on product form -->
+    <record id="view_product_template_property_fin" model="ir.ui.view">
+        <field name="name">product.template.form.property.fin</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <page name="general_information" position="after">
+                <page string="Property Reporting" name="property_reporting">
+                    <group>
+                        <field name="property_fin_account_id"
+                               string="Property Income/Expense Account"
+                               help="GL account for property invoices using this product. Determines the Owners Statement classification."/>
+                        <field name="property_fin_category_id" readonly="1"
+                               string="Report Category (auto)"/>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

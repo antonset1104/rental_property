@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dunning_level_list" model="ir.ui.view">
+        <field name="name">property.dunning.level.list</field>
+        <field name="model">property.dunning.level</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="level"/>
+                <field name="name"/>
+                <field name="days_overdue"/>
+                <field name="send_email"/>
+                <field name="mail_template_id"/>
+                <field name="late_fee_type"/>
+                <field name="late_fee_percent"/>
+                <field name="late_fee_fixed"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_dunning_level" model="ir.actions.act_window">
+        <field name="name">Dunning Levels</field>
+        <field name="res_model">property.dunning.level</field>
+        <field name="view_mode">list</field>
+    </record>
+    <menuitem id="menu_dunning_level" name="Dunning Levels"
+              parent="rental_management.main_menu_rental_management"
+              action="action_dunning_level" sequence="93"/>
+
+    <!-- Tenancy Form View: Sealing Banner & Actions -->
+    <record id="tenancy_details_form_view_dunning" model="ir.ui.view">
+        <field name="name">tenancy.details.form.dunning</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="is_sealed" invisible="1"/>
+                <button name="action_seal_unit" type="object" string="🚨 Segel Unit / Putus Layanan"
+                        class="btn-danger" invisible="is_sealed"
+                        confirm="Apakah Anda yakin ingin menyegel unit ini karena tunggakan sewa?"/>
+                <button name="action_unseal_unit" type="object" string="✅ Buka Segel Unit"
+                        class="btn-success" invisible="not is_sealed"
+                        confirm="Buka segel dan aktifkan kembali unit ini?"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="is_sealed" invisible="1"/>
+                <div class="alert alert-danger mb-2" role="alert" invisible="not is_sealed">
+                    <h5 class="alert-heading mb-1"><i class="fa fa-ban"/> <strong>PERINGATAN: UNIT INI SEDANG DALAM STATUS DISEGEL / LAYANAN DIBLOKIR</strong></h5>
+                    <p class="mb-0">Penyegelan diterapkan akibat sanksi tunggakan pembayaran sewa (Dunning SP3). Hubungi departemen Property / Finance untuk pembukaan segel.</p>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Account Move Form View: WhatsApp Button & Dunning Status -->
+    <record id="view_move_form_dunning" model="ir.ui.view">
+        <field name="name">account.move.form.dunning</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_send_whatsapp" type="object"
+                        string="📲 Kirim WhatsApp" class="btn-success"
+                        invisible="state != 'posted' or payment_state not in ('not_paid', 'partial')"/>
+                <button name="%(action_report_dunning_sp)d" type="action"
+                        string="🖨️ Cetak Surat Peringatan (SP)" class="btn-secondary"
+                        invisible="state != 'posted' or payment_state not in ('not_paid', 'partial')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

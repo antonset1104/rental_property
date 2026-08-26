@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===== Management Fee ===== -->
+    <record id="view_management_fee_list" model="ir.ui.view">
+        <field name="name">property.management.fee.list</field>
+        <field name="model">property.management.fee</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="date"/>
+                <field name="fee_type"/>
+                <field name="manager_id"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_management_fee_form" model="ir.ui.view">
+        <field name="name">property.management.fee.form</field>
+        <field name="model">property.management.fee</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post" type="object" string="Post &amp; Create Bill"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('cancel', 'draft')"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="property_id"/>
+                            <field name="fee_type"/>
+                            <field name="manager_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="period_from"/>
+                            <field name="period_to"/>
+                            <field name="amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="fee_account_id"/>
+                        <field name="journal_id"/>
+                        <field name="tax_ids" widget="many2many_tags"/>
+                        <field name="bill_id" readonly="1"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <field name="notes" placeholder="Notes..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_management_fee" model="ir.actions.act_window">
+        <field name="name">Management Fees</field>
+        <field name="res_model">property.management.fee</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ===== Tenant Recharge ===== -->
+    <record id="view_tenant_recharge_list" model="ir.ui.view">
+        <field name="name">property.tenant.recharge.list</field>
+        <field name="model">property.tenant.recharge</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="date"/>
+                <field name="tenant_id"/>
+                <field name="recharge_type"/>
+                <field name="actual_cost"/>
+                <field name="charged_amount"/>
+                <field name="profit"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tenant_recharge_form" model="ir.ui.view">
+        <field name="name">property.tenant.recharge.form</field>
+        <field name="model">property.tenant.recharge</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post" type="object" string="Post &amp; Create Invoice"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('cancel', 'draft')"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="property_id"/>
+                            <field name="tenancy_id"/>
+                            <field name="tenant_id" readonly="1"/>
+                            <field name="recharge_type"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="actual_cost"/>
+                            <field name="charged_amount"/>
+                            <field name="profit" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="cost_account_id"/>
+                        <field name="income_account_id"/>
+                        <field name="journal_id"/>
+                        <field name="invoice_id" readonly="1"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <field name="notes" placeholder="Notes..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tenant_recharge" model="ir.actions.act_window">
+        <field name="name">Tenant Recharges</field>
+        <field name="res_model">property.tenant.recharge</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

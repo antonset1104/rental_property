@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_owner" inherit_id="portal.portal_my_home"
+              name="Portal My Home: Owner Properties">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">My Properties</t>
+                <t t-set="url" t-value="'/my/properties'"/>
+                <t t-set="text">Properties you own</t>
+                <t t-set="placeholder_count" t-value="'property_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_properties" name="My Properties">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Properties</t>
+            </t>
+            <t t-if="not properties">
+                <div class="alert alert-info">No properties found for your account.</div>
+            </t>
+            <t t-if="properties" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active"><th>Property</th><th>Owners</th></tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="properties" t-as="prop">
+                        <td><a t-attf-href="/my/properties/#{prop.id}"><span t-field="prop.name"/></a></td>
+                        <td>
+                            <span t-foreach="prop.owner_line_ids" t-as="o">
+                                <span t-field="o.owner_id"/> (<t t-out="round(o.ownership_percentage,2)"/>%)<br/>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_property_page" name="Owner Property">
+        <t t-call="portal.portal_layout">
+            <h4 class="mb-3">Property <span t-field="property.name"/></h4>
+            <div class="card mb-3"><div class="card-body">
+                <strong>Owners:</strong>
+                <span t-foreach="property.owner_line_ids" t-as="o">
+                    <span t-field="o.owner_id"/> (<t t-out="round(o.ownership_percentage,2)"/>%)<t t-if="not o_last">, </t>
+                </span>
+            </div></div>
+            <h5>Your Remittances</h5>
+            <t t-if="not remittances">
+                <div class="alert alert-info">No remittances yet.</div>
+            </t>
+            <table t-if="remittances" class="table table-sm">
+                <thead><tr><th>Reference</th><th>Date</th><th class="text-end">Your Amount</th></tr></thead>
+                <tbody>
+                    <tr t-foreach="remittances" t-as="r">
+                        <td t-out="r['name']"/>
+                        <td t-out="r['date']"/>
+                        <td class="text-end" t-out="r['amount']"/>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="/my/properties" class="btn btn-link">Back to Properties</a>
+        </t>
+    </template>
+</odoo>

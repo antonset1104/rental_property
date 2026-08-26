@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="property_details_form_view_documents_ce" model="ir.ui.view">
+        <field name="name">property.details.form.documents.ce</field>
+        <field name="model">property.details</field>
+        <field name="inherit_id" ref="rental_management.property_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Dokumen &amp; Perizinan" name="legal_documents_ce">
+                    <field name="legal_document_ids">
+                        <list editable="bottom">
+                            <field name="document_type"/>
+                            <field name="name"/>
+                            <field name="document_number"/>
+                            <field name="issuer"/>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="is_expired" widget="boolean_toggle" readonly="1"/>
+                            <field name="file_name" column_invisible="1"/>
+                            <field name="attachment_file" filename="file_name" widget="binary"/>
+                        </list>
+                    </field>
+                    <div class="mt-3">
+                        <field name="attachment_count" invisible="1"/>
+                        <button name="action_view_attachments" type="object"
+                                class="btn-secondary btn-sm" icon="fa-paperclip"
+                                string="Lihat Semua Lampiran (ir.attachment)"/>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

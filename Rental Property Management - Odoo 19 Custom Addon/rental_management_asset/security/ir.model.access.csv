@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_asset_user,property.asset user,model_property_asset,account.group_account_user,1,1,1,1
+access_property_asset_manager,property.asset manager,model_property_asset,account.group_account_manager,1,1,1,1
+access_property_asset_dep_line,property.asset.depreciation.line,model_property_asset_depreciation_line,account.group_account_user,1,1,1,1
+access_property_asset_reval_line,property.asset.revaluation.line,model_property_asset_revaluation_line,account.group_account_user,1,1,1,1

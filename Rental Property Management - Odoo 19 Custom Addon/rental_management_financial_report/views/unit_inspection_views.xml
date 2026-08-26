@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_unit_inspection_list" model="ir.ui.view">
+        <field name="name">property.unit.inspection.list</field>
+        <field name="model">property.unit.inspection</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'confirmed'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="inspection_type" widget="badge"/>
+                <field name="tenancy_id"/>
+                <field name="property_id"/>
+                <field name="tenant_id"/>
+                <field name="date"/>
+                <field name="inspector_id"/>
+                <field name="meter_electricity"/>
+                <field name="meter_water"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"
+                       decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_property_unit_inspection_form" model="ir.ui.view">
+        <field name="name">property.unit.inspection.form</field>
+        <field name="model">property.unit.inspection</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_load_default_checklist" type="object"
+                            string="📋 Muat Standar Checklist (10 Item)" class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_confirm" type="object"
+                            string="✅ Sahkan BAST &amp; Hasil Pemeriksaan" class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Apakah seluruh kondisi fisik dan angka meter serah terima telah sesuai dan disetujui kedua belah pihak?"/>
+                    <button name="%(action_report_unit_inspection)d" type="action"
+                            string="🖨️ Cetak BAST (PDF)" class="btn-secondary"
+                            invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identitas BAST &amp; Kontrak">
+                            <field name="inspection_type" readonly="state != 'draft'"/>
+                            <field name="tenancy_id" readonly="state != 'draft'"/>
+                            <field name="property_id"/>
+                            <field name="tenant_id"/>
+                        </group>
+                        <group string="Pelaksanaan Pemeriksaan">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="inspector_id" readonly="state != 'draft'"/>
+                            <field name="meter_electricity" readonly="state != 'draft'"/>
+                            <field name="meter_water" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <separator string="Checklist Kondisi Fisik Ruangan / Unit"/>
+                    <field name="line_ids" readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <field name="item_name"/>
+                            <field name="condition" widget="badge"
+                                   decoration-success="condition == 'good'"
+                                   decoration-danger="condition == 'damaged'"
+                                   decoration-warning="condition == 'missing'"
+                                   decoration-muted="condition == 'na'"/>
+                            <field name="notes" placeholder="Catatan detail kondisi..."/>
+                            <field name="photo_name" column_invisible="1"/>
+                            <field name="photo" filename="photo_name" widget="binary"/>
+                        </list>
+                    </field>
+                    <group string="Catatan Akhir / Kesimpulan">
+                        <field name="notes" nolabel="1" placeholder="Tuliskan catatan tambahan mengenai serah terima / pengembalian unit..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_unit_inspection" model="ir.actions.act_window">
+        <field name="name">BAST &amp; Inspeksi Unit</field>
+        <field name="res_model">property.unit.inspection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_property_unit_inspection"
+              name="BAST &amp; Inspeksi Unit"
+              parent="rental_management.main_menu_rental_management"
+              action="action_property_unit_inspection"
+              sequence="84"/>
+</odoo>

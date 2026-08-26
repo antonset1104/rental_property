@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_gto_declaration_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; color: #222;">
+                        <div class="text-center mb-4">
+                            <h3 style="font-weight: bold; text-decoration: underline; margin-bottom: 2px;">
+                                SURAT PERNYATAAN OMZET PENJUALAN (GTO)
+                            </h3>
+                            <h5 style="color: #555; text-transform: uppercase; font-size: 11px; margin-top: 0;">
+                                GROSS TURNOVER &amp; REVENUE SHARING DECLARATION FORM
+                            </h5>
+                            <span style="font-size: 11px;">Nomor Referensi: <b><t t-out="o.name"/></b></span>
+                        </div>
+
+                        <p style="text-align: justify; line-height: 1.5;">
+                            Yang bertanda tangan di bawah ini selaku perwakilan resmi dari Penyewa (Tenant), dengan ini menyatakan dengan sebenar-benarnya laporan perolehan omzet penjualan kotor (*Gross Turnover*) untuk perhitungan bagi hasil sewa sesuai rincian berikut:
+                        </p>
+
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 11px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 28%; font-weight: bold; background: #f8fafc;">Nama Tenant / Brand</td>
+                                    <td style="width: 72%;"><b><span t-field="o.tenant_id.name"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Unit &amp; Properti</td>
+                                    <td><b><span t-field="o.property_id.name"/></b> (Kontrak: <span t-field="o.tenancy_id.name"/>)</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Periode Pelaporan Omzet</td>
+                                    <td>
+                                        <b><span t-field="o.date_from" t-options="{'format': 'dd MMMM yyyy'}"/></b> s/d 
+                                        <b><span t-field="o.date_to" t-options="{'format': 'dd MMMM yyyy'}"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Skema Perhitungan Sewa (GTO)</td>
+                                    <td><span t-field="o.gto_type"/> (<span t-field="o.gto_percentage"/>%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h6 style="font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #006A4E;">
+                            RINCIAN OMZET &amp; KALKULASI SEWA BAGI HASIL
+                        </h6>
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 11px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 60%; font-weight: bold;">Total Omzet Penjualan Kotor (Gross Sales / POS)</td>
+                                    <td style="width: 40%; font-size: 13px; font-weight: bold; text-align: right;">
+                                        <span t-field="o.gross_turnover"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Persentase Bagi Hasil Sewa (Turnover %)</td>
+                                    <td style="text-align: right;"><span t-field="o.gto_percentage"/> %</td>
+                                </tr>
+                                <tr>
+                                    <td>Sewa Dasar / Pokok Periode Ini (Base Rent)</td>
+                                    <td style="text-align: right;"><span t-field="o.base_rent"/></td>
+                                </tr>
+                                <tr style="background: #f0fdf4;">
+                                    <td style="font-weight: bold; color: #006A4E;">Tagihan Sewa Tambahan / GTO Overage Yang Dikenakan</td>
+                                    <td style="font-size: 13px; font-weight: bold; color: #006A4E; text-align: right;">
+                                        <span t-field="o.overage"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 10px; line-height: 1.4; margin-bottom: 25px;">
+                            <b>Pernyataan &amp; Tanggung Jawab Hukum:</b><br/>
+                            1. Angka omzet di atas adalah mutlak sesuai dengan rekapitulasi data kasir/POS (*Point of Sales*) dan mutasi rekening penjualan periode berjalan.<br/>
+                            2. Pengelola Properti berhak sewaktu-waktu melakukan audit kepatuhan kasir (*Sales Audit / Mystery Shopping*) sesuai perjanjian sewa menyewa.
+                        </div>
+
+                        <div class="row mt-4" style="margin-top: 40px;">
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Dibuat &amp; Dinyatakan Oleh (Tenant),<br/><b><span t-field="o.tenant_id.name"/></b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">Store / Finance Manager</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Diverifikasi Oleh (Pengelola),<br/><b><span t-field="o.company_id.name"/></b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">Tenant Relations &amp; Billing</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

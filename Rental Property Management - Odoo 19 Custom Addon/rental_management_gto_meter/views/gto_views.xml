@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_gto_turnover_list" model="ir.ui.view">
+        <field name="name">property.gto.turnover.list</field>
+        <field name="model">property.gto.turnover</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="tenancy_id"/>
+                <field name="tenant_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="gross_turnover"/>
+                <field name="billable_amount"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'invoiced'"
+                       decoration-info="state == 'draft'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_property_gto_turnover_form" model="ir.ui.view">
+        <field name="name">property.gto.turnover.form</field>
+        <field name="model">property.gto.turnover</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="%(action_report_gto_declaration)d" type="action"
+                            string="🖨️ Cetak Pernyataan Omzet (GTO)" class="btn-secondary"/>
+                    <button name="action_create_invoice" type="object"
+                            string="Create Invoice" class="btn-primary"
+                            invisible="state == 'invoiced'"/>
+                    <button name="action_draft" type="object" string="Set to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tenancy_id"
+                                   readonly="state == 'invoiced'"/>
+                            <field name="tenant_id"/>
+                            <field name="property_id"/>
+                        </group>
+                        <group>
+                            <field name="date_from" readonly="state == 'invoiced'"/>
+                            <field name="date_to" readonly="state == 'invoiced'"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Turnover &amp; Rent Computation">
+                        <group>
+                            <field name="gross_turnover" readonly="state == 'invoiced'"/>
+                            <field name="base_rent" readonly="state == 'invoiced'"/>
+                            <field name="gto_type" readonly="state == 'invoiced'"/>
+                        </group>
+                        <group>
+                            <field name="percentage" readonly="state == 'invoiced'"/>
+                            <field name="breakpoint" readonly="state == 'invoiced'"
+                                   invisible="gto_type != 'base_plus'"/>
+                            <field name="percentage_rent"/>
+                            <field name="billable_amount"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_gto_turnover" model="ir.actions.act_window">
+        <field name="name">Turnover Declarations</field>
+        <field name="res_model">property.gto.turnover</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

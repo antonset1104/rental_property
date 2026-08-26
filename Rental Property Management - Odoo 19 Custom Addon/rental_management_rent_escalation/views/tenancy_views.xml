@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tenancy_form_escalation" model="ir.ui.view">
+        <field name="name">tenancy.details.form.escalation</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Rent Escalation" name="rent_escalation">
+                    <group>
+                        <group string="Konfigurasi Eskalasi Kenaikan Sewa">
+                            <field name="is_escalation"/>
+                            <field name="escalation_type" invisible="not is_escalation"/>
+                            <field name="escalation_value" invisible="not is_escalation"/>
+                            <field name="escalation_frequency_months" invisible="not is_escalation"/>
+                            <field name="escalation_next_date" invisible="not is_escalation"/>
+                        </group>
+                        <group string="Alur Penawaran &amp; Persetujuan Tenant (PDF Req)">
+                            <field name="escalation_proposal_state" widget="badge"
+                                   decoration-info="escalation_proposal_state == 'proposed'"
+                                   decoration-success="escalation_proposal_state == 'approved'"
+                                   decoration-danger="escalation_proposal_state == 'rejected'"
+                                   invisible="not is_escalation"/>
+                            <field name="proposed_new_rent" invisible="not is_escalation"/>
+                            <div class="mt-2" invisible="not is_escalation">
+                                <button name="action_send_escalation_proposal" type="object"
+                                        string="✉️ Kirim Penawaran Kenaikan" class="btn-info btn-sm me-1"
+                                        invisible="escalation_proposal_state == 'proposed'"/>
+                                <button name="action_approve_escalation" type="object"
+                                        string="✅ Tenant Setuju (Terapkan)" class="btn-success btn-sm me-1"
+                                        invisible="escalation_proposal_state != 'proposed'"/>
+                                <button name="action_reject_escalation" type="object"
+                                        string="❌ Tenant Tolak (Negosiasi)" class="btn-danger btn-sm"
+                                        invisible="escalation_proposal_state != 'proposed'"/>
+                            </div>
+                        </group>
+                    </group>
+                    <field name="escalation_log_ids" invisible="not is_escalation">
+                        <list>
+                            <field name="date"/>
+                            <field name="old_rent"/>
+                            <field name="new_rent"/>
+                            <field name="note"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

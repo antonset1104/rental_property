@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tenancy_details_form_view_gto" model="ir.ui.view">
+        <field name="name">tenancy.details.form.gto</field>
+        <field name="model">tenancy.details</field>
+        <field name="inherit_id" ref="rental_management.tenancy_details_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="GTO / Revenue Sharing" name="gto">
+                    <group>
+                        <group>
+                            <field name="is_gto"/>
+                            <field name="gto_type" invisible="not is_gto"/>
+                        </group>
+                        <group>
+                            <field name="gto_percentage" invisible="not is_gto"/>
+                            <field name="gto_breakpoint"
+                                   invisible="not is_gto or gto_type != 'base_plus'"/>
+                            <field name="gto_product_id" invisible="not is_gto"/>
+                        </group>
+                    </group>
+                    <field name="turnover_ids" invisible="not is_gto" context="{'default_tenancy_id': id}">
+                        <list>
+                            <field name="name"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="gross_turnover"/>
+                            <field name="billable_amount"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

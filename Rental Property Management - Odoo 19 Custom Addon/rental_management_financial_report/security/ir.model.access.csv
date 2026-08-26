@@ -1,0 +1,22 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_financial_category_user,property.financial.category user,model_property_financial_category,base.group_user,1,0,0,0
+access_property_financial_category_manager,property.financial.category manager,model_property_financial_category,account.group_account_manager,1,1,1,1
+access_property_ownership_line_user,property.ownership.line user,model_property_ownership_line,base.group_user,1,1,1,1
+access_property_budget_user,property.budget user,model_property_budget,base.group_user,1,1,1,1
+access_property_budget_line_user,property.budget.line user,model_property_budget_line,base.group_user,1,1,1,1
+access_owner_statement_wizard_user,property.owner.statement.wizard user,model_property_owner_statement_wizard,base.group_user,1,1,1,1
+access_property_owner_remittance_user,property.owner.remittance user,model_property_owner_remittance,base.group_user,1,1,1,1
+access_property_owner_remittance_line_user,property.owner.remittance.line user,model_property_owner_remittance_line,base.group_user,1,1,1,1
+access_property_security_deposit_user,property.security.deposit user,model_property_security_deposit,base.group_user,1,1,1,1
+access_property_security_deposit_line_user,property.security.deposit.line user,model_property_security_deposit_line,base.group_user,1,1,1,1
+access_property_accrual_template_user,property.accrual.template user,model_property_accrual_template,base.group_user,1,0,0,0
+access_property_accrual_template_manager,property.accrual.template manager,model_property_accrual_template,account.group_account_manager,1,1,1,1
+access_property_management_fee_user,property.management.fee user,model_property_management_fee,base.group_user,1,1,1,1
+access_property_tenant_recharge_user,property.tenant.recharge user,model_property_tenant_recharge,base.group_user,1,1,1,1
+access_property_period_lock_user,property.period.lock user,model_property_period_lock,base.group_user,1,0,0,0
+access_property_period_lock_manager,property.period.lock manager,model_property_period_lock,account.group_account_manager,1,1,1,1
+access_property_report_snapshot_user,property.report.snapshot user,model_property_report_snapshot,base.group_user,1,0,0,0
+access_property_report_snapshot_manager,property.report.snapshot manager,model_property_report_snapshot,account.group_account_manager,1,1,1,1
+access_property_unit_inspection_user,property.unit.inspection user,model_property_unit_inspection,base.group_user,1,1,1,1
+access_property_unit_inspection_line_user,property.unit.inspection.line user,model_property_unit_inspection_line,base.group_user,1,1,1,1
+

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_dunning_sp_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; color: #222; line-height: 1.5;">
+                        <div class="text-end mb-2">
+                            <span t-field="o.dunning_date" t-options="{'format': 'dd MMMM yyyy'}"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 15%;">Nomor Surat</td>
+                                    <td style="width: 3%;">:</td>
+                                    <td style="width: 82%;">
+                                        <b>SP/<t t-out="o.dunning_level or '1'"/>/<t t-out="o.name"/>/<t t-out="fields.Date.today().strftime('%Y')"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Lampiran</td>
+                                    <td>:</td>
+                                    <td>1 (Satu) Berkas Tagihan Invoice</td>
+                                </tr>
+                                <tr>
+                                    <td>Perihal</td>
+                                    <td>:</td>
+                                    <td>
+                                        <b style="text-decoration: underline; color: #b91c1c;">
+                                            <t t-if="o.dunning_level == 1">SURAT PERINGATAN I (SP-1) - KETERLAMBATAN PEMBAYARAN</t>
+                                            <t t-elif="o.dunning_level == 2">SURAT PERINGATAN II (SP-2) - TEGURAN KERAS TUNGGAKAN SEWA</t>
+                                            <t t-else="">SURAT PERINGATAN TERAKHIR (SP-3) &amp; PEMBERITAHUAN PENYEGELAN UNIT</t>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="mb-3">
+                            Kepada Yth.<br/>
+                            <b>Pimpinan / Manajemen <span t-field="o.partner_id.name"/></b><br/>
+                            <span t-field="o.partner_id.street"/><br/>
+                            Unit / Properti: <b><span t-field="o.property_financial_id.name if o.property_financial_id else '-'"/></b>
+                        </div>
+
+                        <p>Dengan hormat,</p>
+                        <p style="text-align: justify;">
+                            Merujuk pada Perjanjian Sewa Menyewa yang telah disepakati bersama, dengan ini kami sampaikan bahwa berdasarkan catatan bagian Keuangan &amp; Akuntansi kami sampai dengan tanggal surat ini diterbitkan, terdapat kewajiban pembayaran yang telah melewati tanggal jatuh tempo (*overdue*) dengan rincian sebagai berikut:
+                        </p>
+
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 11px;">
+                            <thead style="background: #f8fafc;">
+                                <tr>
+                                    <th>Nomor Invoice</th>
+                                    <th>Tanggal Invoice</th>
+                                    <th>Jatuh Tempo</th>
+                                    <th style="text-align: right;">Sisa Pokok Tagihan</th>
+                                    <th style="text-align: right;">Status SP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b><span t-field="o.name"/></b></td>
+                                    <td><span t-field="o.invoice_date"/></td>
+                                    <td><span t-field="o.invoice_date_due"/></td>
+                                    <td style="text-align: right; font-weight: bold; color: #b91c1c;">
+                                        <span t-field="o.amount_residual"/>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="badge bg-danger" style="color: #fff; padding: 2px 5px;">SP-<t t-out="o.dunning_level or '1'"/></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-if="o.dunning_level == 1">
+                            <p style="text-align: justify;">
+                                Sehubungan dengan hal tersebut di atas, kami mohon kerja sama Bapak/Ibu untuk segera menyelesaikan pembayaran kewajiban tersebut dalam waktu paling lambat <b>7 (tujuh) hari kalender</b> sejak tanggal surat ini diterbitkan guna menghindari pengenaan sanksi denda keterlambatan lanjutan.
+                            </p>
+                        </t>
+                        <t t-elif="o.dunning_level == 2">
+                            <p style="text-align: justify;">
+                                Mengingat Surat Peringatan I (SP-1) kami sebelumnya belum ada penyelesaian, kami memberikan teguran keras dan meminta agar seluruh tunggakan pokok beserta denda keterlambatan diselesaikan dalam waktu paling lambat <b>3 (tiga) hari kalender</b>.
+                            </p>
+                        </t>
+                        <t t-else="">
+                            <div style="padding: 10px 12px; background: #fee2e2; border-left: 4px solid #b91c1c; font-size: 11px; margin-bottom: 15px;">
+                                <b>PERINGATAN KERAS &amp; TINDAKAN TEGAS (SP-3 / FINAL):</b><br/>
+                                Apabila dalam waktu <b>2 x 24 jam</b> sejak surat ini diterima kewajiban di atas belum diselesaikan, maka pihak Pengelola Properti dengan sangat menyesal akan melakukan tindakan penertiban berupa <b>PEMUTUSAN SUPLAI LISTRIK &amp; AIR SERTA PENYEGELAN FISIK UNIT PROPERTI</b> sesuai klausul perjanjian sewa.
+                            </div>
+                        </t>
+
+                        <div style="padding: 8px 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 10.5px; margin-bottom: 20px;">
+                            <b>Instruksi Pembayaran Transfer Bank:</b><br/>
+                            Pembayaran dapat ditransfer ke rekening resmi Pengelola:<br/>
+                            Nama Bank: <b><span t-field="o.company_id.partner_id.bank_ids[0].bank_name if o.company_id.partner_id.bank_ids else 'Rekening Resmi PT'"/></b><br/>
+                            No. Rekening / VA: <b><span t-field="o.company_id.partner_id.bank_ids[0].acc_number if o.company_id.partner_id.bank_ids else '-'"/></b><br/>
+                            Atas Nama: <b><span t-field="o.company_id.name"/></b>
+                        </div>
+
+                        <p>Demikian surat peringatan ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
+
+                        <div class="row mt-4" style="margin-top: 40px;">
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Hormat kami,<br/><b><span t-field="o.company_id.name"/></b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">Building Management</p>
+                                <span style="font-size: 10px; color: #666;">Credit Control &amp; Collection</span>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Mengetahui,<br/><b>Finance &amp; Legal Director</b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">Property Management Division</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_coretax_batch_faktur_wizard_form" model="ir.ui.view">
+        <field name="name">coretax.batch.faktur.wizard.form</field>
+        <field name="model">coretax.batch.faktur.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Batch Update / Set Nomor Faktur Pajak CORETAX">
+                <sheet>
+                    <p class="text-muted">
+                        Gunakan wizard ini untuk mencatat nomor Faktur Pajak resmi (e-Faktur) yang diterbitkan dari portal DJP CORETAX secara massal / berurutan ke tagihan pelanggan.
+                    </p>
+                    <group>
+                        <group string="Filter Periode &amp; Customer">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="partner_id"/>
+                            <field name="only_without_faktur"/>
+                            <button name="action_fetch_invoices" type="object" string="🔄 Tarik Data Tagihan" class="btn-secondary"/>
+                        </group>
+                        <group string="Auto-Fill Nomor Berurutan">
+                            <field name="start_faktur_number"/>
+                            <field name="faktur_date"/>
+                            <button name="action_generate_sequential" type="object"
+                                    string="⚡ Isi Nomor Berurutan Otomatis" class="btn-warning"
+                                    invisible="not start_faktur_number"/>
+                        </group>
+                    </group>
+                    <separator string="Daftar Faktur Tagihan"/>
+                    <field name="line_ids">
+                        <list editable="bottom" create="0">
+                            <field name="move_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="invoice_date" readonly="1"/>
+                            <field name="amount_untaxed" readonly="1"/>
+                            <field name="amount_tax" readonly="1"/>
+                            <field name="amount_total" readonly="1"/>
+                            <field name="faktur_number" placeholder="040.001-26.00000101"/>
+                            <field name="faktur_date"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_apply" type="object" string="Simpan Nomor Faktur Pajak" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_coretax_batch_faktur_wizard" model="ir.actions.act_window">
+        <field name="name">Batch Set Nomor Faktur Pajak</field>
+        <field name="res_model">coretax.batch.faktur.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

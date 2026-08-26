@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_meter_reading_bulk_wizard_form" model="ir.ui.view">
+        <field name="name">property.meter.reading.bulk.wizard.form</field>
+        <field name="model">property.meter.reading.bulk.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Input Catatan Meter Massal (Bulk Readings)">
+                <sheet>
+                    <p class="text-muted">
+                        Tarik seluruh meter utilitas aktif untuk properti tertentu dan masukkan angka stand meter baru secara massal. Sistem akan otomatis menghitung pemakaian dan dapat langsung menerbitkan draft invoice.
+                    </p>
+                    <group>
+                        <group string="Filter &amp; Tanggal">
+                            <field name="date"/>
+                            <field name="property_id"/>
+                            <field name="meter_type"/>
+                            <button name="action_load_meters" type="object" string="🔄 Tarik Semua Meter Aktif" class="btn-secondary"/>
+                        </group>
+                        <group string="Opsi Tagihan">
+                            <field name="auto_create_invoice"/>
+                        </group>
+                    </group>
+                    <separator string="Daftar Meter &amp; Stand Angka Meter"/>
+                    <field name="line_ids">
+                        <list editable="bottom" create="0">
+                            <field name="meter_id" readonly="1"/>
+                            <field name="meter_type" readonly="1"/>
+                            <field name="property_id" readonly="1"/>
+                            <field name="tenant_id" readonly="1"/>
+                            <field name="previous_reading"/>
+                            <field name="current_reading"/>
+                            <field name="uom_name" readonly="1"/>
+                            <field name="tariff" readonly="1"/>
+                            <field name="consumption" readonly="1"/>
+                            <field name="estimated_amount" readonly="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_process_readings" type="object" string="⚡ Proses Bacaan &amp; Terbitkan Tagihan" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_meter_reading_bulk_wizard" model="ir.actions.act_window">
+        <field name="name">Input Catatan Meter Massal</field>
+        <field name="res_model">property.meter.reading.bulk.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

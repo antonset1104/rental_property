@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_gto_declaration" model="ir.actions.report">
+        <field name="name">Formulir Pernyataan Omzet (GTO)</field>
+        <field name="model">property.gto.turnover</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_gto_meter.report_gto_declaration_document</field>
+        <field name="report_file">rental_management_gto_meter.report_gto_declaration_document</field>
+        <field name="print_report_name">'GTO_Declaration_%s' % object.name.replace('/', '_')</field>
+    </record>
+</odoo>

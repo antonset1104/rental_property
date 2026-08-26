@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_management_fee" model="ir.sequence">
+            <field name="name">Property Management Fee</field>
+            <field name="code">property.management.fee</field>
+            <field name="prefix">MGT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_tenant_recharge" model="ir.sequence">
+            <field name="name">Property Tenant Recharge</field>
+            <field name="code">property.tenant.recharge</field>
+            <field name="prefix">RCH/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_report_snapshot" model="ir.sequence">
+            <field name="name">Property Report Snapshot</field>
+            <field name="code">property.report.snapshot</field>
+            <field name="prefix">SNAP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

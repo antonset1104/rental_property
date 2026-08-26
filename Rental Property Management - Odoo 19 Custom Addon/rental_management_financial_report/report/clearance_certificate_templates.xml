@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_clearance_certificate_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; color: #222; line-height: 1.5;">
+                        <div class="text-center mb-4">
+                            <h3 style="font-weight: bold; text-decoration: underline; margin-bottom: 2px;">
+                                SURAT KETERANGAN BEBAS KEWAJIBAN
+                            </h3>
+                            <h5 style="color: #555; text-transform: uppercase; font-size: 11px; margin-top: 0;">
+                                TENANT MOVE-OUT CLEARANCE CERTIFICATE
+                            </h5>
+                            <span style="font-size: 11px;">Nomor: <b>CLR/<t t-out="o.tenancy_seq"/>/<t t-out="fields.Date.today().strftime('%Y%m')"/></b></span>
+                        </div>
+
+                        <p style="text-align: justify;">
+                            Dengan ini Manajemen Pengelola Properti <b><span t-field="o.company_id.name"/></b> menerangkan bahwa Penyewa (Tenant) di bawah ini telah menyelesaikan masa sewa dan memenuhi seluruh prosedur pengosongan unit (*Move-Out Clearance*):
+                        </p>
+
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 11px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 28%; font-weight: bold; background: #f8fafc;">Nama Tenant / Penyewa</td>
+                                    <td style="width: 72%;"><b><span t-field="o.tenancy_id.name"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">No. Kontrak Sewa</td>
+                                    <td><span t-field="o.tenancy_seq"/> (Masa Sewa: <span t-field="o.start_date"/> s/d <span t-field="o.end_date"/>)</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Unit &amp; Lokasi Gedung</td>
+                                    <td><b><span t-field="o.property_id.name"/></b> (Luas: <span t-field="o.property_id.total_area"/> m²)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h6 style="font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #006A4E;">
+                            VERIFIKASI KELAYAKAN BEBAS KEWAJIBAN (4 DEPARTEMEN)
+                        </h6>
+                        <table class="table table-bordered table-sm mb-4" style="width: 100%; font-size: 10.5px;">
+                            <thead style="background: #f0fdf4;">
+                                <tr>
+                                    <th style="width: 5%; text-align: center;">No</th>
+                                    <th style="width: 35%;">Bidang Verifikasi</th>
+                                    <th style="width: 25%; text-align: center;">Status Kepatuhan</th>
+                                    <th style="width: 35%;">Keterangan / Verifikator</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center;">1</td>
+                                    <td><b>Kondisi Fisik &amp; Kunci Unit (BAST)</b></td>
+                                    <td style="text-align: center;"><span class="badge bg-success" style="color: #fff; padding: 2px 6px;">SELESAI (CLEARED)</span></td>
+                                    <td>Unit kosong &amp; BAST pengembalian sah</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">2</td>
+                                    <td><b>Pelunasan Pokok Sewa &amp; Service Charge</b></td>
+                                    <td style="text-align: center;"><span class="badge bg-success" style="color: #fff; padding: 2px 6px;">LUNAS (CLEARED)</span></td>
+                                    <td>Saldo piutang sewa &amp; SC nihil (0)</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">3</td>
+                                    <td><b>Utilitas (Listrik, Air &amp; Stand Akhir)</b></td>
+                                    <td style="text-align: center;"><span class="badge bg-success" style="color: #fff; padding: 2px 6px;">LUNAS (CLEARED)</span></td>
+                                    <td>Stand meter akhir terverifikasi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">4</td>
+                                    <td><b>Pengembalian Security Deposit</b></td>
+                                    <td style="text-align: center;"><span class="badge bg-info" style="color: #fff; padding: 2px 6px;">SIAP PROSES (READY)</span></td>
+                                    <td>Sesuai SLA maksimal 30 hari kalender</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="text-align: justify; line-height: 1.4;">
+                            Berdasarkan hasil verifikasi di atas, pihak Manajemen merekomendasikan pelepasan tanggung jawab operasional dan pengembalian sisa saldo *Security Deposit* kepada pihak Penyewa sesuai rekening yang terdaftar.
+                        </p>
+
+                        <div class="row mt-4" style="margin-top: 35px;">
+                            <div class="col-4 text-center">
+                                <p style="margin-bottom: 50px;">Diperiksa Oleh,<br/><b>Chief Engineering</b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">MEP &amp; Utilitas</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="margin-bottom: 50px;">Diverifikasi Oleh,<br/><b>Finance &amp; Accounting</b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">AR &amp; Billing Dept</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="margin-bottom: 50px;">Disetujui Oleh,<br/><b>Building Manager</b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;"><span t-field="o.company_id.name"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

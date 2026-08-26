@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_cam_period,property.cam.period,model_property_cam_period,base.group_user,1,1,1,1
+access_property_cam_expense_line,property.cam.expense.line,model_property_cam_expense_line,base.group_user,1,1,1,1
+access_property_cam_tenant_line,property.cam.tenant.line,model_property_cam_tenant_line,base.group_user,1,1,1,1

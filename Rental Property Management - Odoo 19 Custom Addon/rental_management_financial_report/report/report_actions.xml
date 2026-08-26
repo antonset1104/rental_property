@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_owner_statement" model="ir.actions.report">
+        <field name="name">Owners Statement</field>
+        <field name="model">property.owner.statement.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.owner_statement_document</field>
+        <field name="report_file">rental_management_financial_report.owner_statement_document</field>
+        <field name="paperformat_id" ref="paperformat_owner_statement"/>
+        <field name="print_report_name">'Owners Statement - %s' % (object.property_id.name or '')</field>
+    </record>
+
+    <!-- BAST & Inspeksi Unit Move-In / Move-Out PDF -->
+    <record id="action_report_unit_inspection" model="ir.actions.report">
+        <field name="name">Berita Acara Serah Terima (BAST)</field>
+        <field name="model">property.unit.inspection</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_unit_inspection_document</field>
+        <field name="report_file">rental_management_financial_report.report_unit_inspection_document</field>
+        <field name="print_report_name">'BAST_%s_%s' % (object.inspection_type, object.name.replace('/', '_'))</field>
+    </record>
+
+    <!-- Kwitansi / Tanda Terima Security Deposit PDF -->
+    <record id="action_report_security_deposit" model="ir.actions.report">
+        <field name="name">Tanda Terima Titipan Jaminan (Deposit)</field>
+        <field name="model">property.security.deposit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_security_deposit_document</field>
+        <field name="report_file">rental_management_financial_report.report_security_deposit_document</field>
+        <field name="print_report_name">'Deposit_Receipt_%s' % object.name.replace('/', '_')</field>
+    </record>
+
+    <!-- Surat Keterangan Bebas Kewajiban (Clearance Certificate) PDF -->
+    <record id="action_report_clearance_certificate" model="ir.actions.report">
+        <field name="name">Surat Bebas Kewajiban (Clearance Certificate)</field>
+        <field name="model">tenancy.details</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_clearance_certificate_document</field>
+        <field name="report_file">rental_management_financial_report.report_clearance_certificate_document</field>
+        <field name="print_report_name">'Clearance_Certificate_%s' % (object.tenancy_seq or object.name).replace('/', '_')</field>
+    </record>
+</odoo>

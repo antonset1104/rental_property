@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_gto_turnover_user,property.gto.turnover user,model_property_gto_turnover,base.group_user,1,1,1,1
+access_property_meter_user,property.meter user,model_property_meter,base.group_user,1,1,1,1
+access_property_meter_reading_user,property.meter.reading user,model_property_meter_reading,base.group_user,1,1,1,1
+access_property_meter_reading_bulk_wizard,property.meter.reading.bulk.wizard,model_property_meter_reading_bulk_wizard,base.group_user,1,1,1,1
+access_property_meter_reading_bulk_line,property.meter.reading.bulk.line,model_property_meter_reading_bulk_line,base.group_user,1,1,1,1
+

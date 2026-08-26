@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_dunning_sp" model="ir.actions.report">
+        <field name="name">Surat Peringatan (SP Dunning)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_dunning.report_dunning_sp_document</field>
+        <field name="report_file">rental_management_dunning.report_dunning_sp_document</field>
+        <field name="print_report_name">'Surat_Peringatan_%s_%s' % (object.dunning_level, object.name.replace('/', '_'))</field>
+    </record>
+</odoo>

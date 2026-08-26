@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_security_deposit_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11.5px; color: #222;">
+                        <div class="text-center mb-4">
+                            <h3 style="font-weight: bold; text-decoration: underline; margin-bottom: 2px;">
+                                TANDA TERIMA TITIPAN JAMINAN (DEPOSIT RECEIPT)
+                            </h3>
+                            <span style="font-size: 12px;">Nomor: <b><t t-out="o.name"/></b></span>
+                        </div>
+
+                        <table class="table table-bordered table-sm mb-4" style="width: 100%; font-size: 11.5px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 30%; font-weight: bold; background: #f8fafc;">Telah Diterima Dari (Tenant)</td>
+                                    <td style="width: 70%;"><b><span t-field="o.tenant_id.name"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Jenis Titipan Jaminan</td>
+                                    <td><span t-field="o.deposit_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">No. Kontrak &amp; Properti</td>
+                                    <td><span t-field="o.tenancy_id.name"/> - <b><span t-field="o.property_id.name"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Tanggal Penerimaan</td>
+                                    <td><span t-field="o.date" t-options="{'format': 'dd MMMM yyyy'}"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Jumlah Nominal Titipan</td>
+                                    <td style="font-size: 14px; font-weight: bold; color: #006A4E;">
+                                        <span t-field="o.amount"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Saldo Deposit Saat Ini</td>
+                                    <td style="font-weight: bold;">
+                                        <span t-field="o.balance"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="padding: 10px 12px; background: #f0fdf4; border-left: 4px solid #006A4E; font-size: 11px; margin-bottom: 25px;">
+                            <b>KETENTUAN TITIPAN JAMINAN (SECURITY DEPOSIT):</b><br/>
+                            1. Dana jaminan ini dicatat sebagai kewajiban titipan (Held Liability) dan disimpan pada rekening penampungan atas nama pemilik properti.<br/>
+                            2. Pengembalian deposit akan diproses maksimal 30 (tiga puluh) hari kalender setelah Berita Acara Serah Terima (BAST Move-Out) selesai dan seluruh kewajiban sewa/utilitas lunas.<br/>
+                            3. Pemotongan atas deposit hanya dilakukan untuk perbaikan kerusakan fisik unit atau pelunasan sisa tunggakan utilitas.
+                        </div>
+
+                        <div class="row mt-4" style="margin-top: 40px;">
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Penyetor (Tenant),</p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;"><span t-field="o.tenant_id.name"/></p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Diterima Oleh (Finance / Pengelola),<br/><b><span t-field="o.company_id.name"/></b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;">Accounting &amp; Finance</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

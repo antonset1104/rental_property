@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_access_card,property.access.card,model_property_access_card,base.group_user,1,1,1,1
+access_property_visitor,property.visitor,model_property_visitor,base.group_user,1,1,1,1

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_leasing_ops_root"
+              name="Leasing Operations"
+              parent="rental_management.main_menu_rental_management"
+              sequence="85"/>
+
+    <menuitem id="menu_gto_turnover"
+              name="GTO Turnovers"
+              parent="menu_leasing_ops_root"
+              action="action_property_gto_turnover"
+              sequence="10"/>
+
+    <menuitem id="menu_property_meter"
+              name="Meters"
+              parent="menu_leasing_ops_root"
+              action="action_property_meter"
+              sequence="20"/>
+
+    <menuitem id="menu_property_meter_reading"
+              name="Meter Readings"
+              parent="menu_leasing_ops_root"
+              action="action_property_meter_reading"
+              sequence="30"/>
+
+    <menuitem id="menu_property_meter_reading_bulk"
+              name="Input Catatan Meter Massal"
+              parent="menu_leasing_ops_root"
+              action="action_property_meter_reading_bulk_wizard"
+              sequence="35"/>
+</odoo>

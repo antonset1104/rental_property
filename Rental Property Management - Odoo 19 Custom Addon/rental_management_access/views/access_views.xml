@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_access_card_list" model="ir.ui.view">
+        <field name="name">property.access.card.list</field>
+        <field name="model">property.access.card</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-muted="status in ('returned','expired')" decoration-danger="status == 'lost'">
+                <field name="card_no"/><field name="card_type"/><field name="property_id"/>
+                <field name="tenancy_id"/><field name="holder_id"/><field name="issue_date"/>
+                <field name="status" widget="badge" decoration-success="status == 'active'"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_access_card" model="ir.actions.act_window">
+        <field name="name">Access Cards</field>
+        <field name="res_model">property.access.card</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="view_visitor_list" model="ir.ui.view">
+        <field name="name">property.visitor.list</field>
+        <field name="model">property.visitor</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/><field name="property_id"/><field name="host_id"/>
+                <field name="purpose"/><field name="id_card_no"/>
+                <field name="check_in"/><field name="check_out"/>
+                <button name="action_check_out" type="object" string="Check Out" icon="fa-sign-out" invisible="check_out"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visitor" model="ir.actions.act_window">
+        <field name="name">Visitor Log</field>
+        <field name="res_model">property.visitor</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_access_root" name="Access &amp; Visitors"
+              parent="rental_management.main_menu_rental_management" sequence="75"/>
+    <menuitem id="menu_access_card" name="Access Cards" parent="menu_access_root"
+              action="action_access_card" sequence="10"/>
+    <menuitem id="menu_visitor" name="Visitor Log" parent="menu_access_root"
+              action="action_visitor" sequence="20"/>
+</odoo>

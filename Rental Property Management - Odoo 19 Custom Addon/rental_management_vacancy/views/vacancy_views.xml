@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vacancy_search" model="ir.ui.view">
+        <field name="name">property.details.search.vacancy</field>
+        <field name="model">property.details</field>
+        <field name="arch" type="xml">
+            <search string="Availability">
+                <field name="name"/>
+                <filter name="available" string="Available" domain="[('stage','=','available')]"/>
+                <filter name="on_lease" string="On Rent" domain="[('stage','=','on_lease')]"/>
+                <filter name="booked" string="In Booking" domain="[('stage','=','booked')]"/>
+                <filter name="for_rent" string="For Rent" domain="[('sale_lease','=','for_tenancy')]"/>
+                <separator string="Group By"/>
+                <filter name="g_stage" string="Status" context="{'group_by':'stage'}"/>
+                <filter name="g_for" string="Property For" context="{'group_by':'sale_lease'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_vacancy" model="ir.actions.act_window">
+        <field name="name">Vacancy / Availability</field>
+        <field name="res_model">property.details</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_vacancy_search"/>
+        <field name="context">{'search_default_g_stage': 1}</field>
+    </record>
+    <menuitem id="menu_vacancy" name="Vacancy / Availability"
+              parent="rental_management.main_menu_rental_management"
+              action="action_vacancy" sequence="3"/>
+</odoo>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_unit_inspection_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; color: #222;">
+                        <div class="text-center mb-3">
+                            <h3 style="font-weight: bold; text-decoration: underline; margin-bottom: 2px;">
+                                BERITA ACARA SERAH TERIMA (BAST)
+                            </h3>
+                            <h5 style="color: #555; text-transform: uppercase; font-size: 12px; margin-top: 0;">
+                                <t t-if="o.inspection_type == 'move_in'">SERAH TERIMA AWAL UNIT (MOVE-IN)</t>
+                                <t t-elif="o.inspection_type == 'move_out'">PENGOSONGAN &amp; PENGEMBALIAN UNIT (MOVE-OUT)</t>
+                                <t t-else="">AUDIT &amp; INSPEKSI BERKALA UNIT</t>
+                            </h5>
+                            <span style="font-size: 11px;">Nomor Dokumen: <b><t t-out="o.name"/></b></span>
+                        </div>
+
+                        <p style="text-align: justify; line-height: 1.5;">
+                            Pada hari ini, tanggal <b><span t-field="o.date" t-options="{'format': 'dd MMMM yyyy'}"/></b>, bertempat di <b><span t-field="o.property_id.name"/></b>, telah dilakukan pemeriksaan kondisi fisik dan serah terima unit properti antara para pihak sebagai berikut:
+                        </p>
+
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 11px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 25%; font-weight: bold; background: #f5f5f5;">Pengelola Properti (Pihak I)</td>
+                                    <td style="width: 75%;"><span t-field="o.company_id.name"/> (Petugas: <span t-field="o.inspector_id.name"/>)</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f5f5f5;">Penyewa / Tenant (Pihak II)</td>
+                                    <td><span t-field="o.tenant_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f5f5f5;">No. Kontrak Sewa</td>
+                                    <td><span t-field="o.tenancy_id.name"/> (Periode: <span t-field="o.tenancy_id.start_date"/> s/d <span t-field="o.tenancy_id.end_date"/>)</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f5f5f5;">Unit &amp; Lokasi</td>
+                                    <td><span t-field="o.property_id.name"/> (Luas: <span t-field="o.property_id.total_area"/> m²)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h6 style="font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #006A4E;">
+                            1. STAND ANGKA METER UTILITAS SAAT SERAH TERIMA
+                        </h6>
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 11px;">
+                            <thead style="background: #f0fdf4;">
+                                <tr>
+                                    <th style="width: 50%;">Meteran Listrik (kWh)</th>
+                                    <th style="width: 50%;">Meteran Air Bersih (m³)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b><span t-field="o.meter_electricity"/> kWh</b></td>
+                                    <td><b><span t-field="o.meter_water"/> m³</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h6 style="font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #006A4E;">
+                            2. HASIL PEMERIKSAAN KONDISI FISIK RUANGAN &amp; PERLENGKAPAN
+                        </h6>
+                        <table class="table table-bordered table-sm mb-3" style="width: 100%; font-size: 10.5px;">
+                            <thead style="background: #f5f5f5;">
+                                <tr>
+                                    <th style="width: 5%; text-align: center;">No</th>
+                                    <th style="width: 35%;">Bagian / Komponen Fisik</th>
+                                    <th style="width: 20%; text-align: center;">Kondisi Fisik</th>
+                                    <th style="width: 40%;">Catatan / Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="idx" t-value="1"/>
+                                <tr t-foreach="o.line_ids" t-as="l">
+                                    <td style="text-align: center;"><t t-out="idx"/></td>
+                                    <td><span t-field="l.item_name"/></td>
+                                    <td style="text-align: center;">
+                                        <t t-if="l.condition == 'good'"><span class="badge bg-success" style="color: #fff; padding: 2px 5px;">Baik / Normal</span></t>
+                                        <t t-elif="l.condition == 'damaged'"><span class="badge bg-danger" style="color: #fff; padding: 2px 5px;">Cacat / Rusak</span></t>
+                                        <t t-elif="l.condition == 'missing'"><span class="badge bg-warning" style="color: #000; padding: 2px 5px;">Hilang</span></t>
+                                        <t t-else="">N/A</t>
+                                    </td>
+                                    <td><span t-field="l.notes"/></td>
+                                    <t t-set="idx" t-value="idx + 1"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-if="o.notes">
+                            <h6 style="font-weight: bold; margin-top: 10px; margin-bottom: 3px; color: #006A4E;">
+                                3. CATATAN KHUSUS &amp; KESEPAKATAN TAMBAHAN
+                            </h6>
+                            <div style="padding: 6px 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 10.5px; border-radius: 3px; margin-bottom: 15px;">
+                                <span t-field="o.notes"/>
+                            </div>
+                        </t>
+
+                        <p style="text-align: justify; line-height: 1.4; margin-top: 15px;">
+                            Demikian Berita Acara Serah Terima (BAST) ini dibuat dan ditandatangani oleh kedua belah pihak dalam keadaan sadar dan tanpa paksaan dari pihak manapun untuk dipergunakan sebagaimana mestinya.
+                        </p>
+
+                        <div class="row mt-4" style="margin-top: 30px;">
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Pihak Pertama (Pengelola Properti),<br/><b><span t-field="o.company_id.name"/></b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;"><span t-field="o.inspector_id.name"/></p>
+                                <span style="font-size: 10px; color: #666;">Building Management / Tenant Relation</span>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p style="margin-bottom: 60px;">Pihak Kedua (Penyewa / Tenant),<br/><b><span t-field="o.tenant_id.name"/></b></p>
+                                <p style="font-weight: bold; text-decoration: underline; margin-bottom: 0;"><span t-field="o.tenant_id.name"/></p>
+                                <span style="font-size: 10px; color: #666;">Penyewa / Kuasa Penyewa</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

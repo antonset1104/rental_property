@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="owner_statement_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-foreach="statements[o.id]" t-as="d">
+                    <div class="page">
+                        <style>
+                            .os table { width:100%; border-collapse:collapse; font-size:8px; }
+                            .os td, .os th { padding:1px 3px; }
+                            .os .num { text-align:right; white-space:nowrap; }
+                            .os .grp { font-weight:bold; background:#f0f0f0; }
+                            .os .sec { font-weight:bold; border-top:1px solid #000;
+                                       border-bottom:1px solid #000; background:#e2e8f0; }
+                            .os .tot { font-weight:bold; border-top:1px solid #000; }
+                            .os h2 { font-size:13px; margin:6px 0 2px; color:#1F3964; }
+                            .os h3 { font-size:11px; margin:10px 0 2px; color:#006A4E;
+                                     border-bottom:2px solid #006A4E; padding-bottom:1px; }
+                            .os .hdr th { border-bottom:1px solid #999; font-weight:bold;
+                                          text-align:right; }
+                            .os .lbl { text-align:left; }
+                            .os .meta td { font-size:9px; padding:1px 6px; }
+                        </style>
+                        <div class="os">
+                            <!-- ===== HEADER ===== -->
+                            <h2>LAPORAN PEMILIK</h2>
+                            <table class="meta">
+                                <tr>
+                                    <td style="width:12%"><b>Properti</b></td>
+                                    <td style="width:55%" t-out="d['property'].name or ''"/>
+                                    <td style="width:13%"><b>Periode</b></td>
+                                    <td t-out="d['period_label'] or ''"/>
+                                </tr>
+                                <tr>
+                                    <td><b>Pemilik</b></td>
+                                    <td>
+                                        <t t-if="d.get('owners')">
+                                            <t t-foreach="d['owners']" t-as="ow">
+                                                <span t-out="ow.get('name', '')"/>
+                                                <span t-out="' (' + ow.get('pct','') + ')'"/><br/>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-out="d['property'].landlord_id.name if d['property'].landlord_id else ''"/>
+                                        </t>
+                                    </td>
+                                    <td><b>Manajer Properti</b></td>
+                                    <td t-out="d.get('manager', '')"/>
+                                </tr>
+                                <tr>
+                                    <td><b>Perusahaan</b></td>
+                                    <td t-out="d['company'].name or ''"/>
+                                    <td><b>Telepon</b></td>
+                                    <td t-out="d.get('phone', '')"/>
+                                </tr>
+                                <tr>
+                                    <td><b>Tahun Fiskal</b></td>
+                                    <td t-out="str(d['fy_from']) + ' s/d ' + str(d['fy_end'])"/>
+                                    <td><b>Faksimili</b></td>
+                                    <td t-out="d.get('fax', '')"/>
+                                </tr>
+                            </table>
+
+                            <!-- ===== CATATAN MANAJEMEN / RINGKASAN EKSEKUTIF ===== -->
+                            <t t-if="d.get('management_notes')">
+                                <div style="margin-top:6px; padding:5px 8px; background:#f8fafc; border-left:3px solid #006A4E; font-size:8.5px; border-radius:2px;">
+                                    <b style="color:#006A4E;">RINGKASAN EKSEKUTIF / CATATAN MANAJEMEN:</b><br/>
+                                    <span t-out="d['management_notes']" style="white-space:pre-wrap; color:#333;"/>
+                                </div>
+                            </t>
+
+                            <!-- ===== 1. RINGKASAN KINERJA ===== -->
+                            <h3>1. RINGKASAN KINERJA (Akrual)</h3>
+                            <table>
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl" style="width:28%">Keterangan</th>
+                                        <th style="width:8%">Aktual (P)</th>
+                                        <th style="width:8%">Anggaran (P)</th>
+                                        <th style="width:7%">Selisih</th>
+                                        <th style="width:6%">%</th>
+                                        <th style="width:8%">Aktual (YTD)</th>
+                                        <th style="width:8%">Anggaran (YTD)</th>
+                                        <th style="width:7%">Selisih</th>
+                                        <th style="width:6%">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="d['perf']['accrual_rows']" t-as="pr">
+                                        <td class="lbl" t-out="pr['label']"/>
+                                        <td class="num" t-out="pr['c_act']"/>
+                                        <td class="num" t-out="pr['c_bud']"/>
+                                        <td class="num" t-out="pr['c_var']"/>
+                                        <td class="num" t-out="pr['c_pct']"/>
+                                        <td class="num" t-out="pr['y_act']"/>
+                                        <td class="num" t-out="pr['y_bud']"/>
+                                        <td class="num" t-out="pr['y_var']"/>
+                                        <td class="num" t-out="pr['y_pct']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl" t-out="d['perf']['net_return']['label']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['c_act']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['c_bud']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['c_var']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['c_pct']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['y_act']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['y_bud']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['y_var']"/>
+                                        <td class="num" t-out="d['perf']['net_return']['y_pct']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table style="margin-top:4px; width:50%;">
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl">Ringkasan Kas &amp; Rekonsiliasi Dana Titipan</th>
+                                        <th style="width:20%">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="d['cash_summary']" t-as="cr"
+                                        t-att-class="'tot' if cr.get('bold') else ''">
+                                        <td class="lbl" t-out="cr['label']"/>
+                                        <td class="num" t-out="cr['v']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 2. LAPORAN PENDAPATAN & PENGELUARAN (AKRUAL) ===== -->
+                            <h3>2. LAPORAN PENDAPATAN &amp; PENGELUARAN (Akrual)</h3>
+                            <table>
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl" style="width:28%">Akun</th>
+                                        <th style="width:8%">Aktual (P)</th>
+                                        <th style="width:8%">Anggaran (P)</th>
+                                        <th style="width:7%">Selisih</th>
+                                        <th style="width:5%">%</th>
+                                        <th style="width:8%">Aktual (YTD)</th>
+                                        <th style="width:8%">Anggaran (YTD)</th>
+                                        <th style="width:7%">Selisih</th>
+                                        <th style="width:5%">%</th>
+                                        <th style="width:8%">Anggaran Tahunan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="d['income_exp']['sections']" t-as="sec">
+                                        <tr class="sec">
+                                            <td class="lbl" colspan="10" t-out="sec['label']"/>
+                                        </tr>
+                                        <t t-foreach="sec['groups']" t-as="grp">
+                                            <tr class="grp">
+                                                <td class="lbl" colspan="10" t-out="grp['label']"/>
+                                            </tr>
+                                            <tr t-foreach="grp['rows']" t-as="ie">
+                                                <td class="lbl">
+                                                    <span t-out="ie['code']"/>
+                                                    <t t-if="ie['code']"> </t>
+                                                    <span t-out="ie['name']"/>
+                                                </td>
+                                                <td class="num" t-out="ie['c_act']"/>
+                                                <td class="num" t-out="ie['c_bud']"/>
+                                                <td class="num" t-out="ie['c_var']"/>
+                                                <td class="num" t-out="ie['c_pct']"/>
+                                                <td class="num" t-out="ie['y_act']"/>
+                                                <td class="num" t-out="ie['y_bud']"/>
+                                                <td class="num" t-out="ie['y_var']"/>
+                                                <td class="num" t-out="ie['y_pct']"/>
+                                                <td class="num" t-out="ie['a_bud']"/>
+                                            </tr>
+                                            <tr class="tot">
+                                                <td class="lbl" t-out="grp['label'] + ' \u2014 Total'"/>
+                                                <td class="num" t-out="grp['sub']['c_act']"/>
+                                                <td class="num" t-out="grp['sub']['c_bud']"/>
+                                                <td/><td/>
+                                                <td class="num" t-out="grp['sub']['y_act']"/>
+                                                <td class="num" t-out="grp['sub']['y_bud']"/>
+                                                <td/><td/>
+                                                <td class="num" t-out="grp['sub']['a_bud']"/>
+                                            </tr>
+                                        </t>
+                                        <tr class="tot" style="border-top:2px solid #000">
+                                            <td class="lbl" t-out="'Total ' + sec['label']"/>
+                                            <td class="num" t-out="sec['total']['c_act']"/>
+                                            <td/><td/><td/>
+                                            <td class="num" t-out="sec['total']['y_act']"/>
+                                            <td/><td/><td/>
+                                            <td class="num" t-out="sec['total']['a_bud']"/>
+                                        </tr>
+                                    </t>
+                                    <tr class="tot" style="border-top:2px solid #000; background:#dbeafe">
+                                        <td class="lbl">TOTAL PENDAPATAN</td>
+                                        <td class="num" t-out="d['income_exp']['total_income']['c']"/>
+                                        <td/><td/><td/>
+                                        <td class="num" t-out="d['income_exp']['total_income']['y']"/>
+                                        <td/><td/><td/>
+                                        <td class="num" t-out="d['income_exp']['total_income']['a']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#fee2e2">
+                                        <td class="lbl">TOTAL PENGELUARAN</td>
+                                        <td class="num" t-out="d['income_exp']['total_expense']['c']"/>
+                                        <td/><td/><td/>
+                                        <td class="num" t-out="d['income_exp']['total_expense']['y']"/>
+                                        <td/><td/><td/>
+                                        <td class="num" t-out="d['income_exp']['total_expense']['a']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#d1fae5; border-top:2px solid #000">
+                                        <td class="lbl">LABA BERSIH</td>
+                                        <td class="num" t-out="d['income_exp']['net_return']['c']"/>
+                                        <td/><td/><td/>
+                                        <td class="num" t-out="d['income_exp']['net_return']['y']"/>
+                                        <td/><td/><td/>
+                                        <td class="num" t-out="d['income_exp']['net_return']['a']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 3. PENERIMAAN & PENGELUARAN KAS ===== -->
+                            <h3>3. LAPORAN PENERIMAAN &amp; PENGELUARAN KAS</h3>
+                            <table style="width:50%">
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl">Keterangan</th>
+                                        <th style="width:25%">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="grp"><td class="lbl" colspan="2">Penerimaan</td></tr>
+                                    <tr t-foreach="d['cash']['receipts']" t-as="cr">
+                                        <td class="lbl">
+                                            <span t-out="cr['code']"/>
+                                            <t t-if="cr['code']"> </t>
+                                            <span t-out="cr['name']"/>
+                                        </td>
+                                        <td class="num" t-out="cr['amount']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">TOTAL PENERIMAAN</td>
+                                        <td class="num" t-out="d['cash']['r_total']"/>
+                                    </tr>
+                                    <tr class="grp"><td class="lbl" colspan="2">Pengeluaran</td></tr>
+                                    <tr t-foreach="d['cash']['payments']" t-as="cp">
+                                        <td class="lbl">
+                                            <span t-out="cp['code']"/>
+                                            <t t-if="cp['code']"> </t>
+                                            <span t-out="cp['name']"/>
+                                        </td>
+                                        <td class="num" t-out="cp['amount']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">TOTAL PENGELUARAN</td>
+                                        <td class="num" t-out="d['cash']['p_total']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#d1fae5">
+                                        <td class="lbl">KAS BERSIH</td>
+                                        <td class="num" t-out="d['cash']['net_cash']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 4. SALDO PENYEWA ===== -->
+                            <h3>4. SALDO PENYEWA</h3>
+                            <table>
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl" style="width:30%">Penyewa / Kontrak</th>
+                                        <th style="width:10%">Saldo Awal</th>
+                                        <th style="width:10%">Tagihan Rutin</th>
+                                        <th style="width:10%">Tagihan Lainnya</th>
+                                        <th style="width:10%">Penerimaan Kas</th>
+                                        <th style="width:10%">Saldo Akhir</th>
+                                        <th style="width:10%">Deposit Jaminan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="d['tenants']['rows']" t-as="tb">
+                                        <td class="lbl" t-out="tb['name']"/>
+                                        <td class="num" t-out="tb['beginning']"/>
+                                        <td class="num" t-out="tb['recurring']"/>
+                                        <td class="num" t-out="tb['other']"/>
+                                        <td class="num" t-out="tb['receipts']"/>
+                                        <td class="num" t-out="tb['ending']"/>
+                                        <td class="num" t-out="tb['secdep']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">TOTAL</td>
+                                        <td class="num" t-out="d['tenants']['totals']['beginning']"/>
+                                        <td class="num" t-out="d['tenants']['totals']['recurring']"/>
+                                        <td class="num" t-out="d['tenants']['totals']['other']"/>
+                                        <td class="num" t-out="d['tenants']['totals']['receipts']"/>
+                                        <td class="num" t-out="d['tenants']['totals']['ending']"/>
+                                        <td class="num" t-out="d['tenants']['totals']['secdep']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 5. LAPORAN TUNGGAKAN ===== -->
+                            <h3>5. LAPORAN TUNGGAKAN (Aged Arrears)</h3>
+                            <table>
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl" style="width:30%">Penyewa</th>
+                                        <th style="width:10%">Berjalan</th>
+                                        <th style="width:10%">1&#8211;30 Hari</th>
+                                        <th style="width:10%">31&#8211;60 Hari</th>
+                                        <th style="width:10%">61&#8211;90 Hari</th>
+                                        <th style="width:10%">&gt;90 Hari</th>
+                                        <th style="width:10%">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="d['arrears']['rows']" t-as="ar">
+                                        <td class="lbl" t-out="ar['name']"/>
+                                        <td class="num" t-out="ar['current']"/>
+                                        <td class="num" t-out="ar['m1']"/>
+                                        <td class="num" t-out="ar['m2']"/>
+                                        <td class="num" t-out="ar['m3']"/>
+                                        <td class="num" t-out="ar['m4']"/>
+                                        <td class="num" t-out="ar['total']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">TOTAL</td>
+                                        <td class="num" t-out="d['arrears']['totals']['current']"/>
+                                        <td class="num" t-out="d['arrears']['totals']['m1']"/>
+                                        <td class="num" t-out="d['arrears']['totals']['m2']"/>
+                                        <td class="num" t-out="d['arrears']['totals']['m3']"/>
+                                        <td class="num" t-out="d['arrears']['totals']['m4']"/>
+                                        <td class="num" t-out="d['arrears']['totals']['total']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 6. RINCIAN PEMBAYARAN ===== -->
+                            <h3>6. RINCIAN PEMBAYARAN</h3>
+                            <table>
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl" style="width:30%">Pemasok</th>
+                                        <th class="lbl" style="width:20%">Referensi</th>
+                                        <th class="lbl" style="width:15%">Tanggal</th>
+                                        <th style="width:15%">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="d['payments']['groups']" t-as="pg">
+                                        <tr class="grp">
+                                            <td class="lbl" colspan="4">
+                                                <span t-out="pg['code']"/>
+                                                <t t-if="pg['code']"> &#8212; </t>
+                                                <span t-out="pg['name']"/>
+                                            </td>
+                                        </tr>
+                                        <tr t-foreach="pg['rows']" t-as="pd">
+                                            <td class="lbl" t-out="pd['supplier']"/>
+                                            <td class="lbl" t-out="pd['ref']"/>
+                                            <td class="lbl" t-out="pd['date']"/>
+                                            <td class="num" t-out="pd['amount']"/>
+                                        </tr>
+                                        <tr class="tot">
+                                            <td class="lbl" colspan="3"
+                                                t-out="'Total ' + (pg['name'] or '')"/>
+                                            <td class="num" t-out="pg['sum']"/>
+                                        </tr>
+                                    </t>
+                                    <t t-if="d['remittances']['rows']">
+                                        <tr class="grp">
+                                            <td class="lbl" colspan="4">Remitansi Pemilik</td>
+                                        </tr>
+                                        <tr t-foreach="d['remittances']['rows']" t-as="rm">
+                                            <td class="lbl" t-out="rm['supplier']"/>
+                                            <td class="lbl" t-out="rm['ref']"/>
+                                            <td class="lbl" t-out="rm['date']"/>
+                                            <td class="num" t-out="rm['amount']"/>
+                                        </tr>
+                                        <tr class="tot">
+                                            <td class="lbl" colspan="3">Total Remitansi</td>
+                                            <td class="num" t-out="d['remittances']['total']"/>
+                                        </tr>
+                                    </t>
+                                    <tr class="tot" style="border-top:2px solid #000">
+                                        <td class="lbl" colspan="3">TOTAL PEMBAYARAN SUPPLIER</td>
+                                        <td class="num" t-out="d['payments']['total']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 7. NERACA SALDO ===== -->
+                            <h3>7. NERACA SALDO</h3>
+                            <table>
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl" style="width:40%">Akun</th>
+                                        <th style="width:15%">Saldo Awal</th>
+                                        <th style="width:12%">Debit</th>
+                                        <th style="width:12%">Kredit</th>
+                                        <th style="width:15%">Saldo Akhir</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="d['trial']" t-as="tr_">
+                                        <td class="lbl">
+                                            <span t-out="tr_['code']"/>
+                                            <t t-if="tr_['code']"> </t>
+                                            <span t-out="tr_['name']"/>
+                                        </td>
+                                        <td class="num" t-out="tr_['opening']"/>
+                                        <td class="num" t-out="tr_['debit']"/>
+                                        <td class="num" t-out="tr_['credit']"/>
+                                        <td class="num" t-out="tr_['closing']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 8. NERACA ===== -->
+                            <h3>8. NERACA</h3>
+                            <table style="width:55%">
+                                <tbody>
+                                    <tr class="sec"><td class="lbl" colspan="2">ASET</td></tr>
+                                    <tr t-foreach="d['balance']['assets']" t-as="bs_">
+                                        <td class="lbl">
+                                            <span t-out="bs_['code']"/>
+                                            <t t-if="bs_['code']"> </t>
+                                            <span t-out="bs_['name']"/>
+                                        </td>
+                                        <td class="num" t-out="bs_['amount']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#dbeafe">
+                                        <td class="lbl">TOTAL ASET</td>
+                                        <td class="num" t-out="d['balance']['assets_total']"/>
+                                    </tr>
+
+                                    <tr class="sec"><td class="lbl" colspan="2">LIABILITAS</td></tr>
+                                    <tr t-foreach="d['balance']['liabilities']" t-as="bs_">
+                                        <td class="lbl">
+                                            <span t-out="bs_['code']"/>
+                                            <t t-if="bs_['code']"> </t>
+                                            <span t-out="bs_['name']"/>
+                                        </td>
+                                        <td class="num" t-out="bs_['amount']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#fee2e2">
+                                        <td class="lbl">TOTAL LIABILITAS</td>
+                                        <td class="num" t-out="d['balance']['liabilities_total']"/>
+                                    </tr>
+                                    <tr class="tot" style="border-top:2px solid #000">
+                                        <td class="lbl">ASET BERSIH</td>
+                                        <td class="num" t-out="d['balance']['net_assets']"/>
+                                    </tr>
+
+                                    <tr class="sec"><td class="lbl" colspan="2">EKUITAS PEMILIK</td></tr>
+                                    <tr class="grp"><td class="lbl" colspan="2">Kontribusi Pemilik</td></tr>
+                                    <tr t-foreach="d['balance']['equity_contribution']" t-as="bs_">
+                                        <td class="lbl">
+                                            <span t-out="bs_['code']"/>
+                                            <t t-if="bs_['code']"> </t>
+                                            <span t-out="bs_['name']"/>
+                                        </td>
+                                        <td class="num" t-out="bs_['amount']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">Total Kontribusi Pemilik</td>
+                                        <td class="num" t-out="d['balance']['equity_contribution_total']"/>
+                                    </tr>
+                                    <tr class="grp"><td class="lbl" colspan="2">Ekuitas / Laba Ditahan</td></tr>
+                                    <tr t-foreach="d['balance']['equity_retained']" t-as="bs_">
+                                        <td class="lbl">
+                                            <span t-out="bs_['code']"/>
+                                            <t t-if="bs_['code']"> </t>
+                                            <span t-out="bs_['name']"/>
+                                        </td>
+                                        <td class="num" t-out="bs_['amount']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">Total Ekuitas / Laba Ditahan</td>
+                                        <td class="num" t-out="d['balance']['equity_retained_total']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#d1fae5; border-top:2px solid #000">
+                                        <td class="lbl">TOTAL EKUITAS PEMILIK</td>
+                                        <td class="num" t-out="d['balance']['equity_total']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- ===== 9. REKONSILIASI PPN ===== -->
+                            <h3>9. REKONSILIASI PPN</h3>
+                            <table style="width:50%">
+                                <thead>
+                                    <tr class="hdr">
+                                        <th class="lbl">Keterangan</th>
+                                        <th style="width:25%">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="grp"><td class="lbl" colspan="2">PPN Keluaran (atas Penjualan)</td></tr>
+                                    <tr t-foreach="d['gst']['output']" t-as="gv">
+                                        <td class="lbl" t-out="gv['name']"/>
+                                        <td class="num" t-out="gv['amount']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">Total PPN Keluaran</td>
+                                        <td class="num" t-out="d['gst']['output_total']"/>
+                                    </tr>
+                                    <tr class="grp"><td class="lbl" colspan="2">PPN Masukan (atas Pembelian)</td></tr>
+                                    <tr t-foreach="d['gst']['input']" t-as="gv">
+                                        <td class="lbl" t-out="gv['name']"/>
+                                        <td class="num" t-out="gv['amount']"/>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td class="lbl">Total PPN Masukan</td>
+                                        <td class="num" t-out="d['gst']['input_total']"/>
+                                    </tr>
+                                    <tr class="tot" style="background:#d1fae5; border-top:2px solid #000">
+                                        <td class="lbl">PPN BERSIH TERUTANG</td>
+                                        <td class="num" t-out="d['gst']['net']"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p style="font-size:7px; margin-top:10px; color:#777; border-top:1px solid #ccc; padding-top:4px">
+                                Laporan ini dibuat otomatis dari jurnal yang telah diposting dan terhubung ke properti ini.
+                                Angka akrual berdasarkan tanggal jurnal. Angka kas berdasarkan tanggal rekonsiliasi pembayaran.
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

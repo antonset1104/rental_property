@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_property_gto_turnover" model="ir.sequence">
+            <field name="name">GTO Turnover Declaration</field>
+            <field name="code">property.gto.turnover</field>
+            <field name="prefix">GTO</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_property_meter_reading" model="ir.sequence">
+            <field name="name">Meter Reading</field>
+            <field name="code">property.meter.reading</field>
+            <field name="prefix">MTR</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

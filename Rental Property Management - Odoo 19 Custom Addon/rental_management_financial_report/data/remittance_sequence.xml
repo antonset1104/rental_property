@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_property_owner_remittance" model="ir.sequence">
+            <field name="name">Owner Remittance</field>
+            <field name="code">property.owner.remittance</field>
+            <field name="prefix">RM</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_property_security_deposit" model="ir.sequence">
+            <field name="name">Security Deposit</field>
+            <field name="code">property.security.deposit</field>
+            <field name="prefix">SD</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
