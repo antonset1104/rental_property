@@ -206,6 +206,26 @@ class TenancyDetailsInspection(models.Model):
     inspection_ids = fields.One2many('property.unit.inspection', 'tenancy_id', string='BAST & Inspeksi')
     inspection_count = fields.Integer(string='Jumlah BAST', compute='_compute_inspection_count')
 
+    # Virtual Account & QRIS Configuration (Indonesia Bank Standards)
+    va_bank = fields.Selection([
+        ('bca', 'BCA Virtual Account'),
+        ('mandiri', 'Mandiri Virtual Account'),
+        ('bni', 'BNI Virtual Account'),
+        ('bri', 'BRI Virtual Account'),
+        ('permata', 'Permata Virtual Account'),
+        ('cimb', 'CIMB Niaga Virtual Account'),
+    ], string='Bank Virtual Account', default='bca')
+    va_company_prefix = fields.Char(string='Kode Prefix Perusahaan (VA)', default='88099')
+    va_number = fields.Char(string='Nomor Virtual Account Tenant', compute='_compute_va_number', store=True)
+    qris_merchant_id = fields.Char(string='NMID / QRIS Merchant ID', default='ID1020304050607')
+
+    @api.depends('va_bank', 'va_company_prefix', 'tenancy_seq')
+    def _compute_va_number(self):
+        for rec in self:
+            prefix = (rec.va_company_prefix or '88099').strip()
+            digits = ''.join([c for c in (rec.tenancy_seq or str(rec.id)) if c.isdigit()]) or str(rec.id)
+            rec.va_number = f"{prefix}{digits.zfill(8)}"
+
     def _compute_inspection_count(self):
         for rec in self:
             rec.inspection_count = len(rec.inspection_ids)
@@ -223,4 +243,33 @@ class TenancyDetailsInspection(models.Model):
                 'default_property_id': self.property_id.id if self.property_id else False,
             },
         }
+
+
+class AccountMoveVA(models.Model):
+    _inherit = 'account.move'
+
+    payment_va_bank = fields.Char(string='Bank Virtual Account', compute='_compute_payment_va_info', store=True)
+    payment_va_number = fields.Char(string='Nomor Virtual Account', compute='_compute_payment_va_info', store=True)
+    payment_qris_info = fields.Char(string='QRIS Merchant Info', compute='_compute_payment_va_info', store=True)
+
+    @api.depends('tenancy_id', 'tenancy_id.va_bank', 'tenancy_id.va_number', 'tenancy_id.qris_merchant_id')
+    def _compute_payment_va_info(self):
+        bank_dict = {
+            'bca': 'BCA Virtual Account',
+            'mandiri': 'Mandiri Virtual Account',
+            'bni': 'BNI Virtual Account',
+            'bri': 'BRI Virtual Account',
+            'permata': 'Permata Virtual Account',
+            'cimb': 'CIMB Niaga Virtual Account',
+        }
+        for rec in self:
+            if rec.tenancy_id:
+                rec.payment_va_bank = bank_dict.get(rec.tenancy_id.va_bank, 'Virtual Account')
+                rec.payment_va_number = rec.tenancy_id.va_number
+                rec.payment_qris_info = rec.tenancy_id.qris_merchant_id or 'ID1020304050607'
+            else:
+                rec.payment_va_bank = False
+                rec.payment_va_number = False
+                rec.payment_qris_info = False
+
 

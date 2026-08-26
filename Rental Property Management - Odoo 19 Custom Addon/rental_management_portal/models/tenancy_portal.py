@@ -30,3 +30,18 @@ class AccountMovePortal(models.Model):
         ('verified', 'Terverifikasi'),
     ], default='none', string='Status Bukti Bayar Portal', tracking=True)
 
+
+class MaintenanceRequestPortal(models.Model):
+    _inherit = 'maintenance.request'
+
+    portal_rating = fields.Selection([
+        ('1', '⭐ 1 - Sangat Buruk'),
+        ('2', '⭐⭐ 2 - Buruk'),
+        ('3', '⭐⭐⭐ 3 - Cukup'),
+        ('4', '⭐⭐⭐⭐ 4 - Baik'),
+        ('5', '⭐⭐⭐⭐⭐ 5 - Sangat Puas'),
+    ], string='Rating Kepuasan Tenant (CSAT)', tracking=True)
+    portal_feedback = fields.Text(string='Ulasan / Masukan Tenant')
+    portal_rating_date = fields.Datetime(string='Waktu Rating Diberikan')
+
+

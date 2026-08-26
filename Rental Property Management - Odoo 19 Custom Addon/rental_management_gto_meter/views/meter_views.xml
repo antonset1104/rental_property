@@ -27,16 +27,19 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
-                        <group>
+                        <group string="Informasi Meter &amp; Unit">
                             <field name="meter_type"/>
                             <field name="property_id"/>
                             <field name="tenancy_id"/>
                             <field name="tenant_id"/>
+                            <field name="is_peak_off_peak"/>
                         </group>
-                        <group>
+                        <group string="Tarif &amp; Satuan">
                             <field name="product_id"/>
-                            <field name="tariff"/>
                             <field name="uom_name"/>
+                            <field name="tariff" invisible="is_peak_off_peak"/>
+                            <field name="tariff_wbp" invisible="not is_peak_off_peak"/>
+                            <field name="tariff_lwbp" invisible="not is_peak_off_peak"/>
                             <field name="last_reading"/>
                             <field name="active"/>
                             <field name="currency_id" invisible="1"/>
@@ -46,11 +49,14 @@
                         <list>
                             <field name="name"/>
                             <field name="date"/>
-                            <field name="previous_reading"/>
-                            <field name="current_reading"/>
+                            <field name="previous_reading" invisible="is_peak_off_peak"/>
+                            <field name="current_reading" invisible="is_peak_off_peak"/>
+                            <field name="consumption_wbp" invisible="not is_peak_off_peak"/>
+                            <field name="consumption_lwbp" invisible="not is_peak_off_peak"/>
                             <field name="consumption"/>
                             <field name="amount"/>
                             <field name="state"/>
+                            <field name="is_peak_off_peak" column_invisible="1"/>
                         </list>
                     </field>
                 </sheet>
@@ -98,19 +104,42 @@
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
-                        <group>
+                        <group string="Data Meter &amp; Kontrak">
                             <field name="meter_id" readonly="state == 'billed'"/>
                             <field name="property_id"/>
                             <field name="tenancy_id" readonly="state == 'billed'"/>
                             <field name="tenant_id"/>
+                            <field name="is_peak_off_peak" invisible="1"/>
                         </group>
-                        <group>
+                        <group string="Stand Tunggal (Reguler)" invisible="is_peak_off_peak">
                             <field name="date" readonly="state == 'billed'"/>
                             <field name="previous_reading" readonly="state == 'billed'"/>
                             <field name="current_reading" readonly="state == 'billed'"/>
                             <field name="tariff" readonly="state == 'billed'"/>
-                            <field name="consumption"/>
-                            <field name="amount"/>
+                        </group>
+                    </group>
+                    <group string="Pencatatan Beban Puncak PLN (WBP / LWBP)" invisible="not is_peak_off_peak">
+                        <group string="1. Waktu Beban Puncak (WBP)">
+                            <field name="previous_reading_wbp" readonly="state == 'billed'"/>
+                            <field name="current_reading_wbp" readonly="state == 'billed'"/>
+                            <field name="tariff_wbp" readonly="state == 'billed'"/>
+                            <field name="consumption_wbp" readonly="1"/>
+                            <field name="amount_wbp" readonly="1"/>
+                        </group>
+                        <group string="2. Luar Waktu Beban Puncak (LWBP)">
+                            <field name="previous_reading_lwbp" readonly="state == 'billed'"/>
+                            <field name="current_reading_lwbp" readonly="state == 'billed'"/>
+                            <field name="tariff_lwbp" readonly="state == 'billed'"/>
+                            <field name="consumption_lwbp" readonly="1"/>
+                            <field name="amount_lwbp" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Total Tagihan Utilitas">
+                        <group>
+                            <field name="consumption" readonly="1"/>
+                            <field name="amount" readonly="1"/>
+                        </group>
+                        <group>
                             <field name="invoice_id" readonly="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>

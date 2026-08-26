@@ -39,4 +39,14 @@
         <field name="report_file">rental_management_financial_report.report_clearance_certificate_document</field>
         <field name="print_report_name">'Clearance_Certificate_%s' % (object.tenancy_seq or object.name).replace('/', '_')</field>
     </record>
+
+    <!-- Surat Izin Kerja (SIK) / Fit-Out Work Permit PDF -->
+    <record id="action_report_fitout_permit" model="ir.actions.report">
+        <field name="name">Surat Izin Kerja (SIK) Renovasi</field>
+        <field name="model">property.fitout.permit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_fitout_permit_document</field>
+        <field name="report_file">rental_management_financial_report.report_fitout_permit_document</field>
+        <field name="print_report_name">'SIK_%s' % object.name.replace('/', '_')</field>
+    </record>
 </odoo>

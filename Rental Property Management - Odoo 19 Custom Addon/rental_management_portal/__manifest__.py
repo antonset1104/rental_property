@@ -23,6 +23,7 @@ a self-service area under /my (IFCA RentX "Tenant Portal/App"):
         'security/ir.model.access.csv',
         'security/portal_security.xml',
         'views/portal_templates.xml',
+        'views/maintenance_views.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="property_details_form_view_financial" model="ir.ui.view">
-        <field name="name">property.details.form.financial</field>
+    <record id="property_details_view_form_inherit_owners" model="ir.ui.view">
+        <field name="name">property.details.form.owners</field>
         <field name="model">property.details</field>
-        <field name="inherit_id" ref="rental_management.property_details_form_view"/>
+        <field name="inherit_id" ref="rental_management.property_details_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page string="Owners &amp; Financial" name="owners_financial">
                     <group>
-                        <group string="Property Management">
+                        <group string="Property Manager">
                             <field name="property_manager_id"/>
                             <field name="manager_phone"/>
                             <field name="manager_fax"/>
                         </group>
-                        <group string="Spesifikasi Teknis Unit (MEP)">
-                            <label for="master_unit_code"/>
+                        <group string="Standard Unit ID &amp; MEP Specifications">
+                            <label for="unit_number" string="Nomor Unit"/>
                             <div class="o_row">
-                                <field name="master_unit_code" placeholder="PMKBN001-GF-01"/>
+                                <field name="unit_number" placeholder="Contoh: GF-01 atau 05-12"/>
                                 <button name="action_generate_master_unit_code" type="object"
-                                        string="Format ID" class="btn btn-outline-primary btn-sm"/>
+                                        string="Format ID" class="btn-sm btn-outline-secondary"/>
                             </div>
-                            <field name="unit_number"/>
+                            <field name="master_unit_code" readonly="1"/>
                             <field name="electricity_power_va"/>
                             <field name="water_supply"/>
                             <field name="telephone_lines"/>
@@ -30,31 +30,33 @@
                             <field name="has_evac_speaker"/>
                             <field name="sewage_system"/>
                         </group>
-                        <group string="Accounting">
-                            <field name="analytic_account_id"/>
-                            <field name="analytic_division_id"/>
-                            <field name="analytic_subdivision_id"/>
-                            <field name="analytic_dept_id"/>
-                            <field name="analytic_location_id"/>
-                            <button name="action_create_analytic_account" type="object"
-                                    string="Create All Analytic Accounts" class="btn-link"
-                                    invisible="analytic_account_id"/>
-                            <button name="action_view_analytic_items" type="object"
-                                    string="Analytic Items" class="btn-link"
-                                    invisible="not analytic_account_id"/>
-                        </group>
-                        <group string="Trust Accounting" colspan="2">
+                    </group>
+                    <group>
+                        <group string="Trust Accounting &amp; Remittance">
                             <field name="trust_account_id"/>
                             <field name="remittance_account_id"/>
                             <field name="remittance_journal_id"/>
                         </group>
-                        <group string="Security Deposit" colspan="2">
+                        <group string="Security Deposits">
                             <field name="deposit_liability_account_id"/>
                             <field name="deposit_income_account_id"/>
                             <field name="deposit_journal_id"/>
                         </group>
                     </group>
-                    <separator string="Owners"/>
+                    <group string="Analytic Dimensions">
+                        <group>
+                            <field name="analytic_account_id"/>
+                            <field name="analytic_division_id"/>
+                            <field name="analytic_subdivision_id"/>
+                        </group>
+                        <group>
+                            <field name="analytic_dept_id"/>
+                            <field name="analytic_location_id"/>
+                            <button name="action_setup_analytic_dimensions" type="object"
+                                    string="Setup Analytic Dimensions" class="btn-sm btn-secondary"/>
+                        </group>
+                    </group>
+                    <separator string="Owners (Multiple Owners with %)"/>
                     <field name="owner_line_ids">
                         <list editable="bottom">
                             <field name="sequence" widget="handle"/>
@@ -70,7 +72,7 @@
         </field>
     </record>
 
-    <!-- Tenancy Form View: Smart Button BAST & Inspeksi & Clearance Certificate -->
+    <!-- Tenancy Form View: Smart Button BAST & Inspeksi & Clearance Certificate & VA -->
     <record id="tenancy_details_form_view_inspection" model="ir.ui.view">
         <field name="name">tenancy.details.form.inspection</field>
         <field name="model">tenancy.details</field>
@@ -85,6 +87,42 @@
                         class="oe_stat_button" icon="fa-clipboard">
                     <field name="inspection_count" widget="statinfo" string="BAST &amp; Inspeksi"/>
                 </button>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Virtual Account &amp; QRIS" name="page_va_qris">
+                    <group>
+                        <group string="Konfigurasi Virtual Account">
+                            <field name="va_bank"/>
+                            <field name="va_company_prefix"/>
+                            <field name="va_number" readonly="1"/>
+                        </group>
+                        <group string="Pembayaran Cepat QRIS">
+                            <field name="qris_merchant_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Account Move: VA Info Section -->
+    <record id="view_move_form_va_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.va</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="💳 Virtual Account &amp; QRIS" name="page_va_payment" invisible="move_type != 'out_invoice' or not payment_va_number">
+                    <group>
+                        <group string="Instruksi Pembayaran Virtual Account">
+                            <field name="payment_va_bank" readonly="1"/>
+                            <field name="payment_va_number" readonly="1"/>
+                        </group>
+                        <group string="Kode Merchant QRIS">
+                            <field name="payment_qris_info" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

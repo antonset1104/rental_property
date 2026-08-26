@@ -18,8 +18,11 @@ Buku petunjuk operasional lengkap ini disusun untuk tim **Property Management**,
 9. [Tenant Self-Service Portal (Bukti Bayar, BAST, Maintenance)](#9-tenant-self-service-portal-bukti-bayar-bast-maintenance)
 10. [Dashboard Eksekutif: Metrik WALE, RevPAM & Okupansi](#10-dashboard-eksekutif-metrik-wale-revpam--okupansi)
 11. [Alur Tutup Kontrak & Surat Bebas Kewajiban (Clearance Certificate)](#11-alur-tutup-kontrak--surat-bebas-kewajiban-clearance-certificate)
-12. [Laporan Keuangan Pemilik (Owners Statement) Konsolidasi 16 PT](#12-laporan-keuangan-pemilik-owners-statement-konsolidasi-16-pt)
+12. [Laporan Keuangan Pemilik (Owners Statement) Konsolidasi 16 PT & Ekspor Excel](#12-laporan-keuangan-pemilik-owners-statement-konsolidasi-16-pt--ekspor-excel)
 13. [Manajemen Perizinan & Dokumen Legal Gedung](#13-manajemen-perizinan--dokumen-legal-gedung)
+14. [Surat Izin Kerja (SIK) Renovasi / Fit-Out Work Permit](#14-surat-izin-kerja-sik-renovasi--fit-out-work-permit)
+15. [Tarif Listrik Beban Puncak PLN (WBP / LWBP) & Utilitas Ganda](#15-tarif-listrik-beban-puncak-pln-wbp--lwbp--utilitas-ganda)
+16. [Rating Kepuasan Tenant (CSAT) pada Portal Maintenance](#16-rating-kepuasan-tenant-csat-pada-portal-maintenance)
 
 ---
 
@@ -224,7 +227,7 @@ Ketika masa sewa tenant berakhir:
 
 ---
 
-## 12. Laporan Keuangan Pemilik (Owners Statement) Konsolidasi 16 PT
+## 12. Laporan Keuangan Pemilik (Owners Statement) Konsolidasi 16 PT & Ekspor Excel
 
 1. Buka menu: **Rental Management > Financial Reports > Laporan Pemilik (Wizard)**.
 2. Pilih Mode Laporan:
@@ -233,7 +236,8 @@ Ketika masa sewa tenant berakhir:
    - **Konsolidasi Seluruh Entitas (16 PT)**: Laporan gabungan seluruh portofolio 16 PT dalam grup holding.
 3. Pilih rentang periode fiskal dan masukkan **Catatan Manajemen / Ringkasan Eksekutif** (narasi kinerja dari Manajer Properti).
 4. Klik **"Cetak Laporan Pemilik (PDF)"** untuk menghasilkan dokumen PDF komprehensif (9 bagian laporan: *Performance Summary, Income & Expenditure Accrual, Receipts & Payments Cash Basis, Tenant Balances, Aged Arrears, Payment Details, Trial Balance, Balance Sheet, GST/PPN Reconciliation*).
-5. Klik tombol **"📧 Kirim Email ke Pemilik"** untuk mengirimkan PDF statement secara otomatis ke seluruh alamat email pemilik yang terdaftar.
+5. Klik **"📊 Ekspor Excel (.xlsx)"** untuk mengunduh spreadsheet Excel multi-tab (*Summary, Income & Expenditure, Receipts & Payments, Tenant Balances, Trial Balance*) dengan formula dan format sel rapi.
+6. Klik tombol **"📧 Kirim Email ke Pemilik"** untuk mengirimkan PDF statement secara otomatis ke seluruh alamat email pemilik yang terdaftar.
 
 ---
 
@@ -247,6 +251,37 @@ Buka menu: **Rental Management > Dokumen Legal & Perizinan** (Modul `rental_mana
   - **Perjanjian**: PKS (Perjanjian Kerja Sama Sewa / Induk).
   - **Lingkungan & Keselamatan**: AMDAL / UKL-UPL, Sertifikat Keselamatan Kebakaran (Damkar).
 - Setiap dokumen dilengkapi tanggal kedaluwarsa (*expiry date*) dan notifikasi pengingat perpanjangan sebelum izin habis masa berlaku.
+
+---
+
+## 14. Surat Izin Kerja (SIK) Renovasi / Fit-Out Work Permit
+
+Sebelum kontraktor tenant memulai pekerjaan fisik/dekorasi:
+1. Buka menu: **Rental Management > Surat Izin Kerja (SIK)**.
+2. Klik **New**, pilih Kontrak Sewa (`tenancy.details`).
+3. Masukkan identitas kontraktor pelaksana, nama PIC, nomor WhatsApp, dan jumlah pekerja.
+4. Tentukan **Kategori Pekerjaan** (*Minor Fit-Out, Renovasi Mayor, MEP, Pembongkaran*) dan **Jam Kerja** (*Siang Hari, Malam Hari 21:00-05:00, Weekend*).
+5. Aktifkan opsi **"Izin Pengelasan / Hot Work Permit"** jika ada pekerjaan panas serta verifikasi ketersediaan APAR dan Safety Briefing K3.
+6. Klik **"✅ Setujui SIK"**, lalu klik **"🖨️ Cetak SIK (PDF)"** untuk mencetak Surat Izin Kerja resmi bertandatangan 3 pihak (*Kontraktor, Tenant, Building Management*).
+
+---
+
+## 15. Tarif Listrik Beban Puncak PLN (WBP / LWBP) & Utilitas Ganda
+
+Khusus tenant komersial golongan tarif PLN B3/I3:
+1. Pada form meteran listrik (`property.meter`), centang opsi **"Tarif Beban Puncak PLN (WBP / LWBP)"**.
+2. Masukkan **Tarif WBP (Beban Puncak)** dan **Tarif LWBP (Luar Beban Puncak)**.
+3. Saat mencatat meteran (`property.meter.reading`), masukkan angka stand meter WBP dan LWBP secara terpisah.
+4. Sistem secara otomatis menghitung pemakaian kwh dan subtotal biaya masing-masing beban puncak, lalu menggabungkannya ke dalam 1 invoice tagihan utilitas bulanan.
+
+---
+
+## 16. Rating Kepuasan Tenant (CSAT) pada Portal Maintenance
+
+1. Saat tiket pemeliharaan (*Maintenance Request*) telah selesai dikerjakan oleh tim Engineering/Teknisi.
+2. Tenant membuka halaman tiket di portal `/my/maintenance/<id>`.
+3. Tenant dapat memberikan **Rating Bintang (1 s.d. 5 Bintang)** dan ulasan masukan (*feedback*) kepuasan pelayanan.
+4. Nilai kepuasan CSAT otomatis tercatat pada backend Odoo dan muncul sebagai indikator penilaian SLA kinerja tim operasional gedung.
 
 ---
 *Dokumentasi disusun dan diverifikasi pada versi Odoo 19 Community Edition.*

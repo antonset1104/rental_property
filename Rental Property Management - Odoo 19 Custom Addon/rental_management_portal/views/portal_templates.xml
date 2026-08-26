@@ -284,11 +284,55 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Rating Kepuasan CSAT -->
+                            <div class="mt-4 pt-3 border-top">
+                                <t t-if="req.portal_rating">
+                                    <div class="alert alert-success d-flex align-items-center mb-0">
+                                        <i class="fa fa-star fa-2x me-3 text-warning"/>
+                                        <div>
+                                            <strong>Terima kasih atas penilaian Anda!</strong><br/>
+                                            Rating Diberikan: <b><span t-field="req.portal_rating"/></b><br/>
+                                            <t t-if="req.portal_feedback">
+                                                Masukan: <em>"<span t-field="req.feedback"/>"</em>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold mb-2">⭐ Berikan Penilaian Kinerja Teknisi / Tim Maintenance</h6>
+                                            <p class="text-muted small mb-3">Bantu kami meningkatkan kualitas pelayanan dengan memberikan penilaian atas penanganan tiket ini.</p>
+                                            <form t-attf-action="/my/maintenance/#{req.id}/rate" method="post">
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Tingkat Kepuasan:</label>
+                                                    <select name="rating" class="form-select" style="max-width: 300px;" required="required">
+                                                        <option value="5">⭐⭐⭐⭐⭐ 5 - Sangat Puas</option>
+                                                        <option value="4">⭐⭐⭐⭐ 4 - Baik</option>
+                                                        <option value="3">⭐⭐⭐ 3 - Cukup</option>
+                                                        <option value="2">⭐⭐ 2 - Buruk</option>
+                                                        <option value="1">⭐ 1 - Sangat Buruk</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Ulasan / Masukan Tambahan (Opsional):</label>
+                                                    <textarea name="feedback" class="form-control" rows="2" placeholder="Bagikan pengalaman Anda mengenai kecepatan dan keramahan tim teknisi..."></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning">
+                                                    <i class="fa fa-paper-plane"/> Kirim Penilaian
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+
                             <div class="mt-4">
                                 <a href="/my/maintenance" class="btn btn-secondary">
                                     <i class="fa fa-arrow-left"/> Kembali ke Daftar Maintenance
                                 </a>
-                                <p class="mb-0 text-muted" t-out="req.description or 'No description provided.'"/>
                             </div>
                         </div>
                     </div>

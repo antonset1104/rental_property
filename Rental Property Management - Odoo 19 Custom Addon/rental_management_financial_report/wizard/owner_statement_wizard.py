@@ -76,6 +76,8 @@ class OwnerStatementWizard(models.TransientModel):
     management_notes = fields.Text(
         string='Catatan Manajemen / Ringkasan Eksekutif',
         help="Narasi atau ringkasan kinerja dari Manajer Properti untuk dicantumkan pada laporan.")
+    excel_file = fields.Binary(string='File Excel', readonly=True)
+    excel_filename = fields.Char(string='Nama File Excel', readonly=True)
 
     @api.onchange('report_mode', 'owner_id')
     def _onchange_report_mode(self):
@@ -901,6 +903,174 @@ class OwnerStatementWizard(models.TransientModel):
                 'type': 'success',
                 'sticky': False,
             }
+        }
+
+    def action_export_excel(self):
+        """Ekspor Laporan Pemilik ke Spreadsheet Excel (.xlsx) Multi-Tab."""
+        self.ensure_one()
+        import io
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+        wb = openpyxl.Workbook()
+        # Setup styles
+        header_fill = PatternFill(start_color="1F3964", end_color="1F3964", fill_type="solid")
+        header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
+        title_font = Font(name="Calibri", size=14, bold=True, color="1F3964")
+        bold_font = Font(name="Calibri", size=10, bold=True)
+        normal_font = Font(name="Calibri", size=10)
+        border_thin = Border(
+            left=Side(style='thin', color='D3D3D3'),
+            right=Side(style='thin', color='D3D3D3'),
+            top=Side(style='thin', color='D3D3D3'),
+            bottom=Side(style='thin', color='D3D3D3')
+        )
+
+        props = self._get_properties()
+        data = self._compute_data(props) if self.report_mode == 'single' else self._compute_data(props[0] if props else self.property_id)
+        d_from, d_to, fy, fy_end = self._get_fy_dates()
+        period_str = self._fmt_period(d_from, d_to)
+
+        # TAB 1: Summary
+        ws1 = wb.active
+        ws1.title = "Summary & Trust"
+        ws1.append(["LAPORAN PEMILIK (OWNERS STATEMENT) - RINGKASAN EKSEKUTIF"])
+        ws1.cell(row=1, column=1).font = title_font
+        ws1.append([f"Entitas / Perusahaan: {self.env.company.name} | Periode: {period_str}"])
+        ws1.append([])
+
+        summary_rows = [
+            ("Indikator Finansial & Operasional", "Nilai (IDR / %)"),
+            ("Total Pendapatan Sewa & Utilitas (Accrual)", data.get('summary', {}).get('total_income', 0.0)),
+            ("Total Beban Pemeliharaan & Operasional (Accrual)", data.get('summary', {}).get('total_expense', 0.0)),
+            ("Pendapatan Operasional Bersih (NOI)", data.get('summary', {}).get('noi', 0.0)),
+            ("Total Penerimaan Kas Nyata (Cash Inflow)", data.get('summary', {}).get('total_receipts', 0.0)),
+            ("Total Pengeluaran Kas Nyata (Cash Outflow)", data.get('summary', {}).get('total_payments', 0.0)),
+            ("Arus Kas Operasional Bersih (Net Cash Flow)", data.get('summary', {}).get('net_cash_flow', 0.0)),
+            ("Saldo Awal Trust Account", data.get('summary', {}).get('opening_trust_balance', 0.0)),
+            ("Distribusi Hasil Sewa ke Pemilik (Remittances)", data.get('summary', {}).get('total_remittance', 0.0)),
+            ("Saldo Akhir Trust Account", data.get('summary', {}).get('closing_trust_balance', 0.0)),
+            ("Tingkat Okupansi Unit (%)", data.get('summary', {}).get('occupancy_rate_str', '100%')),
+            ("Total Tunggakan Piutang Tenant (Arrears)", data.get('summary', {}).get('total_arrears', 0.0)),
+        ]
+        for r_idx, row in enumerate(summary_rows, start=4):
+            ws1.append(list(row))
+            for c_idx in range(1, 3):
+                cell = ws1.cell(row=r_idx, column=c_idx)
+                cell.border = border_thin
+                if r_idx == 4:
+                    cell.fill = header_fill
+                    cell.font = header_font
+                elif c_idx == 1:
+                    cell.font = bold_font
+                else:
+                    cell.font = normal_font
+
+        # TAB 2: Income & Expenditure
+        ws2 = wb.create_sheet(title="Income & Expenditure")
+        ws2.append(["RINCIAN PENDAPATAN & PENGELUARAN (ACCRUAL BASIS)"])
+        ws2.cell(row=1, column=1).font = title_font
+        ws2.append(["Kategori", "Akun GL", "Bulan Berjalan", "YTD Aktual", "YTD Anggaran", "Variansi"])
+        for col in range(1, 7):
+            cell = ws2.cell(row=2, column=col)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.border = border_thin
+
+        row_curr = 3
+        for sec in data.get('income_expenditure', []):
+            for acc in sec.get('accounts', []):
+                ws2.append([
+                    sec.get('title', ''),
+                    acc.get('name', ''),
+                    acc.get('current_month', 0.0),
+                    acc.get('ytd_actual', 0.0),
+                    acc.get('ytd_budget', 0.0),
+                    acc.get('variance', 0.0)
+                ])
+                for col in range(1, 7):
+                    ws2.cell(row=row_curr, column=col).border = border_thin
+                    ws2.cell(row=row_curr, column=col).font = normal_font
+                row_curr += 1
+
+        # TAB 3: Receipts & Payments
+        ws3 = wb.create_sheet(title="Receipts & Payments")
+        ws3.append(["MUTASI PENERIMAAN & PENGELUARAN KAS NYATA (CASH BASIS)"])
+        ws3.cell(row=1, column=1).font = title_font
+        ws3.append(["Tanggal", "No. Dokumen", "Partner / Tenant / Vendor", "Keterangan", "Kas Masuk", "Kas Keluar"])
+        for col in range(1, 7):
+            cell = ws3.cell(row=2, column=col)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.border = border_thin
+
+        row_curr = 3
+        for item in data.get('receipts_payments', []):
+            ws3.append([
+                item.get('date', ''),
+                item.get('ref', ''),
+                item.get('partner_name', ''),
+                item.get('name', ''),
+                item.get('receipt_amount', 0.0),
+                item.get('payment_amount', 0.0)
+            ])
+            for col in range(1, 7):
+                ws3.cell(row=row_curr, column=col).border = border_thin
+                ws3.cell(row=row_curr, column=col).font = normal_font
+            row_curr += 1
+
+        # TAB 4: Tenant Balances
+        ws4 = wb.create_sheet(title="Tenant Balances")
+        ws4.append(["SALDO TAGIHAN & UMUR PIUTANG TENANT (AGED ARREARS)"])
+        ws4.cell(row=1, column=1).font = title_font
+        ws4.append(["Nama Tenant", "Unit Properti", "Total Tagihan", "Total Bayar", "Sisa Saldo", "Lancar (0-30)", "31-60 Hari", "61-90 Hari", "> 90 Hari"])
+        for col in range(1, 10):
+            cell = ws4.cell(row=2, column=col)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.border = border_thin
+
+        row_curr = 3
+        for tb in data.get('tenant_balances', []):
+            ws4.append([
+                tb.get('partner_name', ''),
+                tb.get('unit_name', ''),
+                tb.get('invoiced', 0.0),
+                tb.get('paid', 0.0),
+                tb.get('residual', 0.0),
+                tb.get('current', 0.0),
+                tb.get('days_30', 0.0),
+                tb.get('days_60', 0.0),
+                tb.get('days_90_plus', 0.0)
+            ])
+            for col in range(1, 10):
+                ws4.cell(row=row_curr, column=col).border = border_thin
+                ws4.cell(row=row_curr, column=col).font = normal_font
+            row_curr += 1
+
+        # Adjust column widths
+        for ws in [ws1, ws2, ws3, ws4]:
+            for col in ws.columns:
+                max_len = max(len(str(cell.value or '')) for cell in col)
+                col_letter = openpyxl.utils.get_column_letter(col[0].column)
+                ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
+
+        output = io.BytesIO()
+        wb.save(output)
+        output.seek(0)
+        file_data = output.read()
+        output.close()
+
+        filename = f"Owners_Statement_{period_str.replace(' ', '_')}.xlsx"
+        self.write({
+            'excel_file': base64.b64encode(file_data),
+            'excel_filename': filename
+        })
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/?model=property.owner.statement.wizard&id={self.id}&field=excel_file&download=true&filename={filename}',
+            'target': 'self',
         }
 
 

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fitout Permit Form View -->
+    <record id="view_property_fitout_permit_form" model="ir.ui.view">
+        <field name="name">property.fitout.permit.form</field>
+        <field name="model">property.fitout.permit</field>
+        <field name="arch" type="xml">
+            <form string="Surat Izin Kerja (SIK) Renovasi">
+                <header>
+                    <button name="action_approve" type="object" string="✅ Setujui SIK" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start" type="object" string="🚀 Mulai Pekerjaan" class="btn-success"
+                            invisible="state != 'approved'"/>
+                    <button name="action_complete" type="object" string="🏁 Selesai Pekerjaan" class="btn-info"
+                            invisible="state != 'active'"/>
+                    <button name="action_cancel" type="object" string="Batalkan SIK" class="btn-secondary"
+                            invisible="state in ('completed', 'cancelled')"/>
+                    <button name="%(action_report_fitout_permit)d" type="action"
+                            string="🖨️ Cetak SIK (PDF)" class="btn-outline-primary"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved,active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="No. Surat Izin Kerja (SIK)"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Data Kontrak &amp; Unit Properti">
+                            <field name="tenancy_id"/>
+                            <field name="property_id"/>
+                            <field name="tenant_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="deposit_id"/>
+                        </group>
+                        <group string="Pelaksana &amp; Kontraktor">
+                            <field name="contractor_name"/>
+                            <field name="contractor_pic"/>
+                            <field name="contractor_phone"/>
+                            <field name="contractor_worker_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Jadwal &amp; Ketentuan Waktu">
+                            <field name="work_type"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="working_hours_type"/>
+                        </group>
+                        <group string="Protokol Keselamatan Kerja &amp; K3">
+                            <field name="is_hot_work_permitted"/>
+                            <field name="has_fire_extinguisher"/>
+                            <field name="safety_briefing_done"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ketentuan &amp; Peraturan Gedung" name="rules">
+                            <field name="notes" placeholder="Catatan ketentuan kerja dan aturan K3..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Fitout Permit List View -->
+    <record id="view_property_fitout_permit_list" model="ir.ui.view">
+        <field name="name">property.fitout.permit.list</field>
+        <field name="model">property.fitout.permit</field>
+        <field name="arch" type="xml">
+            <list string="Surat Izin Kerja (SIK)">
+                <field name="name"/>
+                <field name="tenancy_id"/>
+                <field name="property_id"/>
+                <field name="contractor_name"/>
+                <field name="work_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="working_hours_type"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'approved'"
+                       decoration-warning="state == 'active'"
+                       decoration-success="state == 'completed'"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Fitout Permit Action & Menu -->
+    <record id="action_property_fitout_permit" model="ir.actions.act_window">
+        <field name="name">Surat Izin Kerja (SIK)</field>
+        <field name="res_model">property.fitout.permit</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat Surat Izin Kerja (SIK) / Fit-Out Work Permit Baru
+            </p>
+            <p>
+                Kelola izin renovasi, jam kerja malam kontraktor, dan izin pekerjaan panas (hot work) gedung.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_property_fitout_permit"
+              name="Surat Izin Kerja (SIK)"
+              parent="rental_management.menu_property_main"
+              action="action_property_fitout_permit"
+              sequence="26"/>
+</odoo>

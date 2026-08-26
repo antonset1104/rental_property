@@ -31,9 +31,15 @@
                 <group string="Catatan Manajemen / Ringkasan Eksekutif (Opsional)">
                     <field name="management_notes" nolabel="1" placeholder="Tuliskan catatan penjelasan, analisis kinerja, atau pesan dari Manajer Properti untuk dicantumkan pada laporan..."/>
                 </group>
+                <group invisible="not excel_file">
+                    <field name="excel_file" filename="excel_filename" readonly="1"/>
+                    <field name="excel_filename" invisible="1"/>
+                </group>
                 <footer>
                     <button name="action_print" type="object" string="Cetak Laporan Pemilik (PDF)"
                             class="btn-primary"/>
+                    <button name="action_export_excel" type="object" string="📊 Ekspor Excel (.xlsx)"
+                            class="btn-info"/>
                     <button name="action_send_email_to_owners" type="object" string="📧 Kirim Email ke Pemilik"
                             class="btn-success"/>
                     <button string="Batal" class="btn-secondary" special="cancel"/>

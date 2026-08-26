@@ -159,6 +159,30 @@ class TenantPortal(CustomerPortal):
         }
         return request.render('rental_management_portal.portal_maintenance_page', values)
 
+    @http.route(['/my/maintenance/<int:request_id>/rate'],
+                type='http', auth='user', methods=['POST'], website=True, csrf=True)
+    def portal_my_maintenance_rate(self, request_id, **post):
+        partner = request.env.user.partner_id
+        req_sudo = request.env['maintenance.request'].sudo().search([
+            ('id', '=', request_id),
+            '|',
+            ('customer_id', 'child_of', partner.commercial_partner_id.id),
+            ('tenancy_id.tenancy_id', 'child_of', partner.commercial_partner_id.id),
+        ], limit=1)
+        if req_sudo:
+            rating = post.get('rating')
+            feedback = post.get('feedback')
+            if rating:
+                req_sudo.write({
+                    'portal_rating': rating,
+                    'portal_feedback': feedback or '',
+                    'portal_rating_date': fields.Datetime.now(),
+                })
+                req_sudo.message_post(
+                    body=f"⭐ <b>Ulasan Kepuasan Tenant (CSAT):</b> Rating {rating}/5 Bintang.<br/><b>Masukan:</b> {feedback or '-'}"
+                )
+        return request.redirect('/my/maintenance/%s?rated=1' % request_id)
+
     @http.route(['/my/invoices/<int:invoice_id>/upload_proof'],
                 type='http', auth='user', methods=['POST'], website=True, csrf=True)
     def portal_invoice_upload_proof(self, invoice_id, **kw):

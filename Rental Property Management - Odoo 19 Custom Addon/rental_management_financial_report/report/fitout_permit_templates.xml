@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fitout_permit_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 13px; color: #2C3E50;">
+                        <!-- Header -->
+                        <div class="text-center" style="border-bottom: 2px solid #1F3964; padding-bottom: 8px; margin-bottom: 16px;">
+                            <h2 style="color: #1F3964; font-weight: bold; margin: 0; text-transform: uppercase;">
+                                SURAT IZIN KERJA (SIK) / FIT-OUT WORK PERMIT
+                            </h2>
+                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #555;">
+                                <b>Nomor:</b> <span t-field="doc.name"/> | <b>Tanggal Terbit:</b> <span t-field="doc.create_date" t-options="{'widget': 'date'}"/>
+                            </p>
+                        </div>
+
+                        <!-- Data Properti & Kontraktor -->
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <tbody>
+                                <tr style="background-color: #F4F7FB;">
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964; width: 50%;">1. DATA UNIT PROPERTI &amp; TENANT</td>
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964; width: 50%;">2. DATA KONTRAKTOR / PELAKSANA</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; width: 20%;">Unit Properti:</td>
+                                    <td style="width: 30%;"><span t-field="doc.property_id.name"/></td>
+                                    <td style="font-weight: bold; width: 20%;">Perusahaan Kontraktor:</td>
+                                    <td style="width: 30%;"><span t-field="doc.contractor_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Penyewa (Tenant):</td>
+                                    <td><span t-field="doc.tenant_id.name"/></td>
+                                    <td style="font-weight: bold;">Penanggung Jawab (PIC):</td>
+                                    <td><span t-field="doc.contractor_pic"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">No. Kontrak:</td>
+                                    <td><span t-field="doc.tenancy_id.name"/></td>
+                                    <td style="font-weight: bold;">No. HP / WhatsApp:</td>
+                                    <td><span t-field="doc.contractor_phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Gedung / Perusahaan:</td>
+                                    <td><span t-field="doc.company_id.name"/></td>
+                                    <td style="font-weight: bold;">Jumlah Pekerja:</td>
+                                    <td><span t-field="doc.contractor_worker_count"/> Orang</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Rincian Pekerjaan & Waktu -->
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <thead style="background-color: #1F3964; color: white;">
+                                <tr>
+                                    <th colspan="2" class="text-center" style="font-size: 13px;">JADWAL &amp; KETENTUAN PEKERJAAN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; width: 35%;">Kategori Pekerjaan:</td>
+                                    <td><span t-field="doc.work_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Masa Berlaku Izin Kerja:</td>
+                                    <td>
+                                        <b><span t-field="doc.start_date" t-options="{'widget': 'date'}"/></b> s.d. 
+                                        <b><span t-field="doc.end_date" t-options="{'widget': 'date'}"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Jam Kerja yang Diizinkan:</td>
+                                    <td><span t-field="doc.working_hours_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Izin Pengelasan / Hot Work Permit:</td>
+                                    <td>
+                                        <span t-if="doc.is_hot_work_permitted" class="badge text-bg-warning" style="font-size: 12px;">🔥 DIIZINKAN (Wajib Standby APAR)</span>
+                                        <span t-if="not doc.is_hot_work_permitted" class="badge text-bg-secondary" style="font-size: 12px;">TIDAK DIIZINKAN</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Kesiapan APAR &amp; Safety Induction:</td>
+                                    <td>
+                                        <span t-if="doc.has_fire_extinguisher">✅ APAR Tersedia</span> | 
+                                        <span t-if="doc.safety_briefing_done">✅ K3 Induction Selesai</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Aturan K3 & Tata Tertib -->
+                        <div style="background-color: #F9FAFC; border: 1px solid #D3D3D3; padding: 10px; margin-bottom: 20px; font-size: 12px;">
+                            <b style="color: #1F3964;">TATA TERTIB &amp; PROTOKOL K3 GEDUNG:</b>
+                            <p style="white-space: pre-wrap; margin: 4px 0 0 0;"><span t-field="doc.notes"/></p>
+                        </div>
+
+                        <!-- Kolom Tanda Tangan 3 Pihak -->
+                        <table style="width: 100%; margin-top: 25px; text-align: center; font-size: 12px;">
+                            <tr>
+                                <td style="width: 33%;">
+                                    <b>Kontraktor Pelaksana</b><br/><br/><br/><br/>
+                                    ( <span t-field="doc.contractor_pic"/> )<br/>
+                                    <span t-field="doc.contractor_name"/>
+                                </td>
+                                <td style="width: 33%;">
+                                    <b>Penyewa (Tenant)</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    <span t-field="doc.tenant_id.name"/>
+                                </td>
+                                <td style="width: 34%;">
+                                    <b>Building Management</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    Chief Engineering / BM
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

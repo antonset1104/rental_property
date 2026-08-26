@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Maintenance Request: CSAT Rating Section -->
+    <record id="hr_equipment_request_view_form_inherit_portal_rating" model="ir.ui.view">
+        <field name="name">maintenance.request.form.portal.rating</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="⭐ Ulasan &amp; Rating Kepuasan Tenant (Portal CSAT)" invisible="not portal_rating">
+                    <group>
+                        <field name="portal_rating" readonly="1"/>
+                        <field name="portal_rating_date" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="portal_feedback" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_equipment_request_view_tree_inherit_portal_rating" model="ir.ui.view">
+        <field name="name">maintenance.request.list.portal.rating</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="portal_rating" optional="show" widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

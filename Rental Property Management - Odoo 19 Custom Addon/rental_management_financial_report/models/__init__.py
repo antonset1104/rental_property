@@ -11,4 +11,5 @@ from . import management_fee
 from . import period_lock
 from . import report_snapshot
 from . import unit_inspection
+from . import fitout_permit
 
