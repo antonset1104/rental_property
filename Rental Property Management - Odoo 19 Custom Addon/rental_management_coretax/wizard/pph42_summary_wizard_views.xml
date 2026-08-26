@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pph42_summary_wizard_form" model="ir.ui.view">
+        <field name="name">property.pph42.summary.wizard.form</field>
+        <field name="model">property.pph42.summary.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rekapitulasi Tahunan PPh Final 4(2) &amp; e-Bupot">
+                <group>
+                    <group string="Parameter Tahun &amp; Perusahaan">
+                        <field name="year"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group string="Filter Tenant &amp; Status">
+                        <field name="partner_id"/>
+                        <field name="status_filter"/>
+                    </group>
+                </group>
+                <group invisible="not excel_file">
+                    <field name="excel_file" filename="excel_filename" readonly="1"/>
+                    <field name="excel_filename" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_print_pdf" type="object" string="🖨️ Cetak Rekapitulasi (PDF)"
+                            class="btn-primary"/>
+                    <button name="action_export_excel" type="object" string="📊 Ekspor Excel (.xlsx)"
+                            class="btn-info"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pph42_summary_wizard" model="ir.actions.act_window">
+        <field name="name">Rekapitulasi Tahunan PPh 4(2)</field>
+        <field name="res_model">property.pph42.summary.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_pph42_summary_wizard"
+              name="Rekapitulasi PPh 4(2) &amp; e-Bupot"
+              parent="menu_coretax_root"
+              action="action_pph42_summary_wizard"
+              sequence="30"/>
+</odoo>

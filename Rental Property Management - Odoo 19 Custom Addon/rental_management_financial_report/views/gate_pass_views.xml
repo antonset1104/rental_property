@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_gate_pass_form" model="ir.ui.view">
+        <field name="name">property.gate.pass.form</field>
+        <field name="model">property.gate.pass</field>
+        <field name="arch" type="xml">
+            <form string="Surat Izin Masuk/Keluar Barang (Gate Pass)">
+                <header>
+                    <button name="action_approve" type="object" string="✅ Setujui Gate Pass" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_verify_security" type="object" string="🔍 Verifikasi Pos Security / Loading Dock" class="btn-warning"
+                            invisible="state != 'approved'"/>
+                    <button name="action_complete" type="object" string="🏁 Selesai Bongkar/Muat" class="btn-success"
+                            invisible="state != 'checked'"/>
+                    <button name="action_cancel" type="object" string="Batalkan" class="btn-secondary"
+                            invisible="state in ('completed', 'cancelled')"/>
+                    <button name="%(action_report_gate_pass)d" type="action"
+                            string="🖨️ Cetak Gate Pass (PDF)" class="btn-outline-primary"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved,checked,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nomor Gate Pass"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Data Izin &amp; Unit Properti">
+                            <field name="pass_type"/>
+                            <field name="tenancy_id"/>
+                            <field name="property_id"/>
+                            <field name="tenant_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Data Kurir / Supir &amp; Kendaraan">
+                            <field name="carrier_name"/>
+                            <field name="carrier_phone"/>
+                            <field name="vehicle_plate"/>
+                            <field name="pass_date"/>
+                            <field name="time_window"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daftar Rincian Barang / Peralatan" name="items">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="item_name"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_name"/>
+                                    <field name="serial_number"/>
+                                    <field name="condition"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Catatan Pemeriksaan Pos Security" name="security">
+                            <field name="security_notes" placeholder="Catatan hasil pemeriksaan fisik security di pos loading dock..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_property_gate_pass_list" model="ir.ui.view">
+        <field name="name">property.gate.pass.list</field>
+        <field name="model">property.gate.pass</field>
+        <field name="arch" type="xml">
+            <list string="Surat Izin Masuk/Keluar Barang (Gate Pass)">
+                <field name="name"/>
+                <field name="pass_type"/>
+                <field name="tenancy_id"/>
+                <field name="property_id"/>
+                <field name="tenant_id"/>
+                <field name="carrier_name"/>
+                <field name="vehicle_plate"/>
+                <field name="pass_date"/>
+                <field name="item_count"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'approved'"
+                       decoration-warning="state == 'checked'"
+                       decoration-success="state == 'completed'"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_property_gate_pass" model="ir.actions.act_window">
+        <field name="name">Izin Barang (Gate Pass)</field>
+        <field name="res_model">property.gate.pass</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_property_gate_pass"
+              name="Izin Barang (Gate Pass)"
+              parent="rental_management.menu_property_main"
+              action="action_property_gate_pass"
+              sequence="27"/>
+</odoo>

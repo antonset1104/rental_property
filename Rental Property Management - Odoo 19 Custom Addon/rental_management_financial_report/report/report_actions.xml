@@ -10,7 +10,6 @@
         <field name="print_report_name">'Owners Statement - %s' % (object.property_id.name or '')</field>
     </record>
 
-    <!-- BAST & Inspeksi Unit Move-In / Move-Out PDF -->
     <record id="action_report_unit_inspection" model="ir.actions.report">
         <field name="name">Berita Acara Serah Terima (BAST)</field>
         <field name="model">property.unit.inspection</field>
@@ -20,7 +19,6 @@
         <field name="print_report_name">'BAST_%s_%s' % (object.inspection_type, object.name.replace('/', '_'))</field>
     </record>
 
-    <!-- Kwitansi / Tanda Terima Security Deposit PDF -->
     <record id="action_report_security_deposit" model="ir.actions.report">
         <field name="name">Tanda Terima Titipan Jaminan (Deposit)</field>
         <field name="model">property.security.deposit</field>
@@ -30,7 +28,6 @@
         <field name="print_report_name">'Deposit_Receipt_%s' % object.name.replace('/', '_')</field>
     </record>
 
-    <!-- Surat Keterangan Bebas Kewajiban (Clearance Certificate) PDF -->
     <record id="action_report_clearance_certificate" model="ir.actions.report">
         <field name="name">Surat Bebas Kewajiban (Clearance Certificate)</field>
         <field name="model">tenancy.details</field>
@@ -40,7 +37,6 @@
         <field name="print_report_name">'Clearance_Certificate_%s' % (object.tenancy_seq or object.name).replace('/', '_')</field>
     </record>
 
-    <!-- Surat Izin Kerja (SIK) / Fit-Out Work Permit PDF -->
     <record id="action_report_fitout_permit" model="ir.actions.report">
         <field name="name">Surat Izin Kerja (SIK) Renovasi</field>
         <field name="model">property.fitout.permit</field>
@@ -48,5 +44,14 @@
         <field name="report_name">rental_management_financial_report.report_fitout_permit_document</field>
         <field name="report_file">rental_management_financial_report.report_fitout_permit_document</field>
         <field name="print_report_name">'SIK_%s' % object.name.replace('/', '_')</field>
+    </record>
+
+    <record id="action_report_gate_pass" model="ir.actions.report">
+        <field name="name">Surat Izin Barang (Gate Pass)</field>
+        <field name="model">property.gate.pass</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_gate_pass_document</field>
+        <field name="report_file">rental_management_financial_report.report_gate_pass_document</field>
+        <field name="print_report_name">'Gate_Pass_%s' % object.name.replace('/', '_')</field>
     </record>
 </odoo>

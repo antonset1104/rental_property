@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_pph42_annual_summary" model="ir.actions.report">
+        <field name="name">Rekapitulasi Tahunan PPh Final 4(2)</field>
+        <field name="model">property.pph42.summary.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_coretax.report_pph42_annual_summary</field>
+        <field name="report_file">rental_management_coretax.report_pph42_annual_summary</field>
+        <field name="print_report_name">'Rekap_PPh42_%s' % object.year</field>
+    </record>
+
+    <template id="report_pph42_annual_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="data" t-value="report_data"/>
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #2C3E50;">
+                        <div class="text-center" style="border-bottom: 2px solid #1F3964; padding-bottom: 8px; margin-bottom: 16px;">
+                            <h2 style="color: #1F3964; font-weight: bold; margin: 0; text-transform: uppercase;">
+                                REKAPITULASI BUKTI POTONG PPH FINAL PASAL 4 AYAT (2) SEWA
+                            </h2>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #555;">
+                                <b>Entitas:</b> <span t-out="data['company_name']"/> | 
+                                <b>NPWP:</b> <span t-out="data['company_vat']"/> | 
+                                <b>Tahun Pajak:</b> <span t-out="data['year']"/>
+                            </p>
+                        </div>
+                        <div class="row mb-3" style="font-size: 11px;">
+                            <div class="col-3">
+                                <div style="border: 1px solid #1F3964; border-radius: 4px; padding: 6px; text-align: center; background-color: #F4F7FB;">
+                                    <span style="color: #555;">Total DPP Sewa:</span><br/>
+                                    <b style="color: #1F3964; font-size: 13px;">Rp <t t-out="'{:,.2f}'.format(data['total_dpp_all']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></b>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div style="border: 1px solid #1F3964; border-radius: 4px; padding: 6px; text-align: center; background-color: #F4F7FB;">
+                                    <span style="color: #555;">Total PPh 4(2) 10%:</span><br/>
+                                    <b style="color: #1F3964; font-size: 13px;">Rp <t t-out="'{:,.2f}'.format(data['total_pph_all']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></b>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div style="border: 1px solid #28A745; border-radius: 4px; padding: 6px; text-align: center; background-color: #EAF9EE;">
+                                    <span style="color: #28A745;">e-Bupot Diterima:</span><br/>
+                                    <b style="color: #28A745; font-size: 13px;">Rp <t t-out="'{:,.2f}'.format(data['total_received_pph']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></b>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div style="border: 1px solid #DC3545; border-radius: 4px; padding: 6px; text-align: center; background-color: #FDEEEE;">
+                                    <span style="color: #DC3545;">Pending e-Bupot:</span><br/>
+                                    <b style="color: #DC3545; font-size: 13px;">Rp <t t-out="'{:,.2f}'.format(data['total_pending_pph']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></b>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-sm" style="font-size: 11px; margin-bottom: 20px; border-color: #B0C4DE;">
+                            <thead style="background-color: #1F3964; color: white;">
+                                <tr>
+                                    <th style="width: 4%; text-align: center;">No.</th>
+                                    <th style="width: 26%;">Nama Penyewa (Tenant)</th>
+                                    <th style="width: 16%;">NPWP Tenant</th>
+                                    <th style="width: 14%; text-align: right;">DPP Sewa (IDR)</th>
+                                    <th style="width: 13%; text-align: right;">PPh 10% (IDR)</th>
+                                    <th style="width: 13%; text-align: right;">e-Bupot Diserahkan</th>
+                                    <th style="width: 14%; text-align: center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="p_idx" t-value="1"/>
+                                <tr t-foreach="data['partners']" t-as="p">
+                                    <td style="text-align: center;"><t t-out="p_idx"/></td>
+                                    <td><b><t t-out="p['partner_name']"/></b></td>
+                                    <td><t t-out="p['npwp']"/></td>
+                                    <td style="text-align: right;"><t t-out="'{:,.2f}'.format(p['total_dpp']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></td>
+                                    <td style="text-align: right;"><t t-out="'{:,.2f}'.format(p['total_pph']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></td>
+                                    <td style="text-align: right; color: #28A745;"><b><t t-out="'{:,.2f}'.format(p['received_pph']).replace(',', 'X').replace('.', ',').replace('X', '.')"/></b></td>
+                                    <td style="text-align: center;">
+                                        <span t-if="p['pending_pph'] == 0" class="badge text-bg-success" style="font-size: 10px;">Lengkap</span>
+                                        <span t-if="p['pending_pph'] &gt; 0" class="badge text-bg-danger" style="font-size: 10px;">Pending (<t t-out="'{:,.0f}'.format(p['pending_pph'])"/>)</span>
+                                    </td>
+                                    <t t-set="p_idx" t-value="p_idx + 1"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="width: 100%; margin-top: 30px; text-align: center; font-size: 11px;">
+                            <tr>
+                                <td style="width: 50%;">
+                                    <b>Disusun Oleh,</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    Tax &amp; Accounting Staff
+                                </td>
+                                <td style="width: 50%;">
+                                    <b>Diverifikasi Oleh,</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    Finance &amp; Tax Manager
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

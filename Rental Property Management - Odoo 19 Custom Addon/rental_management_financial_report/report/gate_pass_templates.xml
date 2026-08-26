@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_gate_pass_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 13px; color: #2C3E50;">
+                        <div class="text-center" style="border-bottom: 2px solid #1F3964; padding-bottom: 8px; margin-bottom: 16px;">
+                            <h2 style="color: #1F3964; font-weight: bold; margin: 0; text-transform: uppercase;">
+                                SURAT IZIN KELUAR / MASUK BARANG (GATE PASS)
+                            </h2>
+                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #555;">
+                                <b>Nomor:</b> <span t-field="doc.name"/> | <b>Tanggal Izin:</b> <span t-field="doc.pass_date" t-options="{'widget': 'date'}"/>
+                            </p>
+                        </div>
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <tbody>
+                                <tr style="background-color: #F4F7FB;">
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964; width: 50%;">1. DATA TENANT &amp; UNIT</td>
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964; width: 50%;">2. DATA LOGISTIK &amp; KENDARAAN</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; width: 20%;">Penyewa (Tenant):</td>
+                                    <td style="width: 30%;"><span t-field="doc.tenant_id.name"/></td>
+                                    <td style="font-weight: bold; width: 20%;">Jenis Izin:</td>
+                                    <td style="width: 30%;"><b><span t-field="doc.pass_type"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Unit Properti:</td>
+                                    <td><span t-field="doc.property_id.name"/></td>
+                                    <td style="font-weight: bold;">Nama Kurir / Supir:</td>
+                                    <td><span t-field="doc.carrier_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">No. Kontrak:</td>
+                                    <td><span t-field="doc.tenancy_id.name"/></td>
+                                    <td style="font-weight: bold;">No. HP / WhatsApp:</td>
+                                    <td><span t-field="doc.carrier_phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Gedung / Perusahaan:</td>
+                                    <td><span t-field="doc.company_id.name"/></td>
+                                    <td style="font-weight: bold;">No. Plat Kendaraan:</td>
+                                    <td><b><span t-field="doc.vehicle_plate"/></b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5 style="color: #1F3964; font-weight: bold; margin-bottom: 8px;">3. RINCIAN BARANG / PERALATAN:</h5>
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <thead style="background-color: #1F3964; color: white;">
+                                <tr>
+                                    <th style="width: 5%; text-align: center;">No.</th>
+                                    <th style="width: 45%;">Nama Barang / Peralatan</th>
+                                    <th style="width: 15%; text-align: center;">Jumlah / Qty</th>
+                                    <th style="width: 20%;">No. Seri / Keterangan</th>
+                                    <th style="width: 15%; text-align: center;">Kondisi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="seq_num" t-value="1"/>
+                                <tr t-foreach="doc.line_ids" t-as="line">
+                                    <td style="text-align: center;"><t t-out="seq_num"/></td>
+                                    <td><b><span t-field="line.item_name"/></b></td>
+                                    <td style="text-align: center;"><span t-field="line.quantity"/> <span t-field="line.uom_name"/></td>
+                                    <td><span t-field="line.serial_number"/></td>
+                                    <td style="text-align: center;"><span t-field="line.condition"/></td>
+                                    <t t-set="seq_num" t-value="seq_num + 1"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="background-color: #F9FAFC; border: 1px solid #D3D3D3; padding: 10px; margin-bottom: 20px; font-size: 12px;">
+                            <b style="color: #1F3964;">CATATAN PEMERIKSAAN POS SECURITY &amp; LOADING DOCK:</b>
+                            <p style="white-space: pre-wrap; margin: 4px 0 0 0;"><span t-field="doc.security_notes or 'Pemeriksaan fisik sesuai dengan manifes daftar barang.'"/></p>
+                        </div>
+                        <table style="width: 100%; margin-top: 25px; text-align: center; font-size: 12px;">
+                            <tr>
+                                <td style="width: 33%;">
+                                    <b>Petugas / Supir Logistik</b><br/><br/><br/><br/>
+                                    ( <span t-field="doc.carrier_name"/> )<br/>
+                                    Kurir / Pembawa Barang
+                                </td>
+                                <td style="width: 33%;">
+                                    <b>Penyewa (Tenant)</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    <span t-field="doc.tenant_id.name"/>
+                                </td>
+                                <td style="width: 34%;">
+                                    <b>Petugas Pos Security</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    Security &amp; Loading Dock Officer
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -11,3 +11,4 @@ access_coretax_related_party,coretax.related.party,model_coretax_related_party,a
 access_coretax_batch_faktur_wizard,coretax.batch.faktur.wizard,model_coretax_batch_faktur_wizard,account.group_account_user,1,1,1,1
 access_coretax_batch_faktur_line,coretax.batch.faktur.line,model_coretax_batch_faktur_line,account.group_account_user,1,1,1,1
 
+access_property_pph42_summary_wizard,property.pph42.summary.wizard,model_property_pph42_summary_wizard,account.group_account_user,1,1,1,1

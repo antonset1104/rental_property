@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_tenant_announcement_form" model="ir.ui.view">
+        <field name="name">property.tenant.announcement.form</field>
+        <field name="model">property.tenant.announcement</field>
+        <field name="arch" type="xml">
+            <form string="Pengumuman Gedung">
+                <header>
+                    <button name="action_publish" type="object" string="📢 Publikasikan ke Portal" class="btn-primary"
+                            invisible="state == 'published'"/>
+                    <button name="action_send_whatsapp_broadcast" type="object" string="📲 Kirim WhatsApp Broadcast" class="btn-success"/>
+                    <button name="action_archive" type="object" string="Arsipkan" class="btn-secondary"
+                            invisible="state != 'published'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,published,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title" string="Judul Pengumuman"/>
+                        <h1>
+                            <field name="title" placeholder="Contoh: Pemadaman Listrik Berkala &amp; Maintenance Lift Gedung"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Kategori &amp; Jadwal Tayang">
+                            <field name="announcement_type"/>
+                            <field name="publish_date"/>
+                            <field name="expiry_date"/>
+                            <field name="is_published"/>
+                        </group>
+                        <group string="Target Broadcast">
+                            <field name="target_property_ids" widget="many2many_tags" placeholder="Pilih gedung (kosong = semua gedung)..."/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Isi Lengkap Pengumuman" name="content">
+                            <field name="content" placeholder="Tuliskan isi pengumuman detail untuk penyewa gedung..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_property_tenant_announcement_list" model="ir.ui.view">
+        <field name="name">property.tenant.announcement.list</field>
+        <field name="model">property.tenant.announcement</field>
+        <field name="arch" type="xml">
+            <list string="Pengumuman Gedung">
+                <field name="title"/>
+                <field name="announcement_type"/>
+                <field name="publish_date"/>
+                <field name="expiry_date"/>
+                <field name="is_published" widget="boolean_toggle"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'published'"
+                       decoration-muted="state == 'archived'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_property_tenant_announcement" model="ir.actions.act_window">
+        <field name="name">Pengumuman Gedung</field>
+        <field name="res_model">property.tenant.announcement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_property_tenant_announcement"
+              name="Pengumuman Gedung"
+              parent="rental_management.menu_property_main"
+              action="action_property_tenant_announcement"
+              sequence="28"/>
+</odoo>
