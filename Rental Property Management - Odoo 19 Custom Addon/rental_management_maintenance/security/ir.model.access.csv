@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_mep_asset_user,property.mep.asset user,model_property_mep_asset,base.group_user,1,1,1,1
+access_property_mep_inspection_log_user,property.mep.inspection.log user,model_property_mep_inspection_log,base.group_user,1,1,1,1

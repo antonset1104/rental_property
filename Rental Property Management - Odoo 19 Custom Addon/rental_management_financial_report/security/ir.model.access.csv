@@ -26,3 +26,4 @@ access_property_gate_pass_line_user,property.gate.pass.line user,model_property_
 access_property_cashflow_forecast_wizard,property.cashflow.forecast.wizard,model_property_cashflow_forecast_wizard,account.group_account_user,1,1,1,1
 access_property_facility_user,property.facility user,model_property_facility,base.group_user,1,1,1,1
 access_property_facility_booking_user,property.facility.booking user,model_property_facility_booking,base.group_user,1,1,1,1
+access_property_tenant_clearance_user,property.tenant.clearance user,model_property_tenant_clearance,base.group_user,1,1,1,1

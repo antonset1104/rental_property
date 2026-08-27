@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_tenant_clearance_cert" model="ir.actions.report">
+        <field name="name">Surat Bebas Kewajiban &amp; Pengembalian Deposit</field>
+        <field name="model">property.tenant.clearance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_tenant_clearance_cert_document</field>
+        <field name="report_file">rental_management_financial_report.report_tenant_clearance_cert_document</field>
+        <field name="print_report_name">'Clearance_%s' % object.name.replace('/', '_')</field>
+    </record>
+
+    <template id="report_tenant_clearance_cert_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 13px; color: #2C3E50; line-height: 1.6;">
+                        <div class="text-center" style="border-bottom: 2px solid #1F3964; padding-bottom: 8px; margin-bottom: 16px;">
+                            <h2 style="color: #1F3964; font-weight: bold; margin: 0; text-transform: uppercase;">
+                                SURAT KETERANGAN BEBAS KEWAJIBAN (CLEARANCE CERTIFICATE)
+                            </h2>
+                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #555;">
+                                <b>Nomor:</b> <span t-field="doc.name"/> | <b>Tanggal Move-Out:</b> <span t-field="doc.move_out_date" t-options="{'widget': 'date'}"/>
+                            </p>
+                        </div>
+                        <p>
+                            Menerangkan bahwa Penyewa berikut telah menyelesaikan seluruh kewajiban sewa dan serah terima unit properti:
+                        </p>
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <tbody>
+                                <tr style="background-color: #F4F7FB;">
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964;">DATA TENANT &amp; UNIT</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; width: 30%;">Nama Penyewa:</td>
+                                    <td style="width: 70%;"><span t-field="doc.tenant_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Unit &amp; Gedung:</td>
+                                    <td><span t-field="doc.property_id.name"/> - <span t-field="doc.company_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Nomor Kontrak Sewa:</td>
+                                    <td><span t-field="doc.tenancy_id.name"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5 style="color: #1F3964; font-weight: bold;">RINCIAN PENYELESAIAN JAMINAN SEWA (SECURITY DEPOSIT):</h5>
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 60%;">1. Total Security Deposit Awal Tersedia:</td>
+                                    <td style="text-align: right; width: 40%;">Rp <span t-field="doc.deposit_held" t-options="{'widget': 'monetary', 'display_currency': doc.tenancy_id.currency_id}"/></td>
+                                </tr>
+                                <tr>
+                                    <td>2. Potongan Biaya Restorasi / Perbaikan Unit:</td>
+                                    <td style="text-align: right; color: #DC3545;">- Rp <span t-field="doc.repair_deduction" t-options="{'widget': 'monetary', 'display_currency': doc.tenancy_id.currency_id}"/></td>
+                                </tr>
+                                <tr>
+                                    <td>3. Potongan Tunggakan Utilitas Akhir:</td>
+                                    <td style="text-align: right; color: #DC3545;">- Rp <span t-field="doc.utility_deduction" t-options="{'widget': 'monetary', 'display_currency': doc.tenancy_id.currency_id}"/></td>
+                                </tr>
+                                <tr style="background-color: #EAF9EE; font-weight: bold; font-size: 14px;">
+                                    <td style="color: #28A745;">4. TOTAL DEPOSIT YANG DIKEMBALIKAN KE TENANT:</td>
+                                    <td style="text-align: right; color: #28A745;">Rp <span t-field="doc.deposit_refund_amount" t-options="{'widget': 'monetary', 'display_currency': doc.tenancy_id.currency_id}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="width: 100%; margin-top: 40px; text-align: center;">
+                            <tr>
+                                <td style="width: 50%;">
+                                    <b>Penyewa (Tenant)</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    <span t-field="doc.tenant_id.name"/>
+                                </td>
+                                <td style="width: 50%;">
+                                    <b>Building General Manager</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    <span t-field="doc.company_id.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

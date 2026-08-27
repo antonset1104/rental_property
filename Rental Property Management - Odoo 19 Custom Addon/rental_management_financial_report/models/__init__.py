@@ -14,3 +14,4 @@ from . import unit_inspection
 from . import fitout_permit
 from . import gate_pass
 from . import facility_booking
+from . import tenant_clearance

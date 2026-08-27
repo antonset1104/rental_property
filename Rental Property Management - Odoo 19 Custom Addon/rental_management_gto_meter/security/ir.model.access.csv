@@ -5,3 +5,4 @@ access_property_meter_reading_user,property.meter.reading user,model_property_me
 access_property_meter_reading_bulk_wizard,property.meter.reading.bulk.wizard,model_property_meter_reading_bulk_wizard,base.group_user,1,1,1,1
 access_property_meter_reading_bulk_line,property.meter.reading.bulk.line,model_property_meter_reading_bulk_line,base.group_user,1,1,1,1
 
+access_property_gto_trueup_wizard,property.gto.trueup.wizard,model_property_gto_trueup_wizard,account.group_account_user,1,1,1,1

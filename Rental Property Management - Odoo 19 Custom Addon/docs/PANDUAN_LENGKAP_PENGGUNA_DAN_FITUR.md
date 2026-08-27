@@ -342,4 +342,57 @@ Jika terjadi perubahan klausul kontrak di tengah masa sewa berjalan:
 6. Klik **"🖨️ Cetak Surat Adendum (PDF)"** untuk mencetak dokumen Surat Perjanjian Perubahan Sewa resmi bertandatangan 2 pihak.
 
 ---
+
+
+---
+
+## 26. Aset MEP Gedung & Checklist Inspeksi Lapangan Teknisi
+
+Untuk menjaga keandalan fasilitas kritikal gedung (genset, chiller, lift, pompa hydrant):
+1. Buka menu: **Rental Management > Aset MEP & Checklist Inspeksi**.
+2. Daftarkan peralatan mekanikal/elektrikal, kode tag aset, dan interval inspeksi.
+3. Teknisi lapangan mengisi log inspeksi harian/mingguan (suhu, tegangan listrik, tekanan bar, dan foto temuan).
+4. Sistem otomatis mencatat log dan memberikan alert jika status terdeteksi *Warning* atau *Critical*.
+
+---
+
+## 27. Rekonsiliasi Omzet Tahunan (GTO Turnover True-Up Settlement)
+
+Khusus tenant retail / mall dengan skema sewa bagi hasil omzet:
+1. Buka menu: **Rental Management > Contracts > Rekonsiliasi Omzet (True-Up)**.
+2. Pilih Kontrak Sewa Tenant dan Tahun Fiskal Laporan Audit.
+3. Masukkan realisasi omzet audited. Sistem otomatis menghitung selisih bagi hasil vs Minimum Guaranteed Rent (MGR).
+4. Klik **"🧾 Terbitkan Faktur Kekurangan Omzet"** untuk generate invoice penyesuaian otomatis.
+5. Klik **"🖨️ Cetak Berita Acara Rekonsiliasi (PDF)"** sebagai dokumen audit resmi.
+
+---
+
+## 28. Pengakhiran Sewa & Surat Bebas Kewajiban (Move-Out Clearance)
+
+Saat masa sewa tenant berakhir (*move-out*):
+1. Buka menu: **Rental Management > Contracts > Surat Bebas Kewajiban (Clearance)**.
+2. Buat lembar *Clearance*, verifikasi persetujuan 4 divisi:
+   - **Finance**: Pelunasan sewa dan utilitas terakhir.
+   - **Engineering**: Pemeriksaan fisik unit & restorasi *bare condition*.
+   - **Housekeeping**: Pembersihan unit dan bebas sampah.
+   - **Security**: Pengembalian kartu RFID dan kunci unit.
+3. Masukkan potongan kerusakan/utilitas. Sistem otomatis menghitung sisa *Security Deposit* yang wajib dikembalikan.
+4. Klik **"✅ Setujui Seluruh Divisi"** dan **"🖨️ Cetak Surat Clearance (PDF)"**.
+
+---
+
+## 29. Integrasi Smart Meter IoT (Listrik & Air Digital)
+
+Gedung yang menggunakan smart meter digital dapat mengirimkan angka meteran langsung:
+- **API Endpoint**: `POST /api/v1/meter/iot_reading`
+- **Payload Format (JSON)**:
+  ```json
+  {
+    "meter_code": "MTR-PLN-GF-01",
+    "current_reading": 14500.50
+  }
+  ```
+- Angka meteran terupdate otomatis tanpa intervensi manual.
+
+---
 *Dokumentasi disusun dan diverifikasi pada versi Odoo 19 Community Edition.*

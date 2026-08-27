@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_gto_trueup_wizard_form" model="ir.ui.view">
+        <field name="name">property.gto.trueup.wizard.form</field>
+        <field name="model">property.gto.trueup.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rekonsiliasi Omzet Tahunan (GTO True-Up)">
+                <sheet>
+                    <group>
+                        <group string="Kontrak Tenant &amp; Tahun Fiskal">
+                            <field name="tenancy_id"/>
+                            <field name="tenant_id"/>
+                            <field name="property_id"/>
+                            <field name="fiscal_year"/>
+                        </group>
+                        <group string="Perhitungan True-Up Settlement">
+                            <field name="annual_audited_turnover"/>
+                            <field name="turnover_percentage"/>
+                            <field name="calculated_turnover_rent" readonly="1"/>
+                            <field name="total_base_rent_paid"/>
+                            <field name="trueup_difference" readonly="1" style="font-weight: bold; color: #1F3964;"/>
+                            <field name="invoice_id" readonly="1" invisible="not invoice_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate_invoice" type="object" string="🧾 Terbitkan Faktur Kekurangan Omzet" class="btn-primary"
+                            invisible="trueup_difference &lt;= 0 or invoice_id"/>
+                    <button name="action_print_report" type="object" string="🖨️ Cetak Berita Acara Rekonsiliasi (PDF)" class="btn-info"/>
+                    <button string="Tutup" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_gto_trueup_wizard" model="ir.actions.act_window">
+        <field name="name">Rekonsiliasi Omzet Tahunan (True-Up)</field>
+        <field name="res_model">property.gto.trueup.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_property_gto_trueup_wizard"
+              name="Rekonsiliasi Omzet (True-Up)"
+              parent="rental_management.menu_tenancy_root"
+              action="action_property_gto_trueup_wizard"
+              sequence="35"/>
+</odoo>

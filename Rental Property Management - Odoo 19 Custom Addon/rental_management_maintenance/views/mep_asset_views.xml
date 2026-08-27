@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_mep_asset_form" model="ir.ui.view">
+        <field name="name">property.mep.asset.form</field>
+        <field name="model">property.mep.asset</field>
+        <field name="arch" type="xml">
+            <form string="Aset MEP Gedung">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nama Peralatan MEP"/>
+                        <h1><field name="name" placeholder="Contoh: Chiller Utama 01 (Trane 500 TR)"/></h1>
+                        <h3><field name="asset_code" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Informasi &amp; Lokasi">
+                            <field name="asset_category"/>
+                            <field name="property_id"/>
+                            <field name="location_detail"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Spesifikasi &amp; Pemeliharaan">
+                            <field name="brand"/>
+                            <field name="model_number"/>
+                            <field name="serial_number"/>
+                            <field name="inspection_interval"/>
+                            <field name="last_status" widget="badge"
+                                   decoration-success="last_status == 'normal'"
+                                   decoration-warning="last_status == 'warning'"
+                                   decoration-danger="last_status == 'critical'"/>
+                            <field name="last_inspection_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Log Checklist Inspeksi Lapangan" name="logs">
+                            <field name="log_ids">
+                                <list editable="bottom">
+                                    <field name="inspection_date"/>
+                                    <field name="technician_id"/>
+                                    <field name="operating_status" widget="badge"
+                                           decoration-success="operating_status == 'normal'"
+                                           decoration-warning="operating_status == 'warning'"
+                                           decoration-danger="operating_status == 'critical'"/>
+                                    <field name="temperature_celsius"/>
+                                    <field name="pressure_bar"/>
+                                    <field name="voltage_volt"/>
+                                    <field name="current_ampere"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_property_mep_asset_list" model="ir.ui.view">
+        <field name="name">property.mep.asset.list</field>
+        <field name="model">property.mep.asset</field>
+        <field name="arch" type="xml">
+            <list string="Daftar Aset MEP Gedung">
+                <field name="asset_code"/>
+                <field name="name"/>
+                <field name="asset_category"/>
+                <field name="property_id"/>
+                <field name="location_detail"/>
+                <field name="inspection_interval"/>
+                <field name="last_inspection_date"/>
+                <field name="last_status" widget="badge"
+                       decoration-success="last_status == 'normal'"
+                       decoration-warning="last_status == 'warning'"
+                       decoration-danger="last_status == 'critical'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_property_mep_asset" model="ir.actions.act_window">
+        <field name="name">Aset MEP &amp; Checklist Inspeksi</field>
+        <field name="res_model">property.mep.asset</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_property_mep_asset"
+              name="Aset MEP &amp; Checklist Inspeksi"
+              parent="rental_management.menu_property_main"
+              action="action_property_mep_asset"
+              sequence="26"/>
+</odoo>
