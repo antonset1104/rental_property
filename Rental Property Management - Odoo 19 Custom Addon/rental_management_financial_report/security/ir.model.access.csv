@@ -23,3 +23,6 @@ access_property_fitout_permit_user,property.fitout.permit user,model_property_fi
 
 access_property_gate_pass_user,property.gate.pass user,model_property_gate_pass,base.group_user,1,1,1,1
 access_property_gate_pass_line_user,property.gate.pass.line user,model_property_gate_pass_line,base.group_user,1,1,1,1
+access_property_cashflow_forecast_wizard,property.cashflow.forecast.wizard,model_property_cashflow_forecast_wizard,account.group_account_user,1,1,1,1
+access_property_facility_user,property.facility user,model_property_facility,base.group_user,1,1,1,1
+access_property_facility_booking_user,property.facility.booking user,model_property_facility_booking,base.group_user,1,1,1,1

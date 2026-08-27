@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_cashflow_forecast" model="ir.actions.report">
+        <field name="name">Proyeksi Arus Kas 12 Bulan</field>
+        <field name="model">property.cashflow.forecast.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_financial_report.report_cashflow_forecast</field>
+        <field name="report_file">rental_management_financial_report.report_cashflow_forecast</field>
+        <field name="print_report_name">'Proyeksi_Arus_Kas_12Bulan'</field>
+    </record>
+
+    <template id="report_cashflow_forecast">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="data" t-value="report_data"/>
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; color: #2C3E50;">
+                        <div class="text-center" style="border-bottom: 2px solid #1F3964; padding-bottom: 8px; margin-bottom: 16px;">
+                            <h2 style="color: #1F3964; font-weight: bold; margin: 0; text-transform: uppercase;">
+                                PROYEKSI ARUS KAS BERGULIR 12 BULAN (ROLLING CASH FLOW)
+                            </h2>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #555;">
+                                <b>Entitas:</b> <span t-out="data['company_name']"/> | <b>Portofolio:</b> <span t-out="data['property_name']"/> | <b>Mulai:</b> <span t-out="data['start_month']"/>
+                            </p>
+                        </div>
+                        <table class="table table-bordered table-sm" style="font-size: 10px; border-color: #B0C4DE;">
+                            <thead style="background-color: #1F3964; color: white;">
+                                <tr>
+                                    <th style="width: 25%;">Komponen Arus Kas (IDR)</th>
+                                    <th t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="m['label']"/></th>
+                                    <th style="text-align: right; background-color: #152744;">Total 12 Bulan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color: #F4F7FB; font-weight: bold;">
+                                    <td colspan="14">A. ARUS KAS MASUK (INFLOWS)</td>
+                                </tr>
+                                <tr>
+                                    <td>1. Sewa Pokok Terjadwal</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['inflow_rent'])"/></td>
+                                    <td style="text-align: right; font-weight: bold;"><t t-out="'{:,.0f}'.format(sum(x['inflow_rent'] for x in data['months']))"/></td>
+                                </tr>
+                                <tr>
+                                    <td>2. Service Charge</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['inflow_service'])"/></td>
+                                    <td style="text-align: right; font-weight: bold;"><t t-out="'{:,.0f}'.format(sum(x['inflow_service'] for x in data['months']))"/></td>
+                                </tr>
+                                <tr>
+                                    <td>3. Utilitas (Listrik &amp; Air)</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['inflow_utility'])"/></td>
+                                    <td style="text-align: right; font-weight: bold;"><t t-out="'{:,.0f}'.format(sum(x['inflow_utility'] for x in data['months']))"/></td>
+                                </tr>
+                                <tr style="background-color: #EAF2F8; font-weight: bold;">
+                                    <td>TOTAL INFLOWS</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['total_inflow'])"/></td>
+                                    <td style="text-align: right; color: #1F3964;"><t t-out="'{:,.0f}'.format(data['grand_total_inflow'])"/></td>
+                                </tr>
+                                <tr style="background-color: #F4F7FB; font-weight: bold;">
+                                    <td colspan="14">B. ARUS KAS KELUAR (OUTFLOWS)</td>
+                                </tr>
+                                <tr>
+                                    <td>1. Kontrak Vendor Rutin</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['outflow_vendor'])"/></td>
+                                    <td style="text-align: right;"><t t-out="'{:,.0f}'.format(sum(x['outflow_vendor'] for x in data['months']))"/></td>
+                                </tr>
+                                <tr>
+                                    <td>2. Pemeliharaan &amp; MEP</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['outflow_maintenance'])"/></td>
+                                    <td style="text-align: right;"><t t-out="'{:,.0f}'.format(sum(x['outflow_maintenance'] for x in data['months']))"/></td>
+                                </tr>
+                                <tr style="background-color: #FDEEEE; font-weight: bold;">
+                                    <td>TOTAL OUTFLOWS</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['total_outflow'])"/></td>
+                                    <td style="text-align: right; color: #DC3545;"><t t-out="'{:,.0f}'.format(data['grand_total_outflow'])"/></td>
+                                </tr>
+                                <tr style="background-color: #EAF9EE; font-weight: bold; font-size: 11px;">
+                                    <td>C. NET CASH FLOW</td>
+                                    <td t-foreach="data['months']" t-as="m" style="text-align: right;"><t t-out="'{:,.0f}'.format(m['net_cashflow'])"/></td>
+                                    <td style="text-align: right; color: #28A745;"><t t-out="'{:,.0f}'.format(data['grand_net_cashflow'])"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

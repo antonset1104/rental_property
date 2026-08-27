@@ -1,67 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_move_form_coretax" model="ir.ui.view">
+    <record id="view_move_form_inherit_coretax" model="ir.ui.view">
         <field name="name">account.move.form.coretax</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="CORETAX e-Faktur" name="coretax_efaktur"
-                      invisible="move_type not in ('out_invoice', 'out_refund', 'in_refund')">
-                    <group invisible="move_type not in ('out_invoice', 'out_refund')">
-                        <group string="Output Faktur (PK)">
+                <page string="Pajak CORETAX &amp; PPh 4(2)" name="coretax_faktur">
+                    <group>
+                        <group string="Faktur Pajak Keluaran (CORETAX)">
+                            <field name="coretax_faktur_number" placeholder="040.001-26.00000100"/>
+                            <field name="coretax_faktur_date"/>
                             <field name="coretax_trx_code"/>
                             <field name="coretax_invoice_opt"/>
-                            <field name="coretax_add_info"/>
-                            <field name="coretax_facility_stamp"/>
-                            <field name="coretax_ref_desc"/>
+                            <field name="coretax_exported" readonly="1"/>
+                            <field name="coretax_export_date" readonly="1"/>
                         </group>
-                        <group string="ID TKU / Customs">
-                            <field name="coretax_seller_idtku"/>
-                            <field name="coretax_buyer_idtku"/>
-                            <field name="coretax_custom_doc"/>
-                            <field name="coretax_custom_doc_my"/>
-                        </group>
-                    </group>
-                    <group string="Lampiran C (VAT collected by other collector)"
-                           invisible="move_type not in ('out_invoice', 'out_refund')">
-                        <group>
-                            <field name="coretax_collector_type"/>
-                            <field name="coretax_billing_number"/>
-                            <field name="coretax_billing_date"/>
-                        </group>
-                        <group>
-                            <field name="coretax_invoice_replaced"/>
-                            <field name="coretax_lampc_info"/>
-                        </group>
-                    </group>
-                    <group string="Retur Faktur Masukan (Input Return)"
-                           invisible="move_type != 'in_refund'">
-                        <field name="coretax_origin_invoice_number"/>
-                        <field name="coretax_seller_tin"/>
-                    </group>
-                    <group string="Status &amp; Nomor e-Faktur">
-                        <field name="coretax_faktur_number"/>
-                        <field name="coretax_faktur_date"/>
-                        <field name="coretax_exported" readonly="1"/>
-                        <field name="coretax_export_date" readonly="1"/>
-                    </group>
-                    <group string="Pelacakan PPh Final 4(2) Sewa (10%) &amp; Bukti Potong (e-Bupot)"
-                           invisible="move_type not in ('out_invoice', 'out_refund')">
-                        <group>
+                        <group string="PPh Final Pasal 4 Ayat (2) - 10%">
                             <field name="is_pph42_applicable"/>
-                            <field name="pph42_rate" invisible="not is_pph42_applicable"/>
-                            <field name="pph42_withholding_amount" invisible="not is_pph42_applicable"/>
-                            <field name="pph42_bupot_status" widget="badge"
-                                   decoration-warning="pph42_bupot_status == 'pending'"
-                                   decoration-success="pph42_bupot_status == 'received'"
-                                   invisible="not is_pph42_applicable"/>
+                            <field name="pph42_amount" readonly="1"/>
+                            <field name="pph42_ebupot_status"/>
+                            <field name="pph42_ebupot_number" invisible="pph42_ebupot_status == 'none'"/>
+                            <field name="pph42_ebupot_date" invisible="pph42_ebupot_status == 'none'"/>
+                            <field name="pph42_ebupot_attachment" filename="pph42_ebupot_number" invisible="pph42_ebupot_status == 'none'"/>
                         </group>
-                        <group invisible="not is_pph42_applicable">
-                            <field name="pph42_bupot_number"/>
-                            <field name="pph42_bupot_date"/>
-                            <field name="pph42_bupot_filename" invisible="1"/>
-                            <field name="pph42_bupot_file" filename="pph42_bupot_filename" widget="binary"/>
+                    </group>
+                    <group string="Sewa Valas Multi-Currency &amp; Kurs KMK">
+                        <group>
+                            <field name="is_foreign_currency_lease"/>
+                            <field name="lease_foreign_currency_id" invisible="not is_foreign_currency_lease"/>
+                            <field name="lease_foreign_amount" invisible="not is_foreign_currency_lease"/>
+                        </group>
+                        <group>
+                            <field name="exchange_rate_date" invisible="not is_foreign_currency_lease"/>
+                            <field name="tax_exchange_rate_kmk" invisible="not is_foreign_currency_lease"/>
+                            <field name="bi_transaction_rate" invisible="not is_foreign_currency_lease"/>
                         </group>
                     </group>
                 </page>

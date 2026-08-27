@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models
+from odoo import api, fields, models, _
 
 TRX_CODES = [
     ('01', '01 - To non-collector party'),
@@ -17,12 +17,9 @@ TRX_CODES = [
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    coretax_trx_code = fields.Selection(TRX_CODES, string='CORETAX Trx Code',
-                                        default='04')
-    coretax_invoice_opt = fields.Selection([('Normal', 'Normal'),
-                                            ('Replacement', 'Replacement')],
-                                           string='Tax Invoice Option',
-                                           default='Normal')
+    coretax_trx_code = fields.Selection(TRX_CODES, string='CORETAX Trx Code', default='04')
+    coretax_invoice_opt = fields.Selection([('Normal', 'Normal'), ('Replacement', 'Replacement')],
+                                           string='Tax Invoice Option', default='Normal')
     coretax_add_info = fields.Char(string='Additional Info Code')
     coretax_custom_doc = fields.Char(string='Customs Document No.')
     coretax_custom_doc_my = fields.Char(string='Customs Doc Month/Year (MMYYYY)')
@@ -36,16 +33,11 @@ class AccountMove(models.Model):
     coretax_exported = fields.Boolean(string='e-Faktur Exported', copy=False)
     coretax_export_date = fields.Datetime(string='Exported On', copy=False)
 
-    # --- Retur Faktur PM (input tax invoice return / vendor credit note) ---
-    coretax_origin_invoice_number = fields.Char(
-        string='Original Faktur No.',
-        help="Seller's original tax-invoice number being returned (Retur PM).")
-    coretax_seller_tin = fields.Char(
-        string="Seller TIN (Return)",
-        help="Supplier TIN for the returned input invoice; defaults to the "
-             "vendor's CORETAX TIN when empty.")
+    # Retur Faktur PM
+    coretax_origin_invoice_number = fields.Char(string='Original Faktur No.')
+    coretax_seller_tin = fields.Char(string="Seller TIN (Return)")
 
-    # --- Lampiran C (VAT/STLG collected by other collector) ---
+    # Lampiran C
     coretax_collector_type = fields.Selection([
         ('001', '001'), ('002', '002'), ('003', '003'), ('100', '100'),
     ], string='Type of VAT Collected')
@@ -54,29 +46,38 @@ class AccountMove(models.Model):
     coretax_invoice_replaced = fields.Char(string='Invoice Number Replaced')
     coretax_lampc_info = fields.Char(string='Lampiran C Information', default='Ok')
 
-    # --- PPh Final Pasal 4 ayat (2) Sewa Tanah/Bangunan (10%) & e-Bupot ---
-    is_pph42_applicable = fields.Boolean(
-        string='Objek PPh Final 4(2) 10%', default=True,
-        help="Centang jika transaksi ini merupakan sewa tanah/bangunan objek PPh Final 4(2).")
-    pph42_rate = fields.Float(string='Tarif PPh 4(2) (%)', default=10.0)
-    pph42_withholding_amount = fields.Monetary(
-        string='Estimasi PPh 4(2) Dipotong (10%)',
-        compute='_compute_pph42_amount', store=True,
-        help="Nilai 10% dari DPP sewa yang dipotong oleh tenant badan.")
-    pph42_bupot_status = fields.Selection([
-        ('not_applicable', 'Bukan Objek PPh 4(2)'),
-        ('pending', 'Menunggu Bukti Potong (Pending)'),
-        ('received', 'Bukti Potong Diterima'),
-    ], default='pending', string='Status Bukti Potong (e-Bupot)', tracking=True)
-    pph42_bupot_number = fields.Char(string='Nomor Bukti Potong (e-Bupot Unifikasi)')
-    pph42_bupot_date = fields.Date(string='Tanggal Bukti Potong')
-    pph42_bupot_file = fields.Binary(string='File Bukti Potong (PDF)')
-    pph42_bupot_filename = fields.Char(string='Nama File Bukti Potong')
+    # PPh Final 4(2) 10%
+    is_pph42_applicable = fields.Boolean(string='Objek PPh Final 4(2) 10%', default=True)
+    pph42_amount = fields.Monetary(string='PPh Final 4(2) 10%', compute='_compute_pph42_amount', store=True)
+    pph42_ebupot_number = fields.Char(string='Nomor Bukti Potong (e-Bupot)')
+    pph42_ebupot_date = fields.Date(string='Tanggal Bukti Potong')
+    pph42_ebupot_status = fields.Selection([
+        ('none', 'Belum Ada'),
+        ('pending', 'Menunggu Bukti Potong'),
+        ('received', 'Sudah Diterima'),
+    ], string='Status e-Bupot', default='none')
+    pph42_ebupot_attachment = fields.Binary(string='File e-Bupot (PDF)')
 
+    # Multi-Currency Valas Lease & Kurs Pajak KMK / BI
+    is_foreign_currency_lease = fields.Boolean(string='Kontrak Sewa Valas (USD/SGD)')
+    lease_foreign_currency_id = fields.Many2one('res.currency', string='Mata Uang Kontrak Valas')
+    lease_foreign_amount = fields.Monetary(string='Nominal Tagihan Valas', currency_field='lease_foreign_currency_id')
+    tax_exchange_rate_kmk = fields.Float(string='Kurs Pajak KMK (IDR)', digits=(12, 4),
+                                        help="Kurs Menteri Keuangan resmi untuk penentuan DPP e-Faktur.")
+    bi_transaction_rate = fields.Float(string='Kurs Transaksi BI (IDR)', digits=(12, 4),
+                                      help="Kurs tengah Bank Indonesia untuk konversi nilai piutang sewa.")
+    exchange_rate_date = fields.Date(string='Tanggal Penetapan Kurs', default=fields.Date.today)
+
+    @api.depends('is_pph42_applicable', 'amount_untaxed', 'move_type')
     def _compute_pph42_amount(self):
         for rec in self:
-            if rec.is_pph42_applicable:
-                rec.pph42_withholding_amount = (rec.amount_untaxed or 0.0) * ((rec.pph42_rate or 10.0) / 100.0)
+            if rec.is_pph42_applicable and rec.move_type in ('out_invoice', 'out_refund'):
+                rec.pph42_amount = rec.amount_untaxed * 0.10
             else:
-                rec.pph42_withholding_amount = 0.0
+                rec.pph42_amount = 0.0
 
+    @api.onchange('is_foreign_currency_lease', 'lease_foreign_amount', 'tax_exchange_rate_kmk', 'bi_transaction_rate')
+    def _onchange_foreign_lease_values(self):
+        if self.is_foreign_currency_lease and self.lease_foreign_amount and self.tax_exchange_rate_kmk:
+            # Informational notice on how amount converts
+            pass

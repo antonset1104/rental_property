@@ -284,4 +284,62 @@ Khusus tenant komersial golongan tarif PLN B3/I3:
 4. Nilai kepuasan CSAT otomatis tercatat pada backend Odoo dan muncul sebagai indikator penilaian SLA kinerja tim operasional gedung.
 
 ---
+
+
+---
+
+## 21. Manajemen Langganan Parkir Tenant & Kendaraan RFID
+
+Untuk mengelola alokasi parkir kendaraan penyewa (mobil, motor, slot VIP):
+1. Buka menu: **Rental Management > Langganan Parkir Tenant**.
+2. Klik **New**, pilih Kontrak Sewa (`tenancy.details`).
+3. Masukkan data: Nomor Polisi (Plat Nomor), Merk/Model Kendaraan, Nama Pengemudi/Karyawan Tenant, dan Nomor Kartu RFID Parkir.
+4. Tentukan **Kategori Kuota**:
+   - **Jatah Kuota Gratis (Allotted)**: Kuota parkir cuma-cuma sesuai perjanjian luas sewa unit.
+   - **Langganan Berbayar Bulanan**: Dikenakan tarif sewa slot parkir bulanan.
+5. Klik **"✅ Aktifkan Pass Parkir"** dan klik **"🖨️ Cetak Formulir Parkir (PDF)"** untuk mencetak bukti tanda daftar dan stiker parkir resmi.
+
+---
+
+## 22. Proyeksi Arus Kas Bergulir 12 Bulan (Rolling Cash Flow Forecast)
+
+Untuk perencanaan likuiditas dan anggaran belanja modal (*Capex*):
+1. Buka menu: **Rental Management > Reports > Proyeksi Arus Kas (12 Bulan)**.
+2. Tentukan Bulan Awal Proyeksi (misal: Januari 2026) dan pilih Perusahaan / PT.
+3. Klik **"🖨️ Cetak Proyeksi (PDF)"** untuk menerbitkan laporan eksekutif arus kas 12 bulan.
+4. Klik **"📊 Ekspor Excel (.xlsx)"** untuk mengunduh spreadsheet proyeksi multi-kolom (*Inflows, Outflows, Monthly Net Cash Flow, dan Cumulative Cash Flow*).
+
+---
+
+## 23. Pemesanan Fasilitas Bersama & Ruang Rapat (Meeting Room & Ballroom)
+
+Untuk mengoptimalkan pendapatan sewa non-ruangan (*ancillary revenue*):
+1. Buka menu: **Rental Management > Fasilitas & Meeting Room > Pemesanan Fasilitas**.
+2. Pilih Fasilitas (Ruang Rapat, Ballroom, Atrium Mall, Rooftop Lounge) dan tanggal pemakaian.
+3. Pilih Sesi Waktu (*Pagi, Siang, Malam, atau Seharian Penuh*). Sistem secara otomatis memeriksa ketersediaan jadwal untuk mencegah *double booking*.
+4. Klik **"✅ Konfirmasi Jadwal"**, lalu klik **"🧾 Terbitkan Invoice"** untuk membuat tagihan sewa fasilitas dan deposit kebersihan secara otomatis.
+
+---
+
+## 24. Kontrak Sewa Valas (USD/SGD) & Kurs Pajak KMK / BI
+
+Khusus tenant multinasional dengan tarif sewa dalam valuta asing:
+1. Pada form invoice tagihan sewa (`account.move`), centang opsi **"Kontrak Sewa Valas (USD/SGD)"**.
+2. Masukkan mata uang valas (USD/SGD) dan nominal asli tagihan sewa.
+3. Masukkan **Kurs Pajak KMK** resmi dan **Kurs Transaksi Bank Indonesia** pada tanggal penerbitan tagihan.
+4. Nilai DPP dan PPN dikonversi otomatis ke Rupiah (IDR) untuk pelaporan e-Faktur CORETAX DJP.
+
+---
+
+## 25. Adendum Kontrak & Audit Trail Perubahan Sewa
+
+Jika terjadi perubahan klausul kontrak di tengah masa sewa berjalan:
+1. Buka menu: **Rental Management > Contracts > Adendum & Perubahan Kontrak**.
+2. Klik **New**, pilih Kontrak Sewa Induk (`tenancy.details`).
+3. Pilih Jenis Adendum (*Penyesuaian Tarif Sewa, Perubahan Luas Unit m², Perpanjangan Masa Sewa, atau Grace Period*).
+4. Masukkan nilai komparasi (Tarif/Tanggal Lama vs Nilai Baru yang Ditetapkan).
+5. Klik **"✅ Setujui Adendum"**, lalu klik **"⚡ Terapkan ke Kontrak"** untuk mengupdate data kontrak induk secara otomatis.
+6. Klik **"🖨️ Cetak Surat Adendum (PDF)"** untuk mencetak dokumen Surat Perjanjian Perubahan Sewa resmi bertandatangan 2 pihak.
+
+---
 *Dokumentasi disusun dan diverifikasi pada versi Odoo 19 Community Edition.*

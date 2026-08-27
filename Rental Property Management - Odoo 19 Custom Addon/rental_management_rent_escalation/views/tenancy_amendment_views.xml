@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_tenancy_amendment_form" model="ir.ui.view">
+        <field name="name">property.tenancy.amendment.form</field>
+        <field name="model">property.tenancy.amendment</field>
+        <field name="arch" type="xml">
+            <form string="Adendum Kontrak Sewa">
+                <header>
+                    <button name="action_approve" type="object" string="✅ Setujui Adendum" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_apply_to_tenancy" type="object" string="⚡ Terapkan ke Kontrak" class="btn-success"
+                            invisible="state != 'approved'"/>
+                    <button name="%(action_report_tenancy_amendment)d" type="action"
+                            string="🖨️ Cetak Surat Adendum (PDF)" class="btn-outline-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,applied"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nomor Adendum"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Kontrak Sewa &amp; Tanggal">
+                            <field name="tenancy_id" readonly="state != 'draft'"/>
+                            <field name="tenant_id"/>
+                            <field name="property_id"/>
+                            <field name="amendment_date" readonly="state != 'draft'"/>
+                            <field name="effective_date" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Kategori Perubahan">
+                            <field name="amendment_type" readonly="state != 'draft'"/>
+                            <field name="reason" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Perbandingan Nilai &amp; Klausul">
+                        <group string="Nilai Sebelum Perubahan">
+                            <field name="previous_rent" readonly="1"/>
+                            <field name="previous_end_date" readonly="1"/>
+                        </group>
+                        <group string="Nilai Baru yang Ditetapkan">
+                            <field name="new_rent" readonly="state != 'draft'"/>
+                            <field name="new_end_date" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rincian Perubahan Klausul" name="desc">
+                            <field name="description" placeholder="Tuliskan detail pasal/klausul yang diubah..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_property_tenancy_amendment_list" model="ir.ui.view">
+        <field name="name">property.tenancy.amendment.list</field>
+        <field name="model">property.tenancy.amendment</field>
+        <field name="arch" type="xml">
+            <list string="Adendum Kontrak Sewa">
+                <field name="name"/>
+                <field name="tenancy_id"/>
+                <field name="tenant_id"/>
+                <field name="property_id"/>
+                <field name="amendment_date"/>
+                <field name="amendment_type"/>
+                <field name="previous_rent"/>
+                <field name="new_rent"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'approved'"
+                       decoration-success="state == 'applied'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_property_tenancy_amendment" model="ir.actions.act_window">
+        <field name="name">Adendum &amp; Perubahan Kontrak</field>
+        <field name="res_model">property.tenancy.amendment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_property_tenancy_amendment"
+              name="Adendum &amp; Perubahan Kontrak"
+              parent="rental_management.menu_tenancy_root"
+              action="action_property_tenancy_amendment"
+              sequence="25"/>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_property_cashflow_forecast_wizard_form" model="ir.ui.view">
+        <field name="name">property.cashflow.forecast.wizard.form</field>
+        <field name="model">property.cashflow.forecast.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Proyeksi Arus Kas Bergulir 12 Bulan">
+                <group>
+                    <group string="Parameter Periode">
+                        <field name="start_date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group string="Filter Properti">
+                        <field name="property_id"/>
+                    </group>
+                </group>
+                <group invisible="not excel_file">
+                    <field name="excel_file" filename="excel_filename" readonly="1"/>
+                    <field name="excel_filename" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_print_pdf" type="object" string="🖨️ Cetak Proyeksi (PDF)" class="btn-primary"/>
+                    <button name="action_export_excel" type="object" string="📊 Ekspor Excel (.xlsx)" class="btn-info"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_property_cashflow_forecast_wizard" model="ir.actions.act_window">
+        <field name="name">Proyeksi Arus Kas 12 Bulan</field>
+        <field name="res_model">property.cashflow.forecast.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_property_cashflow_forecast_wizard"
+              name="Proyeksi Arus Kas (12 Bulan)"
+              parent="rental_management.menu_property_report"
+              action="action_property_cashflow_forecast_wizard"
+              sequence="45"/>
+</odoo>

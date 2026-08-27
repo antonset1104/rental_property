@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_parking_pass" model="ir.actions.report">
+        <field name="name">Formulir Pendaftaran &amp; Kartu Pass Parkir</field>
+        <field name="model">property.parking.pass</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rental_management_parking.report_parking_pass_document</field>
+        <field name="report_file">rental_management_parking.report_parking_pass_document</field>
+        <field name="print_report_name">'Pass_Parkir_%s' % object.name.replace('/', '_')</field>
+    </record>
+
+    <template id="report_parking_pass_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 13px; color: #2C3E50;">
+                        <div class="text-center" style="border-bottom: 2px solid #1F3964; padding-bottom: 8px; margin-bottom: 16px;">
+                            <h2 style="color: #1F3964; font-weight: bold; margin: 0; text-transform: uppercase;">
+                                TANDA DAFTAR &amp; KARTU PASS PARKIR TENANT
+                            </h2>
+                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #555;">
+                                <b>Nomor:</b> <span t-field="doc.name"/> | <b>Gedung:</b> <span t-field="doc.property_id.name"/>
+                            </p>
+                        </div>
+                        <table class="table table-bordered table-sm" style="margin-bottom: 16px; border-color: #B0C4DE;">
+                            <tbody>
+                                <tr style="background-color: #F4F7FB;">
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964; width: 50%;">1. DATA PENYEWA (TENANT)</td>
+                                    <td colspan="2" style="font-weight: bold; color: #1F3964; width: 50%;">2. DATA KENDARAAN &amp; AKSES</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; width: 20%;">Penyewa:</td>
+                                    <td style="width: 30%;"><span t-field="doc.tenant_id.name"/></td>
+                                    <td style="font-weight: bold; width: 20%;">Nomor Polisi:</td>
+                                    <td style="width: 30%;"><b style="font-size: 14px; color: #1F3964;"><span t-field="doc.plate_number"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">No. Kontrak:</td>
+                                    <td><span t-field="doc.tenancy_id.name"/></td>
+                                    <td style="font-weight: bold;">Jenis Kendaraan:</td>
+                                    <td><span t-field="doc.vehicle_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Nama Pengemudi:</td>
+                                    <td><span t-field="doc.driver_name"/></td>
+                                    <td style="font-weight: bold;">Merk / Model:</td>
+                                    <td><span t-field="doc.vehicle_brand"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">No. HP Pengemudi:</td>
+                                    <td><span t-field="doc.driver_phone"/></td>
+                                    <td style="font-weight: bold;">No. Kartu RFID:</td>
+                                    <td><b><span t-field="doc.rfid_card_number"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Kategori Kuota:</td>
+                                    <td><span t-field="doc.parking_quota_type"/></td>
+                                    <td style="font-weight: bold;">Masa Berlaku:</td>
+                                    <td><span t-field="doc.date_start"/> s.d. <span t-field="doc.date_end"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="background-color: #F9FAFC; border: 1px solid #D3D3D3; padding: 10px; margin-bottom: 20px; font-size: 12px;">
+                            <b style="color: #1F3964;">TATA TERTIB &amp; KETENTUAN PARKIR GEDUNG:</b>
+                            <ol style="margin: 4px 0 0 16px; padding: 0;">
+                                <li>Kartu pass / stiker parkir wajib ditempelkan atau ditunjukkan pada pos portal masuk.</li>
+                                <li>Pengelola gedung tidak bertanggung jawab atas kehilangan barang berharga di dalam kendaraan.</li>
+                                <li>Kehilangan kartu RFID parkir dikenakan biaya penggantian kartu sebesar Rp 100.000,-.</li>
+                            </ol>
+                        </div>
+                        <table style="width: 100%; margin-top: 30px; text-align: center; font-size: 12px;">
+                            <tr>
+                                <td style="width: 50%;">
+                                    <b>Pemohon / Tenant</b><br/><br/><br/><br/>
+                                    ( <span t-field="doc.driver_name"/> )<br/>
+                                    <span t-field="doc.tenant_id.name"/>
+                                </td>
+                                <td style="width: 50%;">
+                                    <b>Petugas Pengelola Parkir</b><br/><br/><br/><br/>
+                                    ( _______________________ )<br/>
+                                    Building Management &amp; Parking Division
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_property_parking_bay,property.parking.bay,model_property_parking_bay,base.group_user,1,1,1,1
+access_property_parking_pass_user,property.parking.pass user,model_property_parking_pass,base.group_user,1,1,1,1

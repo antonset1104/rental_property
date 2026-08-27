@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_rent_escalation_log,property.rent.escalation.log,model_property_rent_escalation_log,base.group_user,1,1,1,1
+access_property_tenancy_amendment_user,property.tenancy.amendment user,model_property_tenancy_amendment,base.group_user,1,1,1,1

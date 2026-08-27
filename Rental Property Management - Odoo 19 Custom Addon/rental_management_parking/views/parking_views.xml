@@ -1,50 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_parking_bay_list" model="ir.ui.view">
-        <field name="name">property.parking.bay.list</field>
-        <field name="model">property.parking.bay</field>
+    <record id="view_property_parking_pass_form" model="ir.ui.view">
+        <field name="name">property.parking.pass.form</field>
+        <field name="model">property.parking.pass</field>
         <field name="arch" type="xml">
-            <list editable="bottom" decoration-success="status == 'available'" decoration-warning="status == 'allocated'">
-                <field name="code"/><field name="property_id"/><field name="zone"/>
-                <field name="bay_type"/><field name="partner_id"/><field name="tenancy_id"/>
-                <field name="monthly_rate"/>
-                <field name="status" widget="badge" decoration-success="status == 'available'" decoration-warning="status == 'allocated'"/>
-                <field name="currency_id" column_invisible="1"/>
-            </list>
-        </field>
-    </record>
-    <record id="view_parking_bay_form" model="ir.ui.view">
-        <field name="name">property.parking.bay.form</field>
-        <field name="model">property.parking.bay</field>
-        <field name="arch" type="xml">
-            <form>
+            <form string="Kartu Pass Parkir Tenant">
                 <header>
-                    <button name="action_allocate" type="object" string="Allocate" class="btn-primary" invisible="status == 'allocated'"/>
-                    <button name="action_create_invoice" type="object" string="Create Invoice" invisible="status != 'allocated'"/>
-                    <button name="action_release" type="object" string="Release" invisible="status != 'allocated'"/>
-                    <field name="status" widget="statusbar"/>
+                    <button name="action_activate" type="object" string="✅ Aktifkan Pass Parkir" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_expire" type="object" string="Set Kedaluwarsa" class="btn-warning"
+                            invisible="state != 'active'"/>
+                    <button name="action_cancel" type="object" string="Batalkan" class="btn-secondary"
+                            invisible="state in ('expired', 'cancelled')"/>
+                    <button name="%(action_report_parking_pass)d" type="action"
+                            string="🖨️ Cetak Formulir Parkir (PDF)" class="btn-outline-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,expired"/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nomor Pass Parkir"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
                     <group>
-                        <group>
-                            <field name="code"/><field name="property_id"/><field name="zone"/><field name="bay_type"/>
+                        <group string="Data Kendaraan &amp; Pengemudi">
+                            <field name="vehicle_type"/>
+                            <field name="plate_number"/>
+                            <field name="vehicle_brand"/>
+                            <field name="driver_name"/>
+                            <field name="driver_phone"/>
+                            <field name="rfid_card_number"/>
                         </group>
-                        <group>
-                            <field name="partner_id"/><field name="tenancy_id"/>
-                            <field name="monthly_rate"/><field name="product_id"/>
-                            <field name="currency_id" invisible="1"/>
+                        <group string="Kontrak Sewa &amp; Tarif">
+                            <field name="tenancy_id"/>
+                            <field name="tenant_id"/>
+                            <field name="property_id"/>
+                            <field name="parking_quota_type"/>
+                            <field name="monthly_fee" invisible="parking_quota_type == 'free'"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Catatan Tambahan" name="notes">
+                            <field name="notes" placeholder="Catatan nomor stiker, nomor slot khusus VIP, dll..."/>
+                        </page>
+                    </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
-    <record id="action_parking_bay" model="ir.actions.act_window">
-        <field name="name">Parking Bays</field>
-        <field name="res_model">property.parking.bay</field>
+
+    <record id="view_property_parking_pass_list" model="ir.ui.view">
+        <field name="name">property.parking.pass.list</field>
+        <field name="model">property.parking.pass</field>
+        <field name="arch" type="xml">
+            <list string="Kartu Pass Parkir Tenant">
+                <field name="name"/>
+                <field name="plate_number"/>
+                <field name="vehicle_type"/>
+                <field name="driver_name"/>
+                <field name="tenant_id"/>
+                <field name="property_id"/>
+                <field name="rfid_card_number"/>
+                <field name="parking_quota_type"/>
+                <field name="monthly_fee" optional="show"/>
+                <field name="date_end"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'expired'"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_property_parking_pass" model="ir.actions.act_window">
+        <field name="name">Pass Parkir Tenant</field>
+        <field name="res_model">property.parking.pass</field>
         <field name="view_mode">list,form</field>
     </record>
-    <menuitem id="menu_parking_bay" name="Parking"
-              parent="rental_management.main_menu_rental_management"
-              action="action_parking_bay" sequence="77"/>
+
+    <menuitem id="menu_property_parking_pass"
+              name="Langganan Parkir Tenant"
+              parent="rental_management.menu_property_main"
+              action="action_property_parking_pass"
+              sequence="29"/>
 </odoo>

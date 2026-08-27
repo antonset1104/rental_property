@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Rental Management - Property Financial Reports (Owners Statement)",
-    'summary': "CBRE/MRI-style Owners Statement suite for the rental_management module: "
-               "Performance Summary, Income & Expenditure (Accrual & Cash), Receipts & Payments, "
-               "Tenant Balances, Aged Arrears, Payment Details, Trial Balance, Balance Sheet & GST.",
+    'summary': "CBRE/MRI-style Owners Statement suite, Cash Flow Projection & Facility Booking.",
     'author': "System Analyst (companion to TechKhedut rental_management)",
     'category': 'Realestate',
     'version': "19.0.1.0.0",
@@ -21,6 +19,7 @@
         'report/clearance_certificate_templates.xml',
         'report/fitout_permit_templates.xml',
         'report/gate_pass_templates.xml',
+        'report/cashflow_forecast_templates.xml',
         'report/report_actions.xml',
         'views/financial_category_views.xml',
         'views/property_budget_views.xml',
@@ -35,7 +34,9 @@
         'views/unit_inspection_views.xml',
         'views/fitout_permit_views.xml',
         'views/gate_pass_views.xml',
+        'views/facility_booking_views.xml',
         'wizard/owner_statement_wizard_views.xml',
+        'wizard/cashflow_forecast_wizard_views.xml',
         'views/menus.xml',
     ],
     'license': 'LGPL-3',

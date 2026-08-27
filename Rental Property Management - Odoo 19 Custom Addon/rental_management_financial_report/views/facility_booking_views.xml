@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Facility Master Form -->
+    <record id="view_property_facility_form" model="ir.ui.view">
+        <field name="name">property.facility.form</field>
+        <field name="model">property.facility</field>
+        <field name="arch" type="xml">
+            <form string="Fasilitas Bersama Gedung">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nama Fasilitas"/>
+                        <h1><field name="name" placeholder="Contoh: Ruang Rapat Executive A (Lantai 5)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informasi &amp; Lokasi">
+                            <field name="code"/>
+                            <field name="facility_type"/>
+                            <field name="property_id"/>
+                            <field name="capacity"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Tarif &amp; Deposit">
+                            <field name="hourly_rate"/>
+                            <field name="daily_rate"/>
+                            <field name="cleaning_deposit"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Kelengkapan Fasilitas" name="desc">
+                            <field name="description" placeholder="Daftar fasilitas (Proyektor 4K, Audio Conference, Whiteboard, Wi-Fi 100Mbps)..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Facility Booking Form -->
+    <record id="view_property_facility_booking_form" model="ir.ui.view">
+        <field name="name">property.facility.booking.form</field>
+        <field name="model">property.facility.booking</field>
+        <field name="arch" type="xml">
+            <form string="Pemesanan Fasilitas Gedung">
+                <header>
+                    <button name="action_confirm" type="object" string="✅ Konfirmasi Jadwal" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_create_invoice" type="object" string="🧾 Terbitkan Invoice" class="btn-success"
+                            invisible="state != 'confirmed' or invoice_id"/>
+                    <button name="action_complete" type="object" string="🏁 Selesai Pemakaian" class="btn-info"
+                            invisible="state not in ('confirmed', 'invoiced')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,invoiced,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Kode Booking"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Jadwal &amp; Ruangan">
+                            <field name="facility_id" readonly="state != 'draft'"/>
+                            <field name="booking_date" readonly="state != 'draft'"/>
+                            <field name="time_slot" readonly="state != 'draft'"/>
+                            <field name="property_id"/>
+                        </group>
+                        <group string="Data Pemesan &amp; Tagihan">
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="tenancy_id" readonly="state != 'draft'"/>
+                            <field name="rental_price" readonly="state != 'draft'"/>
+                            <field name="cleaning_deposit" readonly="state != 'draft'"/>
+                            <field name="total_amount" readonly="1"/>
+                            <field name="invoice_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Facility Booking List -->
+    <record id="view_property_facility_booking_list" model="ir.ui.view">
+        <field name="name">property.facility.booking.list</field>
+        <field name="model">property.facility.booking</field>
+        <field name="arch" type="xml">
+            <list string="Pemesanan Fasilitas">
+                <field name="name"/>
+                <field name="facility_id"/>
+                <field name="partner_id"/>
+                <field name="booking_date"/>
+                <field name="time_slot"/>
+                <field name="rental_price"/>
+                <field name="cleaning_deposit"/>
+                <field name="total_amount"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'confirmed'"
+                       decoration-success="state in ('invoiced', 'completed')"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_property_facility_booking" model="ir.actions.act_window">
+        <field name="name">Pemesanan Fasilitas &amp; Meeting Room</field>
+        <field name="res_model">property.facility.booking</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_property_facility" model="ir.actions.act_window">
+        <field name="name">Master Fasilitas Gedung</field>
+        <field name="res_model">property.facility</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_property_facility_root"
+              name="Fasilitas &amp; Meeting Room"
+              parent="rental_management.menu_property_main"
+              sequence="30"/>
+
+    <menuitem id="menu_property_facility_booking"
+              name="Pemesanan Fasilitas"
+              parent="menu_property_facility_root"
+              action="action_property_facility_booking"
+              sequence="1"/>
+
+    <menuitem id="menu_property_facility_master"
+              name="Daftar Fasilitas"
+              parent="menu_property_facility_root"
+              action="action_property_facility"
+              sequence="2"/>
+</odoo>
