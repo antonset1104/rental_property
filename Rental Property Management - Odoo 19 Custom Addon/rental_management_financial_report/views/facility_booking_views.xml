@@ -115,11 +115,11 @@
 
     <menuitem id="menu_property_facility_root"
               name="Fasilitas &amp; Meeting Room"
-              parent="rental_management.menu_property_main"
+              parent="rental_management.menu_property"
               sequence="30"/>
 
     <menuitem id="menu_property_facility_booking"
-              name="Pemesanan Fasilitas"
+              name="Booking Fasilitas"
               parent="menu_property_facility_root"
               action="action_property_facility_booking"
               sequence="1"/>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -60,14 +60,14 @@ class PropertyParkingPass(models.Model):
     def action_activate(self):
         for rec in self:
             rec.state = 'active'
-            rec.message_post(body=_("Kartu Pass Parkir Kendaraan telah diaktifkan."))
+            rec.message_post(body=self.env._("Kartu Pass Parkir Kendaraan telah diaktifkan."))
 
     def action_expire(self):
         for rec in self:
             rec.state = 'expired'
-            rec.message_post(body=_("Masa berlaku pass parkir telah habis / kedaluwarsa."))
+            rec.message_post(body=self.env._("Masa berlaku pass parkir telah habis / kedaluwarsa."))
 
     def action_cancel(self):
         for rec in self:
             rec.state = 'cancelled'
-            rec.message_post(body=_("Kartu pass parkir telah dibatalkan."))
+            rec.message_post(body=self.env._("Kartu pass parkir telah dibatalkan."))

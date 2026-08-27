@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -66,22 +66,22 @@ class PropertyGatePass(models.Model):
     def action_approve(self):
         for rec in self:
             rec.state = 'approved'
-            rec.message_post(body=_("Surat Izin Masuk/Keluar Barang (Gate Pass) telah disetujui Building Management."))
+            rec.message_post(body=self.env._("Surat Izin Masuk/Keluar Barang (Gate Pass) telah disetujui Building Management."))
 
     def action_verify_security(self):
         for rec in self:
             rec.state = 'checked'
-            rec.message_post(body=_("Pemeriksaan fisik barang di Pos Security & Loading Dock telah diverifikasi."))
+            rec.message_post(body=self.env._("Pemeriksaan fisik barang di Pos Security & Loading Dock telah diverifikasi."))
 
     def action_complete(self):
         for rec in self:
             rec.state = 'completed'
-            rec.message_post(body=_("Proses muat/bongkar barang di Loading Dock telah selesai."))
+            rec.message_post(body=self.env._("Proses muat/bongkar barang di Loading Dock telah selesai."))
 
     def action_cancel(self):
         for rec in self:
             rec.state = 'cancelled'
-            rec.message_post(body=_("Surat Izin Gate Pass telah dibatalkan."))
+            rec.message_post(body=self.env._("Surat Izin Gate Pass telah dibatalkan."))
 
 
 class PropertyGatePassLine(models.Model):

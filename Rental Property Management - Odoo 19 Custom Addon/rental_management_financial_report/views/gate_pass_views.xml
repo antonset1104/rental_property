@@ -95,8 +95,8 @@
     </record>
 
     <menuitem id="menu_property_gate_pass"
-              name="Izin Barang (Gate Pass)"
-              parent="rental_management.menu_property_main"
+              name="Izin Keluar Masuk (Gate Pass)"
+              parent="rental_management.menu_property"
               action="action_property_gate_pass"
-              sequence="27"/>
+              sequence="28"/>
 </odoo>

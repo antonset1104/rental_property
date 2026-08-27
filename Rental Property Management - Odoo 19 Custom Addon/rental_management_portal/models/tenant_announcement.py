@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib.parse
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -39,13 +39,13 @@ class PropertyTenantAnnouncement(models.Model):
         for rec in self:
             rec.state = 'published'
             rec.is_published = True
-            rec.message_post(body=_("Pengumuman telah dipublikasikan ke Portal Mandiri Tenant."))
+            rec.message_post(body=self.env._("Pengumuman telah dipublikasikan ke Portal Mandiri Tenant."))
 
     def action_archive(self):
         for rec in self:
             rec.state = 'archived'
             rec.is_published = False
-            rec.message_post(body=_("Pengumuman telah diarsipkan."))
+            rec.message_post(body=self.env._("Pengumuman telah diarsipkan."))
 
     def action_send_whatsapp_broadcast(self):
         self.ensure_one()

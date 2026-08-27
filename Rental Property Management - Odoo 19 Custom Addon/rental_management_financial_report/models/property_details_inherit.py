@@ -168,6 +168,10 @@ class PropertyDetails(models.Model):
                     {'name': rec.name or 'Property', 'plan_id': plan.id, **company_vals}).id
         return True
 
+    def action_setup_analytic_dimensions(self):
+        """Action button on form view to generate all multi-level analytic dimensions."""
+        return self.action_create_analytic_account()
+
 
 class PropertyOwnershipLine(models.Model):
     _name = 'property.ownership.line'

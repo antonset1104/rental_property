@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -75,19 +75,19 @@ class PropertyFitoutPermit(models.Model):
     def action_approve(self):
         for rec in self:
             rec.state = 'approved'
-            rec.message_post(body=_("Surat Izin Kerja (SIK) telah disetujui oleh Building Management."))
+            rec.message_post(body=self.env._("Surat Izin Kerja (SIK) telah disetujui oleh Building Management."))
 
     def action_start(self):
         for rec in self:
             rec.state = 'active'
-            rec.message_post(body=_("Pekerjaan fit-out kontraktor resmi dimulai."))
+            rec.message_post(body=self.env._("Pekerjaan fit-out kontraktor resmi dimulai."))
 
     def action_complete(self):
         for rec in self:
             rec.state = 'completed'
-            rec.message_post(body=_("Pekerjaan fit-out telah selesai dan siap diinspeksi akhir."))
+            rec.message_post(body=self.env._("Pekerjaan fit-out telah selesai dan siap diinspeksi akhir."))
 
     def action_cancel(self):
         for rec in self:
             rec.state = 'cancelled'
-            rec.message_post(body=_("Surat Izin Kerja telah dibatalkan."))
+            rec.message_post(body=self.env._("Surat Izin Kerja telah dibatalkan."))

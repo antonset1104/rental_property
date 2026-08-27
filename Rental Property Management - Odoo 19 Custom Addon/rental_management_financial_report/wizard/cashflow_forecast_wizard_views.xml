@@ -36,7 +36,7 @@
 
     <menuitem id="menu_property_cashflow_forecast_wizard"
               name="Proyeksi Arus Kas (12 Bulan)"
-              parent="rental_management.menu_property_report"
+              parent="rental_management.menu_print_report"
               action="action_property_cashflow_forecast_wizard"
               sequence="45"/>
 </odoo>

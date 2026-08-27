@@ -55,7 +55,7 @@ class PropertySecurityDeposit(models.Model):
     bast_filename = fields.Char(string='Nama File BAST')
     sla_deadline = fields.Date(string='Tenggat SLA Refund (30 Hari)', compute='_compute_sla', store=True,
                                help="Batas maksimal 30 hari kalender setelah BAST ditandatangani.")
-    sla_days_left = fields.Integer(string='Sisa Hari SLA', compute='_compute_sla')
+    sla_days_left = fields.Integer(string='Sisa Hari SLA', compute='_compute_sla_days_left')
     sla_status = fields.Selection([
         ('no_bast', 'Menunggu BAST'),
         ('on_track', 'SLA Berjalan (Aman)'),
@@ -70,13 +70,11 @@ class PropertySecurityDeposit(models.Model):
         for rec in self:
             if not rec.bast_date:
                 rec.sla_deadline = False
-                rec.sla_days_left = 0
                 rec.sla_status = 'no_bast'
             else:
                 deadline = rec.bast_date + timedelta(days=30)
                 rec.sla_deadline = deadline
                 days_left = (deadline - today).days
-                rec.sla_days_left = days_left
                 if rec.state == 'closed' or (rec.balance or 0.0) <= 0.0:
                     rec.sla_status = 'on_track'
                 elif days_left < 0:
@@ -85,6 +83,15 @@ class PropertySecurityDeposit(models.Model):
                     rec.sla_status = 'warning'
                 else:
                     rec.sla_status = 'on_track'
+
+    @api.depends('sla_deadline')
+    def _compute_sla_days_left(self):
+        today = fields.Date.today()
+        for rec in self:
+            if rec.sla_deadline:
+                rec.sla_days_left = (rec.sla_deadline - today).days
+            else:
+                rec.sla_days_left = 0
 
     def action_confirm_bast(self):
         for rec in self:
@@ -214,6 +221,7 @@ class PropertySecurityDepositLine(models.Model):
     _description = 'Security Deposit Deduction / Refund'
     _order = 'date, id'
 
+    name = fields.Char(string='Description', compute='_compute_name', store=True, readonly=False)
     deposit_id = fields.Many2one('property.security.deposit', required=True,
                                  ondelete='cascade')
     line_type = fields.Selection([('deduction', 'Deduction'),
@@ -225,3 +233,11 @@ class PropertySecurityDepositLine(models.Model):
     move_id = fields.Many2one('account.move', string='Journal Entry', readonly=True)
     currency_id = fields.Many2one(related='deposit_id.currency_id')
     company_id = fields.Many2one(related='deposit_id.company_id', store=True)
+
+    @api.depends('reason', 'line_type')
+    def _compute_name(self):
+        for rec in self:
+            if not rec.name:
+                rec.name = rec.reason or (
+                    'Deduction' if rec.line_type == 'deduction' else 'Refund'
+                )

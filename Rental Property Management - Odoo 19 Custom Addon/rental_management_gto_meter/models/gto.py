@@ -80,12 +80,11 @@ class PropertyGtoTurnover(models.Model):
 
     @api.onchange('tenancy_id')
     def _onchange_tenancy(self):
-        for rec in self:
-            if rec.tenancy_id:
-                rec.percentage = rec.tenancy_id.gto_percentage
-                rec.breakpoint = rec.tenancy_id.gto_breakpoint
-                rec.base_rent = rec.tenancy_id.total_rent
-                rec.gto_type = rec.tenancy_id.gto_type
+        if self.tenancy_id:
+            self.percentage = self.tenancy_id.gto_percentage
+            self.breakpoint = self.tenancy_id.gto_breakpoint
+            self.base_rent = self.tenancy_id.total_rent
+            self.gto_type = self.tenancy_id.gto_type
 
     @api.depends('gross_turnover', 'base_rent', 'percentage', 'breakpoint', 'gto_type')
     def _compute_amounts(self):
@@ -118,6 +117,7 @@ class PropertyGtoTurnover(models.Model):
         self.write({'state': 'draft'})
 
     def action_create_invoice(self):
+        last_rec = self.env['property.gto.turnover']
         for rec in self:
             if rec.invoice_id:
                 continue
@@ -143,7 +143,10 @@ class PropertyGtoTurnover(models.Model):
             })
             rec.invoice_id = move.id
             rec.state = 'invoiced'
-        return self._open_invoice()
+            last_rec = rec
+        if len(self) == 1 and last_rec:
+            return last_rec._open_invoice()
+        return True
 
     def _open_invoice(self):
         self.ensure_one()

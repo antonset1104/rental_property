@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class PropertyMeterReadingBulkWizard(models.TransientModel):
@@ -64,8 +68,10 @@ class PropertyMeterReadingBulkWizard(models.TransientModel):
             if self.auto_create_invoice and reading.consumption > 0 and (reading.tenant_id or reading.tenancy_id):
                 try:
                     reading.action_create_invoice()
-                except Exception:
-                    pass
+                except Exception as e:
+                    _logger.warning(
+                        "Auto-invoice failed for meter reading %s: %s",
+                        reading.name, e)
 
         return {
             'type': 'ir.actions.act_window',

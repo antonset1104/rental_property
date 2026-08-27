@@ -42,7 +42,7 @@
 
     <menuitem id="menu_property_gto_trueup_wizard"
               name="Rekonsiliasi Omzet (True-Up)"
-              parent="rental_management.menu_tenancy_root"
+              parent="rental_management.menu_tenancy_details"
               action="action_property_gto_trueup_wizard"
               sequence="35"/>
 </odoo>

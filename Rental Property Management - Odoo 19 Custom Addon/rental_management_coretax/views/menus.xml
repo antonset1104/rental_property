@@ -17,6 +17,12 @@
               action="action_coretax_batch_faktur_wizard"
               sequence="15"/>
 
+    <menuitem id="menu_pph42_summary_wizard"
+              name="Rekapitulasi PPh 4(2) &amp; e-Bupot"
+              parent="menu_coretax_root"
+              action="action_pph42_summary_wizard"
+              sequence="18"/>
+
     <menuitem id="menu_coretax_spt_registers"
               name="SPT Registers"
               parent="menu_coretax_root"

@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import mep_asset
+from . import models

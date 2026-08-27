@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -96,15 +96,15 @@ class PropertyFacilityBooking(models.Model):
                 ('state', 'in', ('confirmed', 'invoiced', 'completed')),
             ], limit=1)
             if conflict:
-                raise UserError(_("Jadwal bentrok! Fasilitas '%s' pada tanggal %s sesi %s sudah dipesan (%s).") % (
+                raise UserError(self.env._("Jadwal bentrok! Fasilitas '%s' pada tanggal %s sesi %s sudah dipesan (%s).") % (
                     rec.facility_id.name, rec.booking_date, rec.time_slot, conflict.name))
             rec.state = 'confirmed'
-            rec.message_post(body=_("Pemesanan fasilitas telah dikonfirmasi."))
+            rec.message_post(body=self.env._("Pemesanan fasilitas telah dikonfirmasi."))
 
     def action_create_invoice(self):
         for rec in self:
             if rec.invoice_id:
-                raise UserError(_("Invoice sudah pernah dibuat."))
+                raise UserError(self.env._("Invoice sudah pernah dibuat."))
             inv_vals = {
                 'move_type': 'out_invoice',
                 'partner_id': rec.partner_id.id,
@@ -125,9 +125,19 @@ class PropertyFacilityBooking(models.Model):
                 }))
             inv = self.env['account.move'].create(inv_vals)
             rec.write({'invoice_id': inv.id, 'state': 'invoiced'})
-            rec.message_post(body=_("Invoice tagihan fasilitas %s telah dibuat.") % inv.name)
+            rec.message_post(body=self.env._("Invoice tagihan fasilitas %s telah dibuat.") % inv.name)
 
     def action_complete(self):
         for rec in self:
             rec.state = 'completed'
-            rec.message_post(body=_("Pemakaian fasilitas telah selesai."))
+            rec.message_post(body=self.env._("Pemakaian fasilitas telah selesai."))
+
+    # INC-03 FIX: Missing cancel action
+    def action_cancel(self):
+        for rec in self:
+            if rec.state == 'invoiced' and rec.invoice_id:
+                raise UserError(self.env._(
+                    "Tidak dapat membatalkan booking yang sudah ditagihkan. "
+                    "Batalkan invoice terlebih dahulu."))
+            rec.state = 'cancelled'
+            rec.message_post(body=self.env._("Pemesanan fasilitas telah dibatalkan."))

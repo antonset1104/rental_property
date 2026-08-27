@@ -78,7 +78,7 @@
 
     <menuitem id="menu_property_tenant_clearance"
               name="Surat Bebas Kewajiban (Clearance)"
-              parent="rental_management.menu_tenancy_root"
+              parent="rental_management.menu_tenancy_details"
               action="action_property_tenant_clearance"
               sequence="30"/>
 </odoo>

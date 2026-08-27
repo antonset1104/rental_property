@@ -84,7 +84,7 @@
 
     <menuitem id="menu_property_parking_pass"
               name="Langganan Parkir Tenant"
-              parent="rental_management.menu_property_main"
+              parent="rental_management.menu_property"
               action="action_property_parking_pass"
               sequence="29"/>
 </odoo>

@@ -83,7 +83,7 @@
 
     <menuitem id="menu_property_mep_asset"
               name="Aset MEP &amp; Checklist Inspeksi"
-              parent="rental_management.menu_property_main"
+              parent="rental_management.menu_property"
               action="action_property_mep_asset"
               sequence="26"/>
 </odoo>

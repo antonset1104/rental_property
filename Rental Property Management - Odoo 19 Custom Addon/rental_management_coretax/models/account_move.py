@@ -78,6 +78,15 @@ class AccountMove(models.Model):
 
     @api.onchange('is_foreign_currency_lease', 'lease_foreign_amount', 'tax_exchange_rate_kmk', 'bi_transaction_rate')
     def _onchange_foreign_lease_values(self):
-        if self.is_foreign_currency_lease and self.lease_foreign_amount and self.tax_exchange_rate_kmk:
-            # Informational notice on how amount converts
-            pass
+        if self.is_foreign_currency_lease and self.lease_foreign_amount:
+            curr_symbol = self.lease_foreign_currency_id.symbol or self.lease_foreign_currency_id.name or 'Valas'
+            kmk_rate = self.tax_exchange_rate_kmk or 1.0
+            bi_rate = self.bi_transaction_rate or kmk_rate
+            dpp_kmk = self.lease_foreign_amount * kmk_rate
+            piutang_bi = self.lease_foreign_amount * bi_rate
+            if not self.coretax_ref_desc:
+                self.coretax_ref_desc = (
+                    f"Tagihan Valas {curr_symbol} {self.lease_foreign_amount:,.2f} "
+                    f"@ Kurs KMK Rp {kmk_rate:,.2f} (DPP Rp {dpp_kmk:,.0f}) | "
+                    f"Kurs BI Rp {bi_rate:,.2f} (Est Rp {piutang_bi:,.0f})"
+                )

@@ -441,8 +441,9 @@ class ContractWizard(models.TransientModel):
             services = ""
             if rec.property_id and rec.is_extra_service:
                 for data in rec.property_id.extra_service_ids:
-                    services += f"{data.service_id.name}[{'Once' if data.service_type == 'once'
-                    else 'Recurring'}] - {rec.currency_id.symbol} {data.price}\n"
+                    stype = 'Once' if data.service_type == 'once' else 'Recurring'
+                    sym = rec.currency_id.symbol or ''
+                    services += f"{data.service_id.name}[{stype}] - {sym} {data.price}\n"
             rec.services = services
 
     # Extend Increment Time

@@ -190,6 +190,7 @@ class PropertyCashflowForecastWizard(models.TransientModel):
 
 class ReportCashflowForecast(models.AbstractModel):
     _name = 'report.rental_management_financial_report.report_cashflow_forecast'
+    _table = 'report_rmfr_cashflow_forecast'
     _description = 'Laporan Proyeksi Arus Kas PDF'
 
     @api.model

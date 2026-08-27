@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_tenancy_details_portal,tenancy.details portal read,rental_management.model_tenancy_details,base.group_portal,1,0,0,0
 access_maintenance_request_portal,maintenance.request portal,maintenance.model_maintenance_request,base.group_portal,1,0,1,0
-
+access_property_tenant_announcement_user,property.tenant.announcement user,model_property_tenant_announcement,base.group_user,1,1,1,1
+access_property_tenant_announcement_portal,property.tenant.announcement portal,model_property_tenant_announcement,base.group_portal,1,0,0,0

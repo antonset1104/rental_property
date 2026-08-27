@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -69,7 +69,7 @@ class PropertyMEPAsset(models.Model):
 class PropertyMEPInspectionLog(models.Model):
     _name = 'property.mep.inspection.log'
     _description = 'Log Checklist Inspeksi Lapangan Teknisi MEP'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'inspection_date desc, id desc'
 
     asset_id = fields.Many2one('property.mep.asset', string='Peralatan MEP', required=True, ondelete='cascade')
@@ -99,7 +99,7 @@ class PropertyMEPInspectionLog(models.Model):
         records = super().create(vals_list)
         for rec in records:
             if rec.operating_status in ('warning', 'critical'):
-                rec.asset_id.message_post(body=_(
+                rec.asset_id.message_post(body=self.env._(
                     "⚠️ <b>PERINGATAN INSPEKSI TEKNISI MEP:</b><br/>"
                     "Status: <b>%s</b><br/>"
                     "Teknisi: %s<br/>"

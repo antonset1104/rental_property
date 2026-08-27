@@ -107,7 +107,7 @@
 
     <menuitem id="menu_property_fitout_permit"
               name="Surat Izin Kerja (SIK)"
-              parent="rental_management.menu_property_main"
+              parent="rental_management.menu_property"
               action="action_property_fitout_permit"
               sequence="26"/>
 </odoo>

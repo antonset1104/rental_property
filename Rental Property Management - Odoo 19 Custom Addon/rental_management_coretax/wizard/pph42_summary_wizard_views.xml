@@ -36,10 +36,4 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
-
-    <menuitem id="menu_pph42_summary_wizard"
-              name="Rekapitulasi PPh 4(2) &amp; e-Bupot"
-              parent="menu_coretax_root"
-              action="action_pph42_summary_wizard"
-              sequence="30"/>
 </odoo>

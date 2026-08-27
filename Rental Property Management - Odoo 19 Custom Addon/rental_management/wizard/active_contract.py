@@ -419,10 +419,10 @@ class ActiveContract(models.Model):
         # Merged Extra Services
         if tenancy.is_extra_service and self.contract_id.extra_service_invoice == 'merge':
             for service in tenancy.extra_services_ids:
+                stype = 'Once' if service.service_type == 'once' else 'Recurring'
                 line_vals = {
                     "product_id": service.service_id.id,
-                    "name": f"Service Type : {'Once' if service.service_type == 'once'
-                    else 'Recurring'}\nService : {service.service_id.name}",
+                    "name": f"Service Type : {stype}\nService : {service.service_id.name}",
                     "quantity": half_yearly_service_quantity,
                     "price_unit": service.price,
                     "tax_ids": tenancy.tax_ids.ids if tenancy.service_tax else False,

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -49,7 +49,46 @@ class PropertyTenantClearance(models.Model):
                 vals['name'] = seq
         return super().create(vals_list)
 
+    def action_clear_finance(self):
+        for rec in self:
+            rec.finance_status = 'cleared'
+            rec.message_post(body=self.env._("✅ Divisi Finance menyetujui: Seluruh tagihan sewa & utilitas LUNAS."))
+            rec._check_all_cleared()
+
+    def action_clear_engineering(self):
+        for rec in self:
+            rec.engineering_status = 'cleared'
+            rec.message_post(body=self.env._("✅ Divisi Engineering menyetujui: Unit telah dikembalikan ke kondisi bare/restorasi."))
+            rec._check_all_cleared()
+
+    def action_clear_housekeeping(self):
+        for rec in self:
+            rec.housekeeping_status = 'cleared'
+            rec.message_post(body=self.env._("✅ Divisi Housekeeping menyetujui: Unit bersih & bebas sampah."))
+            rec._check_all_cleared()
+
+    def action_clear_security(self):
+        for rec in self:
+            rec.security_status = 'cleared'
+            rec.message_post(body=self.env._("✅ Divisi Security menyetujui: Kunci & kartu RFID telah dikembalikan."))
+            rec._check_all_cleared()
+
+    def _check_all_cleared(self):
+        """Automatically approve clearance once all 4 divisions have signed off."""
+        self.ensure_one()
+        if all([
+            self.finance_status == 'cleared',
+            self.engineering_status == 'cleared',
+            self.housekeeping_status == 'cleared',
+            self.security_status == 'cleared',
+        ]):
+            self.state = 'approved'
+            self.message_post(body=self.env._(
+                "Seluruh divisi telah menyetujui pengakhiran sewa dan "
+                "Surat Bebas Kewajiban (Clearance) telah terbit."))
+
     def action_approve_all(self):
+        """Shortcut: mark all divisions cleared at once (manager override)."""
         for rec in self:
             rec.write({
                 'finance_status': 'cleared',
@@ -58,9 +97,17 @@ class PropertyTenantClearance(models.Model):
                 'security_status': 'cleared',
                 'state': 'approved',
             })
-            rec.message_post(body=_("Seluruh divisi telah menyetujui pengakhiran sewa dan Surat Bebas Kewajiban (Clearance) telah terbit."))
+            rec.message_post(body=self.env._(
+                "Seluruh divisi telah menyetujui pengakhiran sewa dan "
+                "Surat Bebas Kewajiban (Clearance) telah terbit "
+                "(Override oleh Manager)."))
 
     def action_mark_refunded(self):
         for rec in self:
+            if rec.state != 'approved':
+                raise UserError(self.env._(
+                    "Deposit hanya bisa dicairkan setelah status clearance disetujui seluruh divisi."))
             rec.state = 'refunded'
-            rec.message_post(body=_("Pengembalian deposit sebesar Rp {:,.2f} telah selesai diproses ke rekening tenant.").format(rec.deposit_refund_amount))
+            rec.message_post(body=self.env._(
+                "Pengembalian deposit sebesar Rp {:,.2f} telah selesai diproses "
+                "ke rekening tenant.").format(rec.deposit_refund_amount))

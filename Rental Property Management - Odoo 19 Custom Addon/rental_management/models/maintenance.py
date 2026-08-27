@@ -304,10 +304,13 @@ class PropertyMaintenance(models.Model):
                 }
 
 
+            sym = currency_id.symbol or ''
+            pos = currency_id.position or 'after'
+            formatted_amt = f"{sym} {total_amount:,.2f}" if pos == 'before' else f"{total_amount:,.2f} {sym}"
             if move_type == 'out_invoice':
-                property_totals[prop_id]['invoice_amount'] = f'{currency_id.symbol if currency_id.position == 'before' else ''} {total_amount} {'' if currency_id.position == 'before' else currency_id.symbol.symbol}'
+                property_totals[prop_id]['invoice_amount'] = formatted_amt
             elif move_type == 'in_invoice':
-                property_totals[prop_id]['bill_amount'] = f'{currency_id.symbol if currency_id.position == 'before' else ''} {total_amount} {'' if currency_id.position == 'before' else currency_id.symbol.symbol}'
+                property_totals[prop_id]['bill_amount'] = formatted_amt
 
         property_wise_amount = list(property_totals.values())
 

@@ -41,13 +41,13 @@ class PropertyMeter(models.Model):
     @api.depends('reading_ids.current_reading', 'reading_ids.current_reading_lwbp', 'reading_ids.date')
     def _compute_last_reading(self):
         for rec in self:
-            readings = rec.reading_ids.sorted(lambda r: (r.date or fields.Date.today(),
-                                                         r.id))
+            readings = rec.reading_ids.sorted(lambda r: (r.date or fields.Date.today(), r.id or 0))
             if readings:
+                last_r = readings[-1]
                 if rec.is_peak_off_peak:
-                    rec.last_reading = (readings[-1].current_reading_wbp or 0.0) + (readings[-1].current_reading_lwbp or 0.0)
+                    rec.last_reading = (last_r.current_reading_wbp or 0.0) + (last_r.current_reading_lwbp or 0.0)
                 else:
-                    rec.last_reading = readings[-1].current_reading or 0.0
+                    rec.last_reading = last_r.current_reading or 0.0
             else:
                 rec.last_reading = 0.0
 
@@ -55,17 +55,24 @@ class PropertyMeter(models.Model):
     def _cron_meter_reading_reminder(self):
         """Pengingat terjadwal bulanan untuk tim Engineering mencatat meteran utilitas."""
         today = fields.Date.today()
-        meters = self.search([('active', '=', True)])
+        meters = self.search([('active', '=', True), ('tenancy_id', '!=', False)])
+        if not meters:
+            return True
+        readings_data = self.env['property.meter.reading']._read_group(
+            domain=[('meter_id', 'in', meters.ids)],
+            groupby=['meter_id'],
+            aggregates=['date:max'],
+        )
+        latest_dates = {m.id: d_max for m, d_max in readings_data}
+
         for m in meters:
-            # Check last reading date
-            last_date = m.reading_ids and max(m.reading_ids.mapped('date'))
+            last_date = latest_dates.get(m.id)
             if not last_date or (today - last_date).days >= 28:
-                if m.tenancy_id:
-                    m.tenancy_id.message_post(body=self.env._(
-                        "⚡ <b>JADWAL PENCATATAN METERAN UTILITAS (%s)</b><br/>"
-                        "Unit: %s | Tipe: %s (Stand Terakhir: %s %s).<br/>"
-                        "Harap lakukan pencatatan meteran bulanan periode berjalan.") % (
-                            m.name, m.property_id.name or '', m.meter_type, m.last_reading, m.uom_name))
+                m.tenancy_id.message_post(body=self.env._(
+                    "⚡ <b>JADWAL PENCATATAN METERAN UTILITAS (%s)</b><br/>"
+                    "Unit: %s | Tipe: %s (Stand Terakhir: %s %s).<br/>"
+                    "Harap lakukan pencatatan meteran bulanan periode berjalan.") % (
+                        m.name, m.property_id.name or '', m.meter_type, m.last_reading, m.uom_name or ''))
         return True
 
 
@@ -140,13 +147,12 @@ class PropertyMeterReading(models.Model):
 
     @api.onchange('meter_id')
     def _onchange_meter(self):
-        for rec in self:
-            if rec.meter_id:
-                rec.previous_reading = rec.meter_id.last_reading
-                rec.tariff = rec.meter_id.tariff
-                rec.tariff_wbp = rec.meter_id.tariff_wbp
-                rec.tariff_lwbp = rec.meter_id.tariff_lwbp
-                rec.tenancy_id = rec.meter_id.tenancy_id
+        if self.meter_id:
+            self.previous_reading = self.meter_id.last_reading
+            self.tariff = self.meter_id.tariff
+            self.tariff_wbp = self.meter_id.tariff_wbp
+            self.tariff_lwbp = self.meter_id.tariff_lwbp
+            self.tenancy_id = self.meter_id.tenancy_id
 
 
     @api.model_create_multi
@@ -158,6 +164,7 @@ class PropertyMeterReading(models.Model):
         return super().create(vals_list)
 
     def action_create_invoice(self):
+        last_rec = self.env['property.meter.reading']
         for rec in self:
             if rec.invoice_id:
                 continue
@@ -190,7 +197,10 @@ class PropertyMeterReading(models.Model):
             })
             rec.invoice_id = move.id
             rec.state = 'billed'
-        return self._open_invoice()
+            last_rec = rec
+        if len(self) == 1 and last_rec:
+            return last_rec._open_invoice()
+        return True
 
     def _open_invoice(self):
         self.ensure_one()
